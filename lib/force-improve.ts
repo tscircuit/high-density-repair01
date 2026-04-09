@@ -39,6 +39,7 @@ type ForceElementBase = {
 
 type PointForceElement = ForceElementBase & {
   kind: "point"
+  targetClearance?: number
   z: number
 }
 
@@ -326,12 +327,15 @@ const clampMutableRoutesToBounds = (
 const getElementTargetClearance = (element: ForceElement) =>
   element.kind === "via"
     ? VIA_SEGMENT_TARGET_CLEARANCE
-    : POINT_SEGMENT_TARGET_CLEARANCE
+    : element.targetClearance ?? POINT_SEGMENT_TARGET_CLEARANCE
 
 const getElementFalloffDistance = (element: ForceElement) =>
   element.kind === "via"
     ? VIA_SEGMENT_FALLOFF_DISTANCE
-    : POINT_SEGMENT_FALLOFF_DISTANCE
+    : Math.max(
+        POINT_SEGMENT_FALLOFF_DISTANCE,
+        (element.targetClearance ?? POINT_SEGMENT_TARGET_CLEARANCE) + 0.25,
+      )
 
 const getBorderTargetClearance = (element: ForceElement) =>
   element.kind === "via" ? VIA_BORDER_TARGET_CLEARANCE : TARGET_CLEARANCE
@@ -432,7 +436,10 @@ const buildMutableRoutes = (routes: HighDensityIntraNodeRoute[]) => {
   }
 }
 
-const buildForceElements = (routes: MutableRoute[]): ForceElement[] => {
+const buildForceElements = (
+  sample: Sample,
+  routes: MutableRoute[],
+): ForceElement[] => {
   const elements: ForceElement[] = []
 
   for (let routeIndex = 0; routeIndex < routes.length; routeIndex += 1) {
@@ -473,6 +480,29 @@ const buildForceElements = (routes: MutableRoute[]): ForceElement[] => {
         fixed: node.fixed,
       })
     }
+  }
+
+  for (const portPoint of sample.nodeWithPortPoints.portPoints) {
+    elements.push({
+      kind: "point",
+      routeIndex: -1,
+      rootConnectionName:
+        portPoint.rootConnectionName ?? portPoint.connectionName,
+      node: {
+        x: portPoint.x,
+        y: portPoint.y,
+        originalX: portPoint.x,
+        originalY: portPoint.y,
+        boundaryPadding: 0,
+        pointIndexes: [],
+        fixed: true,
+        forceIndex: -1,
+      },
+      targetClearance:
+        portPoint.keepoutRadius ?? POINT_SEGMENT_TARGET_CLEARANCE,
+      z: portPoint.z,
+      fixed: true,
+    })
   }
 
   return elements
@@ -939,7 +969,7 @@ export const runForceDirectedImprovement = (
 ): ForceImproveResult => {
   const bounds = getSampleBounds(sample)
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
-  const forceElements = buildForceElements(mutableRoutes)
+  const forceElements = buildForceElements(sample, mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)

@@ -24,6 +24,7 @@ const summarizeIssueKinds = (issues: DrcIssue[]) => {
   const issueKinds: Record<DrcIssue["kind"], number> = {
     "invalid-route": 0,
     "out-of-bounds": 0,
+    "trace-port-point": 0,
     "trace-trace": 0,
     "via-trace": 0,
     "via-via": 0,
@@ -96,6 +97,7 @@ if (selectedFileNames.length === 0) {
 const issueKindCounts: Record<DrcIssue["kind"], number> = {
   "invalid-route": 0,
   "out-of-bounds": 0,
+  "trace-port-point": 0,
   "trace-trace": 0,
   "via-trace": 0,
   "via-via": 0,

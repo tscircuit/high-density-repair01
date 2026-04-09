@@ -258,27 +258,44 @@ const getEndpointPorts = (
   portPointsByConnection: Map<string, PortPoint[]>,
 ) => {
   const routePorts = portPointsByConnection.get(route.connectionName)
-  if (!routePorts || routePorts.length !== 2) {
+  if (!routePorts || routePorts.length < 2) {
     return null
   }
 
   const startPoint = route.route[0]
   const endPoint = route.route.at(-1)
-  const firstPort = routePorts[0]
-  const secondPort = routePorts[1]
-
-  if (!startPoint || !endPoint || !firstPort || !secondPort) {
+  if (!startPoint || !endPoint) {
     return null
   }
 
-  const directDistance =
-    getDistance(startPoint, firstPort) + getDistance(endPoint, secondPort)
-  const swappedDistance =
-    getDistance(startPoint, secondPort) + getDistance(endPoint, firstPort)
+  let bestPorts: { startPort: PortPoint; endPort: PortPoint } | null = null
+  let bestScore = Infinity
 
-  return directDistance <= swappedDistance
-    ? { startPort: firstPort, endPort: secondPort }
-    : { startPort: secondPort, endPort: firstPort }
+  for (let i = 0; i < routePorts.length; i += 1) {
+    const firstPort = routePorts[i]
+    if (!firstPort) continue
+
+    for (let j = i + 1; j < routePorts.length; j += 1) {
+      const secondPort = routePorts[j]
+      if (!secondPort) continue
+
+      const directDistance =
+        getDistance(startPoint, firstPort) + getDistance(endPoint, secondPort)
+      if (directDistance < bestScore) {
+        bestScore = directDistance
+        bestPorts = { startPort: firstPort, endPort: secondPort }
+      }
+
+      const swappedDistance =
+        getDistance(startPoint, secondPort) + getDistance(endPoint, firstPort)
+      if (swappedDistance < bestScore) {
+        bestScore = swappedDistance
+        bestPorts = { startPort: secondPort, endPort: firstPort }
+      }
+    }
+  }
+
+  return bestPorts
 }
 
 const ensureStartAttachmentLayer = (points: Point3D[], startPort: PortPoint) => {

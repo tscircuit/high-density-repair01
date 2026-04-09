@@ -30,6 +30,15 @@ type ViaRecord = {
   point: Point2D
 }
 
+type PortPointRecord = {
+  orderIndex: number
+  connectionName: string
+  netName: string
+  keepoutRadius: number
+  z: number
+  point: Point2D
+}
+
 export type DrcIssue =
   | {
       kind: "invalid-route"
@@ -76,6 +85,15 @@ export type DrcIssue =
       x: number
       y: number
     }
+  | {
+      kind: "trace-port-point"
+      routeIndex: number
+      connectionName: string
+      portPointConnectionName: string
+      segmentIndex: number
+      distance: number
+      clearance: number
+    }
 
 export type DrcCheckResult = {
   ok: boolean
@@ -83,6 +101,7 @@ export type DrcCheckResult = {
 }
 
 const POSITION_EPSILON = 1e-6
+const PORT_POINT_TRACE_CLEARANCE = 0.25
 
 const roundToTwoDecimals = (value: number) => Number(value.toFixed(2))
 
@@ -335,6 +354,49 @@ const getPortPointsByConnectionName = (
   return portPointsByConnection
 }
 
+const getBestRoutePortPair = (
+  route: NodeHdRoute,
+  routePortPoints: PortPoint[],
+): [PortPoint, PortPoint] | null => {
+  const startPoint = route.route[0]
+  const endPoint = route.route.at(-1)
+
+  if (!startPoint || !endPoint || routePortPoints.length < 2) {
+    return null
+  }
+
+  let bestPair: [PortPoint, PortPoint] | null = null
+  let bestScore = Infinity
+
+  for (let i = 0; i < routePortPoints.length; i += 1) {
+    const leftPort = routePortPoints[i]
+    if (!leftPort) continue
+
+    for (let j = i + 1; j < routePortPoints.length; j += 1) {
+      const rightPort = routePortPoints[j]
+      if (!rightPort) continue
+
+      const directScore =
+        getPointDistance(startPoint, leftPort) +
+        getPointDistance(endPoint, rightPort)
+      if (directScore < bestScore) {
+        bestScore = directScore
+        bestPair = [leftPort, rightPort]
+      }
+
+      const swappedScore =
+        getPointDistance(startPoint, rightPort) +
+        getPointDistance(endPoint, leftPort)
+      if (swappedScore < bestScore) {
+        bestScore = swappedScore
+        bestPair = [rightPort, leftPort]
+      }
+    }
+  }
+
+  return bestPair
+}
+
 const getSegmentBounds = (segment: RouteSegment) => ({
   minX: Math.min(segment.start.x, segment.end.x),
   maxX: Math.max(segment.start.x, segment.end.x),
@@ -368,6 +430,19 @@ const collectViaRecords = (routes: NodeHdRoute[]) => {
   return vias
 }
 
+const collectPortPointRecords = (nodeWithPortPoints: NodeWithPortPoints) =>
+  nodeWithPortPoints.portPoints.map((portPoint, index) => ({
+    orderIndex: index,
+    connectionName: portPoint.connectionName,
+    netName: getRouteNetName(portPoint),
+    keepoutRadius: portPoint.keepoutRadius ?? PORT_POINT_TRACE_CLEARANCE,
+    z: portPoint.z,
+    point: {
+      x: portPoint.x,
+      y: portPoint.y,
+    },
+  }))
+
 const collectBaseDrcData = (
   nodeWithPortPoints: NodeWithPortPoints,
   routes: NodeHdRoute[],
@@ -385,27 +460,27 @@ const collectBaseDrcData = (
     if (!route) continue
 
     const routePortPoints = portPointsByConnection.get(route.connectionName)
-    if (!routePortPoints || routePortPoints.length !== 2) {
+    if (!routePortPoints || routePortPoints.length < 2) {
       issues.push({
         kind: "invalid-route",
         routeIndex,
         connectionName: route.connectionName,
-        message: "Route must match exactly 2 sample port points.",
+        message: "Route must match at least 2 sample port points.",
       })
       continue
     }
 
-    const firstPortPoint = routePortPoints[0]
-    const secondPortPoint = routePortPoints[1]
-    if (!firstPortPoint || !secondPortPoint) {
+    const endpointPorts = getBestRoutePortPair(route, routePortPoints)
+    if (!endpointPorts) {
       issues.push({
         kind: "invalid-route",
         routeIndex,
         connectionName: route.connectionName,
-        message: "Route must match exactly 2 sample port points.",
+        message: "Route must match at least 2 sample port points.",
       })
       continue
     }
+    const [firstPortPoint, secondPortPoint] = endpointPorts
 
     if (
       !routeHasValidAttachedEndpoints(route, [firstPortPoint, secondPortPoint])
@@ -459,6 +534,7 @@ const collectBaseDrcData = (
     issues,
     segments,
     vias: collectViaRecords(routes),
+    portPoints: collectPortPointRecords(nodeWithPortPoints),
   }
 }
 
@@ -591,6 +667,44 @@ const appendViaViaIssuesBruteForce = (
         rightConnectionName: rightVia.connectionName,
         distance,
         clearance,
+      })
+    }
+  }
+}
+
+const appendTracePortPointIssuesBruteForce = (
+  issues: DrcIssue[],
+  segments: RouteSegment[],
+  portPoints: PortPointRecord[],
+) => {
+  for (const portPoint of portPoints) {
+    for (const segment of segments) {
+      if (segment.netName === portPoint.netName) {
+        continue
+      }
+
+      if (segment.start.z !== portPoint.z) {
+        continue
+      }
+
+      const distance = getDistanceFromPointToSegment(
+        portPoint.point,
+        segment.start,
+        segment.end,
+      )
+
+      if (distance + POSITION_EPSILON >= portPoint.keepoutRadius) {
+        continue
+      }
+
+      issues.push({
+        kind: "trace-port-point",
+        routeIndex: segment.routeIndex,
+        connectionName: segment.connectionName,
+        portPointConnectionName: portPoint.connectionName,
+        segmentIndex: segment.segmentIndex,
+        distance,
+        clearance: portPoint.keepoutRadius,
       })
     }
   }
@@ -898,13 +1012,14 @@ export const runDrcCheckBruteForce = (
   nodeWithPortPoints: NodeWithPortPoints,
   routes: NodeHdRoute[],
 ): DrcCheckResult => {
-  const { issues, segments, vias } = collectBaseDrcData(
+  const { issues, segments, vias, portPoints } = collectBaseDrcData(
     nodeWithPortPoints,
     routes,
   )
   appendTraceTraceIssuesBruteForce(issues, segments)
   appendViaTraceIssuesBruteForce(issues, vias, segments)
   appendViaViaIssuesBruteForce(issues, vias)
+  appendTracePortPointIssuesBruteForce(issues, segments, portPoints)
 
   return {
     ok: issues.length === 0,
@@ -916,13 +1031,14 @@ export const runDrcCheckWithFlatbush = (
   nodeWithPortPoints: NodeWithPortPoints,
   routes: NodeHdRoute[],
 ): DrcCheckResult => {
-  const { issues, segments, vias } = collectBaseDrcData(
+  const { issues, segments, vias, portPoints } = collectBaseDrcData(
     nodeWithPortPoints,
     routes,
   )
   appendTraceTraceIssuesWithFlatbush(issues, segments)
   appendViaTraceIssuesWithFlatbush(issues, vias, segments)
   appendViaViaIssuesWithFlatbush(issues, vias)
+  appendTracePortPointIssuesBruteForce(issues, segments, portPoints)
 
   return {
     ok: issues.length === 0,
