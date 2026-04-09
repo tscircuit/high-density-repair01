@@ -48,6 +48,7 @@ export interface NodeHdRoute {
 
 export interface PortPoint extends Point3D {
   connectionName: string
+  keepoutRadius?: number
   portPointId: string
   rootConnectionName: string
 }
