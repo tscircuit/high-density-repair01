@@ -15,7 +15,6 @@
     "analyze:dataset-hd08:drc": "bun scripts/analyze-dataset-hd08-drc.ts",
     "analyze:hd08v2:unresolved": "bun scripts/analyze-hd08v2-unresolved.ts",
     "build:hd08v2": "bun scripts/build-hd08v2.ts",
-    "benchmark:hd08v2:solver": "bun scripts/benchmark-hd08v2-solver.ts",
     "measure:hd08v2:repair": "bun scripts/measure-hd08v2-repair.ts",
     "render:hd08v2:repair": "bun scripts/render-hd08v2-repair.ts",
     "test": "bun test",

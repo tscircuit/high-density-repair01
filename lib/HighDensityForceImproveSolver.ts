@@ -93,60 +93,8 @@ export type ForceImproveResult = {
   stepsCompleted: number
 }
 
-export type ForceImproveProfilePhaseTimes = {
-  buildMutableRoutesMs: number
-  buildForceElementsMs: number
-  buildSegmentObstaclesMs: number
-  initialClampMs: number
-  viaViaRepulsionMs: number
-  elementSegmentRepulsionMs: number
-  borderForceMs: number
-  nodeMovementMs: number
-  stepClampMs: number
-  clearanceProjectionMs: number
-  finalClearanceProjectionMs: number
-  materializeRoutesMs: number
-}
-
-export type ForceImproveProfileCounts = {
-  viaElementCount: number
-  pointElementCount: number
-  viaViaPairChecks: number
-  viaViaDistanceChecks: number
-  viaViaInteractions: number
-  elementSegmentPairChecks: number
-  elementSegmentDistanceChecks: number
-  elementSegmentInteractions: number
-  projectionCalls: number
-  projectionPasses: number
-  projectionViaViaPairChecks: number
-  projectionViaViaDistanceChecks: number
-  projectionViaViaCorrections: number
-  projectionElementSegmentPairChecks: number
-  projectionElementSegmentDistanceChecks: number
-  projectionElementSegmentCorrections: number
-}
-
-export type ForceImproveProfileRun = {
-  label?: string
-  elapsedMs: number
-  routeCount: number
-  totalSteps: number
-  totalNodeCount: number
-  forceElementCount: number
-  segmentCount: number
-  phaseMs: ForceImproveProfilePhaseTimes
-  counts: ForceImproveProfileCounts
-}
-
-export type ForceImproveProfile = {
-  runs: ForceImproveProfileRun[]
-}
-
 export type ForceImproveOptions = {
   includeForceVectors?: boolean
-  profile?: ForceImproveProfile
-  profileLabel?: string
 }
 
 const TARGET_CLEARANCE = 0.2
@@ -197,40 +145,6 @@ const DEFAULT_TOTAL_STEPS_PER_NODE = 60
 const ROUNDING_PRECISION = 1_000
 const POSITION_EPSILON = 1e-6
 const BOUNDARY_INSET = 1 / ROUNDING_PRECISION
-
-const createEmptyProfilePhaseTimes = (): ForceImproveProfilePhaseTimes => ({
-  buildMutableRoutesMs: 0,
-  buildForceElementsMs: 0,
-  buildSegmentObstaclesMs: 0,
-  initialClampMs: 0,
-  viaViaRepulsionMs: 0,
-  elementSegmentRepulsionMs: 0,
-  borderForceMs: 0,
-  nodeMovementMs: 0,
-  stepClampMs: 0,
-  clearanceProjectionMs: 0,
-  finalClearanceProjectionMs: 0,
-  materializeRoutesMs: 0,
-})
-
-const createEmptyProfileCounts = (): ForceImproveProfileCounts => ({
-  viaElementCount: 0,
-  pointElementCount: 0,
-  viaViaPairChecks: 0,
-  viaViaDistanceChecks: 0,
-  viaViaInteractions: 0,
-  elementSegmentPairChecks: 0,
-  elementSegmentDistanceChecks: 0,
-  elementSegmentInteractions: 0,
-  projectionCalls: 0,
-  projectionPasses: 0,
-  projectionViaViaPairChecks: 0,
-  projectionViaViaDistanceChecks: 0,
-  projectionViaViaCorrections: 0,
-  projectionElementSegmentPairChecks: 0,
-  projectionElementSegmentDistanceChecks: 0,
-  projectionElementSegmentCorrections: 0,
-})
 
 const roundCoordinate = (value: number) =>
   Math.round(value * ROUNDING_PRECISION) / ROUNDING_PRECISION
@@ -897,13 +811,7 @@ const resolveClearanceConstraints = (
   nodeCorrections: Float64Array,
   passCount = CLEARANCE_PROJECTION_PASSES,
   maxCorrection = MAX_CLEARANCE_CORRECTION,
-  profileCounts?: ForceImproveProfileCounts,
 ) => {
-  if (profileCounts) {
-    profileCounts.projectionCalls += 1
-    profileCounts.projectionPasses += passCount
-  }
-
   for (let passIndex = 0; passIndex < passCount; passIndex += 1) {
     nodeCorrections.fill(0)
     const segmentSpatialIndex = buildSegmentSpatialIndex(segments)
@@ -920,9 +828,6 @@ const resolveClearanceConstraints = (
       ) {
         const rightElement = forceElements[rightIndex]
         if (!rightElement || rightElement.kind !== "via") continue
-        if (profileCounts) {
-          profileCounts.projectionViaViaPairChecks += 1
-        }
         if (
           leftElement.rootConnectionName === rightElement.rootConnectionName
         ) {
@@ -938,15 +843,9 @@ const resolveClearanceConstraints = (
         ) {
           continue
         }
-        if (profileCounts) {
-          profileCounts.projectionViaViaDistanceChecks += 1
-        }
         const distance = Math.hypot(separationX, separationY)
         const penetration = TARGET_CLEARANCE - distance
         if (penetration <= 0) continue
-        if (profileCounts) {
-          profileCounts.projectionViaViaCorrections += 1
-        }
 
         const fallbackSeed =
           passIndex * 1_009 + leftIndex * 97 + rightIndex * 13
@@ -1006,16 +905,10 @@ const resolveClearanceConstraints = (
         for (const candidateIndex of segmentSearch.candidateIndexes) {
           const segment = segmentSearch.segments[candidateIndex]
           if (!segment) continue
-          if (profileCounts) {
-            profileCounts.projectionElementSegmentPairChecks += 1
-          }
           if (element.rootConnectionName === segment.rootConnectionName) {
             continue
           }
           const { startNode, endNode } = segment
-          if (profileCounts) {
-            profileCounts.projectionElementSegmentDistanceChecks += 1
-          }
 
           const segmentX = endNode.x - startNode.x
           const segmentY = endNode.y - startNode.y
@@ -1036,9 +929,6 @@ const resolveClearanceConstraints = (
           const distance = Math.hypot(separationX, separationY)
           const penetration = targetClearance - distance
           if (penetration <= 0) continue
-          if (profileCounts) {
-            profileCounts.projectionElementSegmentCorrections += 1
-          }
 
           const fallbackSeed =
             passIndex * 1_009 + elementIndex * 97 + segment.obstacleIndex * 13
@@ -1133,54 +1023,13 @@ export const runForceDirectedImprovement = (
   totalSteps: number,
   options?: ForceImproveOptions,
 ): ForceImproveResult => {
-  const profileRun = options?.profile
-    ? {
-        label: options.profileLabel,
-        elapsedMs: 0,
-        routeCount: routes.length,
-        totalSteps,
-        totalNodeCount: 0,
-        forceElementCount: 0,
-        segmentCount: 0,
-        phaseMs: createEmptyProfilePhaseTimes(),
-        counts: createEmptyProfileCounts(),
-      }
-    : undefined
-  const profileStartedAt = profileRun ? performance.now() : 0
-  let phaseStartedAt = profileRun ? performance.now() : 0
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
-  if (profileRun) {
-    profileRun.phaseMs.buildMutableRoutesMs +=
-      performance.now() - phaseStartedAt
-    profileRun.totalNodeCount = totalNodeCount
-    phaseStartedAt = performance.now()
-  }
   const forceElements = buildForceElements(mutableRoutes)
-  if (profileRun) {
-    profileRun.phaseMs.buildForceElementsMs +=
-      performance.now() - phaseStartedAt
-    profileRun.forceElementCount = forceElements.length
-    profileRun.counts.viaElementCount = forceElements.filter(
-      (element) => element.kind === "via",
-    ).length
-    profileRun.counts.pointElementCount =
-      forceElements.length - profileRun.counts.viaElementCount
-    phaseStartedAt = performance.now()
-  }
   const segments = buildSegmentObstacles(mutableRoutes)
-  if (profileRun) {
-    profileRun.phaseMs.buildSegmentObstaclesMs +=
-      performance.now() - phaseStartedAt
-    profileRun.segmentCount = segments.length
-    phaseStartedAt = performance.now()
-  }
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
   clampMutableRoutesToBounds(mutableRoutes, bounds)
-  if (profileRun) {
-    profileRun.phaseMs.initialClampMs += performance.now() - phaseStartedAt
-  }
   let forceVectors: ForceVector[] = []
 
   for (let stepIndex = 0; stepIndex < totalSteps; stepIndex += 1) {
@@ -1195,9 +1044,6 @@ export const runForceDirectedImprovement = (
       : undefined
     nodeForces.fill(0)
 
-    if (profileRun) {
-      phaseStartedAt = performance.now()
-    }
     for (let leftIndex = 0; leftIndex < forceElements.length; leftIndex += 1) {
       const leftElement = forceElements[leftIndex]
       if (!leftElement || leftElement.kind !== "via") continue
@@ -1210,9 +1056,6 @@ export const runForceDirectedImprovement = (
       ) {
         const rightElement = forceElements[rightIndex]
         if (!rightElement || rightElement.kind !== "via") continue
-        if (profileRun) {
-          profileRun.counts.viaViaPairChecks += 1
-        }
         if (
           leftElement.rootConnectionName === rightElement.rootConnectionName
         ) {
@@ -1227,9 +1070,6 @@ export const runForceDirectedImprovement = (
           Math.abs(separationY) >= CLEARANCE_FALLOFF_DISTANCE
         ) {
           continue
-        }
-        if (profileRun) {
-          profileRun.counts.viaViaDistanceChecks += 1
         }
         const distance = Math.hypot(separationX, separationY)
         const fallbackSeed = leftIndex * 97 + rightIndex * 13
@@ -1255,9 +1095,6 @@ export const runForceDirectedImprovement = (
           ) * stepDecay
 
         if (magnitude <= 0) continue
-        if (profileRun) {
-          profileRun.counts.viaViaInteractions += 1
-        }
 
         const leftForceX = directionX * magnitude
         const leftForceY = directionY * magnitude
@@ -1278,10 +1115,6 @@ export const runForceDirectedImprovement = (
           rightIndex,
         )
       }
-    }
-    if (profileRun) {
-      profileRun.phaseMs.viaViaRepulsionMs += performance.now() - phaseStartedAt
-      phaseStartedAt = performance.now()
     }
 
     const segmentSpatialIndex = buildSegmentSpatialIndex(segments)
@@ -1306,16 +1139,10 @@ export const runForceDirectedImprovement = (
         for (const candidateIndex of segmentSearch.candidateIndexes) {
           const segment = segmentSearch.segments[candidateIndex]
           if (!segment) continue
-          if (profileRun) {
-            profileRun.counts.elementSegmentPairChecks += 1
-          }
           if (element.rootConnectionName === segment.rootConnectionName) {
             continue
           }
           const { startNode, endNode } = segment
-          if (profileRun) {
-            profileRun.counts.elementSegmentDistanceChecks += 1
-          }
 
           const segmentX = endNode.x - startNode.x
           const segmentY = endNode.y - startNode.y
@@ -1370,9 +1197,6 @@ export const runForceDirectedImprovement = (
             ) * stepDecay
 
           if (magnitude <= 0) continue
-          if (profileRun) {
-            profileRun.counts.elementSegmentInteractions += 1
-          }
 
           const pointForceX = directionX * magnitude
           const pointForceY = directionY * magnitude
@@ -1394,11 +1218,6 @@ export const runForceDirectedImprovement = (
           )
         }
       }
-    }
-    if (profileRun) {
-      profileRun.phaseMs.elementSegmentRepulsionMs +=
-        performance.now() - phaseStartedAt
-      phaseStartedAt = performance.now()
     }
 
     if (captureForceVectors) {
@@ -1442,10 +1261,6 @@ export const runForceDirectedImprovement = (
           dy: elementForces[forceOffset + 1] ?? 0,
         }
       }
-    }
-    if (profileRun) {
-      profileRun.phaseMs.borderForceMs += performance.now() - phaseStartedAt
-      phaseStartedAt = performance.now()
     }
 
     for (
@@ -1575,16 +1390,8 @@ export const runForceDirectedImprovement = (
         node.y += movementY + tighteningMoveY + orthogonalMoveY
       }
     }
-    if (profileRun) {
-      profileRun.phaseMs.nodeMovementMs += performance.now() - phaseStartedAt
-      phaseStartedAt = performance.now()
-    }
 
     clampMutableRoutesToBounds(mutableRoutes, bounds)
-    if (profileRun) {
-      profileRun.phaseMs.stepClampMs += performance.now() - phaseStartedAt
-      phaseStartedAt = performance.now()
-    }
     resolveClearanceConstraints(
       bounds,
       mutableRoutes,
@@ -1593,17 +1400,9 @@ export const runForceDirectedImprovement = (
       nodeCorrections,
       CLEARANCE_PROJECTION_PASSES,
       MAX_CLEARANCE_CORRECTION,
-      profileRun?.counts,
     )
-    if (profileRun) {
-      profileRun.phaseMs.clearanceProjectionMs +=
-        performance.now() - phaseStartedAt
-    }
   }
 
-  if (profileRun) {
-    phaseStartedAt = performance.now()
-  }
   resolveClearanceConstraints(
     bounds,
     mutableRoutes,
@@ -1612,20 +1411,9 @@ export const runForceDirectedImprovement = (
     nodeCorrections,
     FINAL_CLEARANCE_PROJECTION_PASSES,
     FINAL_MAX_CLEARANCE_CORRECTION,
-    profileRun?.counts,
   )
-  if (profileRun) {
-    profileRun.phaseMs.finalClearanceProjectionMs +=
-      performance.now() - phaseStartedAt
-    phaseStartedAt = performance.now()
-  }
 
   const improvedRoutes = materializeRoutes(mutableRoutes)
-  if (profileRun) {
-    profileRun.phaseMs.materializeRoutesMs += performance.now() - phaseStartedAt
-    profileRun.elapsedMs = performance.now() - profileStartedAt
-    options?.profile?.runs.push(profileRun)
-  }
 
   return {
     routes: improvedRoutes,
@@ -1641,7 +1429,6 @@ export class HighDensityForceImproveSolver extends BaseSolver {
   readonly colorMap: Record<string, string>
   readonly totalStepsPerNode: number
   readonly nodeAssignmentMargin: number
-  readonly profile?: ForceImproveProfile
 
   improvedRoutesByIndex = new Map<number, HighDensityRoute>()
   activeSampleIndex = 0
@@ -1653,13 +1440,11 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     totalStepsPerNode?: number
     nodeAssignmentMargin?: number
     colorMap?: Record<string, string>
-    profile?: ForceImproveProfile
   }) {
     super()
     this.originalHdRoutes = params.hdRoutes
     this.originalNodeWithPortPoints = params.nodeWithPortPoints
     this.colorMap = params.colorMap ?? {}
-    this.profile = params.profile
     this.totalStepsPerNode =
       params.totalStepsPerNode ?? DEFAULT_TOTAL_STEPS_PER_NODE
     this.nodeAssignmentMargin =
@@ -1727,11 +1512,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       bounds,
       inputRoutes,
       this.totalStepsPerNode,
-      {
-        includeForceVectors: true,
-        profile: this.profile,
-        profileLabel: sampleEntry.node.capacityMeshNodeId,
-      },
+      { includeForceVectors: true },
     )
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
