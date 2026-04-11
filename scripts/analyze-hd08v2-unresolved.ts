@@ -8,7 +8,7 @@ import type {
   Point2D,
   Point3D,
   PortPoint,
-} from "../lib/types"
+} from "../lib/types/types"
 
 const POSITION_EPSILON = 1e-6
 
@@ -132,7 +132,11 @@ const classifyInvalidRoute = (
     return `port-count-${routePortPoints.length}`
   }
 
-  for (let segmentIndex = 0; segmentIndex < route.route.length - 1; segmentIndex += 1) {
+  for (
+    let segmentIndex = 0;
+    segmentIndex < route.route.length - 1;
+    segmentIndex += 1
+  ) {
     const start = route.route[segmentIndex]
     const end = route.route[segmentIndex + 1]
     if (!start || !end) continue
@@ -202,7 +206,8 @@ const classifyInvalidRoute = (
   const swappedEndClass = classifyEndpoint(firstPortPoint, "end")
 
   const directScore =
-    Number(directStartClass === "attached") + Number(directEndClass === "attached")
+    Number(directStartClass === "attached") +
+    Number(directEndClass === "attached")
   const swappedScore =
     Number(swappedStartClass === "attached") +
     Number(swappedEndClass === "attached")
@@ -262,7 +267,9 @@ for (const [sampleIndex, [sampleName, sample]] of selectedEntries.entries()) {
   })
 
   if (progressInterval > 0 && (sampleIndex + 1) % progressInterval === 0) {
-    console.error(`Analyzed ${sampleIndex + 1}/${selectedEntries.length} samples...`)
+    console.error(
+      `Analyzed ${sampleIndex + 1}/${selectedEntries.length} samples...`,
+    )
   }
 
   if (result.repaired) {
@@ -379,10 +386,9 @@ if (values.json) {
   )
   console.log("")
   console.log("Top invalid-route categories:")
-  for (const [category, count] of Object.entries(summary.invalidRouteCategories).slice(
-    0,
-    topK,
-  )) {
+  for (const [category, count] of Object.entries(
+    summary.invalidRouteCategories,
+  ).slice(0, topK)) {
     console.log(`- ${category}: ${count}`)
   }
   console.log("")

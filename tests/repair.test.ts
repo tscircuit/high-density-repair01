@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test"
 import { runDrcCheck } from "../lib/drc-check"
-import { HighDensityRepair01 } from "../lib/HighDensityRepair01"
 import { repairSample } from "../lib/repair"
-import type { HighDensityRepair01Input } from "../lib/types"
+import type { HighDensityRepair01Input } from "../lib/types/types"
+import { HighDensityForceImproveSolver } from "lib/HighDensityForceImproveSolver"
 
 const createOutOfBoundsSample = (): HighDensityRepair01Input => ({
   adjacentObstacles: [],
@@ -211,22 +211,20 @@ test("repairSample can turn a simple out-of-bounds route into a DRC-clean route"
   expect(result.issueCountDelta).toBeGreaterThan(0)
 })
 
-test("HighDensityRepair01 returns the repaired sample as solver output", () => {
-  const solver = new HighDensityRepair01(createOutOfBoundsSample(), {
-    forceImprovementPasses: 40,
-    includeForceVectors: false,
+test("HighDensityForceImproveSolver returns improved routes as solver output", () => {
+  const sample = createOutOfBoundsSample()
+  const solver = new HighDensityForceImproveSolver({
+    nodeWithPortPoints: [sample.nodeWithPortPoints],
+    hdRoutes: sample.nodeHdRoutes,
+    totalStepsPerNode: 40,
   })
 
   solver.solve()
 
-  const output = solver.getOutput()
-  const repairResult = solver.getRepairResult()
+  const output = solver.getOutput() as HighDensityRepair01Input["nodeHdRoutes"]
 
-  expect(repairResult?.repaired).toBe(true)
   expect(output).toBeDefined()
-  expect(runDrcCheck(output.nodeWithPortPoints, output.nodeHdRoutes).ok).toBe(
-    true,
-  )
+  expect(runDrcCheck(sample.nodeWithPortPoints, output).ok).toBe(true)
 })
 
 test("repairSample can normalize routes that attach on the wrong port layer", () => {

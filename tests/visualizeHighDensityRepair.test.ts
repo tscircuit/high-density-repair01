@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
-import { HighDensityRepair01 } from "lib/HighDensityRepair01"
-import type { HighDensityRepair01Input } from "lib/types"
+import { visualizeHighDensityRepair } from "../lib/visualizeHighDensityRepair"
+import type { HighDensityRepair01Input } from "lib/types/types"
 
 const sample: HighDensityRepair01Input = {
   adjacentObstacles: [
@@ -69,8 +69,7 @@ const sample: HighDensityRepair01Input = {
 }
 
 test("visualizeHighDensityRepair renders node, routes, and obstacles", () => {
-  const solver = new HighDensityRepair01(sample)
-  const graphics = solver.visualize()
+  const graphics = visualizeHighDensityRepair(sample)
 
   expect(graphics.coordinateSystem).toBe("cartesian")
   expect(graphics.title).toBe("HighDensityRepair01")
@@ -85,7 +84,9 @@ test("visualizeHighDensityRepair renders node, routes, and obstacles", () => {
   )
   expect(
     graphics.points?.some((point) =>
-      point.label?.includes(sample.nodeWithPortPoints.portPoints[0]?.connectionName),
+      point.label?.includes(
+        sample.nodeWithPortPoints.portPoints[0]?.connectionName,
+      ),
     ),
   ).toBe(true)
   expect(

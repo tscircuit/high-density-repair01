@@ -1,6 +1,10 @@
-import type { HighDensityRepair01 } from "./HighDensityRepair01"
 import type { GraphicsObject } from "graphics-debug"
-import type { AdjacentObstacle, NodeHdRoute, Point2D, Sample } from "./types"
+import type {
+  AdjacentObstacle,
+  NodeHdRoute,
+  Point2D,
+  Sample,
+} from "./types/types"
 
 const ROUTE_HUE_SPAN = 300
 
@@ -187,10 +191,8 @@ const addRouteGraphics = (
 }
 
 export const visualizeHighDensityRepair = (
-  solver: HighDensityRepair01,
+  sample: Sample | null | undefined,
 ): GraphicsObject => {
-  const sample = solver.getVisualizedSample()
-
   const graphics: GraphicsObject = {
     points: [],
     lines: [],

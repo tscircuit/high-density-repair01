@@ -3,10 +3,10 @@ import {
   type ForceImproveOptions,
   type ForceImproveResult,
   runForceDirectedImprovement,
-} from "./force-improve"
-import { normalizeRoutesToPortAttachments } from "./normalize-routes"
-import { simplifyRoutes } from "./simplify"
-import type { HighDensityRepair01Input, NodeHdRoute } from "./types"
+} from "./HighDensityForceImproveSolver"
+import { normalizeRoutesToPortAttachments } from "./utils/normalize-routes"
+import { simplifyRoutes } from "./utils/simplify"
+import type { HighDensityRepair01Input, NodeHdRoute } from "./types/types"
 
 export const DEFAULT_REPAIR_TARGET_SEGMENTS = 10
 export const DEFAULT_FORCE_IMPROVEMENT_PASSES = 100
@@ -23,10 +23,14 @@ export type RepairSampleOptions = ForceImproveOptions & {
   targetSegments?: number
 }
 
+export type RepairForceImproveResult = Omit<ForceImproveResult, "routes"> & {
+  routes: NodeHdRoute[]
+}
+
 export type RepairSampleResult = {
   finalDrc: DrcCheckResult
   forceImprovementPasses: number
-  forceImproveResult: ForceImproveResult
+  forceImproveResult: RepairForceImproveResult
   improved: boolean
   issueCountDelta: number
   normalizedDrc: DrcCheckResult
@@ -50,6 +54,42 @@ const cloneRoutes = (routes: NodeHdRoute[]): NodeHdRoute[] =>
       connectedTo: [...viaRegion.connectedTo],
     })),
   }))
+
+const getNodeBounds = (sample: HighDensityRepair01Input) => {
+  const { center, width, height } = sample.nodeWithPortPoints
+
+  return {
+    minX: center.x - width / 2,
+    maxX: center.x + width / 2,
+    minY: center.y - height / 2,
+    maxY: center.y + height / 2,
+  }
+}
+
+const restoreNodeRouteMetadata = (
+  sourceRoutes: NodeHdRoute[],
+  improvedResult: ForceImproveResult,
+): RepairForceImproveResult => ({
+  ...improvedResult,
+  routes: improvedResult.routes.map((improvedRoute, routeIndex) => {
+    const sourceRoute = sourceRoutes[routeIndex]
+
+    return {
+      ...sourceRoute,
+      ...improvedRoute,
+      capacityMeshNodeId: sourceRoute?.capacityMeshNodeId ?? "",
+      rootConnectionName:
+        improvedRoute.rootConnectionName ??
+        sourceRoute?.rootConnectionName ??
+        improvedRoute.connectionName,
+      route: improvedRoute.route.map((point) => ({
+        ...point,
+        z: point.z as NodeHdRoute["route"][number]["z"],
+      })),
+      vias: improvedRoute.vias.map((via) => ({ ...via })),
+    }
+  }),
+})
 
 const isBetterDrcResult = (
   candidate: DrcCheckResult,
@@ -87,13 +127,16 @@ export const repairSample = (
     options.forceImprovementPasses ?? DEFAULT_FORCE_IMPROVEMENT_PASSES
   const forceImproveResult =
     forceImprovementPasses > 0
-      ? runForceDirectedImprovement(
-          sample,
+      ? restoreNodeRouteMetadata(
           simplifiedRoutes,
-          forceImprovementPasses,
-          {
-            includeForceVectors: options.includeForceVectors,
-          },
+          runForceDirectedImprovement(
+            getNodeBounds(sample),
+            simplifiedRoutes,
+            forceImprovementPasses,
+            {
+              includeForceVectors: options.includeForceVectors,
+            },
+          ),
         )
       : {
           routes: cloneRoutes(simplifiedRoutes),

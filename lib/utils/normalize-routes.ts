@@ -4,7 +4,7 @@ import type {
   Point2D,
   Point3D,
   PortPoint,
-} from "./types"
+} from "../types/types"
 
 const POSITION_EPSILON = 1e-6
 
@@ -137,7 +137,11 @@ const clampColocatedClusterToBounds = (
     point.y = clampedPosition.y
   }
 
-  for (let pointIndex = index + 1; pointIndex < points.length; pointIndex += 1) {
+  for (
+    let pointIndex = index + 1;
+    pointIndex < points.length;
+    pointIndex += 1
+  ) {
     const point = points[pointIndex]
     if (!point || !arePointsCoincident(point, anchorPosition)) {
       break
@@ -179,14 +183,20 @@ const getInteriorJogPoint = (
 
   if (Math.abs(deltaX) >= Math.abs(deltaY)) {
     return {
-      x: Math.max(bounds.minX, Math.min(bounds.maxX, origin.x + Math.sign(deltaX || 1) * step)),
+      x: Math.max(
+        bounds.minX,
+        Math.min(bounds.maxX, origin.x + Math.sign(deltaX || 1) * step),
+      ),
       y: origin.y,
     }
   }
 
   return {
     x: origin.x,
-    y: Math.max(bounds.minY, Math.min(bounds.maxY, origin.y + Math.sign(deltaY || 1) * step)),
+    y: Math.max(
+      bounds.minY,
+      Math.min(bounds.maxY, origin.y + Math.sign(deltaY || 1) * step),
+    ),
   }
 }
 
@@ -197,7 +207,11 @@ const createMinimalRouteBetweenPorts = (
   endPort: PortPoint,
 ) => {
   const bounds = getNodeBounds(nodeWithPortPoints)
-  const preferredStep = Math.max(route.traceThickness * 2, route.viaDiameter, 0.1)
+  const preferredStep = Math.max(
+    route.traceThickness * 2,
+    route.viaDiameter,
+    0.1,
+  )
 
   if (isSamePoint3D(startPort, endPort)) {
     return [copyPortPoint(startPort)]
@@ -223,7 +237,10 @@ const createMinimalRouteBetweenPorts = (
     y: (startPort.y + endPort.y) / 2,
   }
 
-  if (arePointsCoincident(viaPoint, startPort) || arePointsCoincident(viaPoint, endPort)) {
+  if (
+    arePointsCoincident(viaPoint, startPort) ||
+    arePointsCoincident(viaPoint, endPort)
+  ) {
     viaPoint = getInteriorJogPoint(startPort, bounds, preferredStep)
   }
 
@@ -281,7 +298,10 @@ const getEndpointPorts = (
     : { startPort: secondPort, endPort: firstPort }
 }
 
-const ensureStartAttachmentLayer = (points: Point3D[], startPort: PortPoint) => {
+const ensureStartAttachmentLayer = (
+  points: Point3D[],
+  startPort: PortPoint,
+) => {
   if (points.length === 0) {
     return
   }

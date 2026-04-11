@@ -4,7 +4,7 @@ import {
   runDrcCheckBruteForce,
   type DrcCheckResult,
 } from "../lib/drc-check"
-import type { NodeHdRoute, NodeWithPortPoints } from "../lib/types"
+import type { NodeHdRoute, NodeWithPortPoints } from "../lib/types/types"
 
 const createRoute = (
   connectionName: string,

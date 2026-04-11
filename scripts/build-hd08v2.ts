@@ -3,7 +3,7 @@ import { dirname, join } from "node:path"
 import { performance } from "node:perf_hooks"
 import { parseArgs } from "node:util"
 import { runDrcCheck } from "../lib/drc-check"
-import type { HighDensityRepair01Input } from "../lib/types"
+import type { HighDensityRepair01Input } from "../lib/types/types"
 
 const { values } = parseArgs({
   args: Bun.argv.slice(2),

@@ -1,13 +1,13 @@
 import { performance } from "node:perf_hooks"
 import { join } from "node:path"
 import { parseArgs } from "node:util"
-import { HighDensityRepair01 } from "../lib/HighDensityRepair01"
 import {
   DEFAULT_FORCE_IMPROVEMENT_PASSES,
   DEFAULT_REPAIR_TARGET_SEGMENTS,
+  repairSample,
   type RepairStage,
 } from "../lib/repair"
-import type { HighDensityRepair01Input } from "../lib/types"
+import type { HighDensityRepair01Input } from "../lib/types/types"
 
 type SampleMeasurement = {
   finalIssueCount: number
@@ -84,17 +84,11 @@ let totalFinalIssueCount = 0
 const startedAt = performance.now()
 
 for (const [sampleIndex, [sampleName, sample]] of selectedEntries.entries()) {
-  const solver = new HighDensityRepair01(sample, {
+  const repairResult = repairSample(sample, {
     forceImprovementPasses: resolvedForceImprovementPasses,
     includeForceVectors: false,
     targetSegments: resolvedTargetSegments,
   })
-  solver.solve()
-  const repairResult = solver.getRepairResult()
-
-  if (!repairResult) {
-    throw new Error(`Repair result missing for ${sampleName}.`)
-  }
 
   repairedCount += repairResult.repaired ? 1 : 0
   totalOriginalIssueCount += repairResult.originalDrc.issues.length

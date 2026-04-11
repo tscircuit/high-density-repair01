@@ -1,7 +1,7 @@
 {
-	"ignore": ["**/tscircuit-autorouter/**", "**/hd-cache.tscircuit.com/**"],
-	"plugins": ["react-cosmos-plugin-vite"],
-	"vite": {
-		"configPath": "./vite.config.ts"
-	}
+  "ignore": ["**/tscircuit-autorouter/**", "**/hd-cache.tscircuit.com/**"],
+  "plugins": ["react-cosmos-plugin-vite"],
+  "vite": {
+    "configPath": "./vite.config.ts"
+  }
 }

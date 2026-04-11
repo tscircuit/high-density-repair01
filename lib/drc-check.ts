@@ -1,5 +1,5 @@
 import Flatbush from "flatbush"
-import type { NodeHdRoute, NodeWithPortPoints, PortPoint } from "./types"
+import type { NodeHdRoute, NodeWithPortPoints, PortPoint } from "./types/types"
 
 type Point2D = {
   x: number

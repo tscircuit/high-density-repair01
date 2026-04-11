@@ -6,15 +6,15 @@ import {
   stackGraphicsHorizontally,
   stackGraphicsVertically,
 } from "graphics-debug"
-import { HighDensityRepair01 } from "../lib/HighDensityRepair01"
 import { runDrcCheck } from "../lib/drc-check"
 import {
   DEFAULT_FORCE_IMPROVEMENT_PASSES,
   DEFAULT_REPAIR_TARGET_SEGMENTS,
   repairSample,
 } from "../lib/repair"
-import { simplifyRoutes } from "../lib/simplify"
-import type { HighDensityRepair01Input, NodeHdRoute } from "../lib/types"
+import { simplifyRoutes } from "../lib/utils/simplify"
+import { visualizeHighDensityRepair } from "../lib/visualizeHighDensityRepair"
+import type { HighDensityRepair01Input, NodeHdRoute } from "../lib/types/types"
 
 type StageSample = {
   label: string
@@ -76,7 +76,7 @@ const cloneRoutes = (routes: NodeHdRoute[]) =>
   }))
 
 const renderStage = ({ label, sample }: StageSample) => {
-  const graphics = new HighDensityRepair01(sample).visualize()
+  const graphics = visualizeHighDensityRepair(sample)
   const issueSummary = summarizeIssues(sample)
   return {
     graphics,
@@ -127,7 +127,9 @@ const failingSamples = (await Bun.file(assetPath).json()) as Record<
 const selectedKeys =
   values.sample && values.sample.length > 0
     ? values.sample
-    : Object.keys(failingSamples).sort().slice(0, limit ?? 4)
+    : Object.keys(failingSamples)
+        .sort()
+        .slice(0, limit ?? 4)
 
 if (selectedKeys.length === 0) {
   throw new Error("No samples selected.")
@@ -144,7 +146,10 @@ for (const sampleKey of selectedKeys) {
 
   const simplifiedSample: HighDensityRepair01Input = {
     ...sample,
-    nodeHdRoutes: simplifyRoutes(cloneRoutes(sample.nodeHdRoutes), targetSegments),
+    nodeHdRoutes: simplifyRoutes(
+      cloneRoutes(sample.nodeHdRoutes),
+      targetSegments,
+    ),
   }
   const repairResult = repairSample(sample, {
     forceImprovementPasses,

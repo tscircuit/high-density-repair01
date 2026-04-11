@@ -1,4 +1,4 @@
-import type { HighDensityIntraNodeRoute } from "./types"
+import type { HighDensityIntraNodeRoute } from "../types/types"
 
 type RoutePoint = HighDensityIntraNodeRoute["route"][number]
 type ViaPoint = HighDensityIntraNodeRoute["vias"][number]
@@ -324,9 +324,8 @@ export const simplifyRoute = (
     simplifiedPoints[0] = copyPointExact(firstOriginalPoint)
   }
   if (lastOriginalPoint && simplifiedPoints.length > 1) {
-    simplifiedPoints[simplifiedPoints.length - 1] = copyPointExact(
-      lastOriginalPoint,
-    )
+    simplifiedPoints[simplifiedPoints.length - 1] =
+      copyPointExact(lastOriginalPoint)
   }
 
   return {

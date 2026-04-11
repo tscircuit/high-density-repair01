@@ -1,4 +1,10 @@
-import type { HighDensityIntraNodeRoute, Sample } from "./types"
+import type { GraphicsObject } from "graphics-debug"
+import type {
+  HighDensityRoute,
+  NodeWithPortPoints,
+} from "./types/high-density-types"
+import { safeTransparentize } from "./utils/colors"
+import { BaseSolver } from "./BaseSolver"
 
 type Vector = {
   x: number
@@ -24,7 +30,7 @@ type MutableNode = {
 }
 
 type MutableRoute = {
-  route: HighDensityIntraNodeRoute
+  route: HighDensityRoute
   rootConnectionName: string
   nodes: MutableNode[]
   pointNodeIndexes: Int32Array
@@ -55,6 +61,11 @@ type SegmentObstacle = {
   endNode: MutableNode
 }
 
+type ForceImproveSampleEntry = {
+  node: NodeWithPortPoints
+  routeIndexes: number[]
+}
+
 export type ForceVector = {
   kind: "point" | "via"
   routeIndex: number
@@ -66,7 +77,7 @@ export type ForceVector = {
 }
 
 export type ForceImproveResult = {
-  routes: HighDensityIntraNodeRoute[]
+  routes: HighDensityRoute[]
   forceVectors: ForceVector[]
   stepsCompleted: number
 }
@@ -75,60 +86,57 @@ export type ForceImproveOptions = {
   includeForceVectors?: boolean
 }
 
-export const TARGET_CLEARANCE = 0.2
-export const CLEARANCE_FALLOFF_DISTANCE = 0.4
-export const VIA_DIAMETER = 0.3
-export const VIA_RADIUS = VIA_DIAMETER / 2
-export const POINT_SEGMENT_TARGET_CLEARANCE = 0.25
-export const POINT_SEGMENT_FALLOFF_DISTANCE = 0.5
-export const VIA_SEGMENT_TARGET_CLEARANCE = VIA_RADIUS + 0.25
-export const VIA_SEGMENT_FALLOFF_DISTANCE = 0.5
-export const VIA_BORDER_EXTRA_CLEARANCE = 0.15
-export const VIA_BORDER_TARGET_CLEARANCE =
+const TARGET_CLEARANCE = 0.2
+const CLEARANCE_FALLOFF_DISTANCE = 0.4
+const VIA_DIAMETER = 0.3
+const VIA_RADIUS = VIA_DIAMETER / 2
+const POINT_SEGMENT_TARGET_CLEARANCE = 0.25
+const POINT_SEGMENT_FALLOFF_DISTANCE = 0.5
+const VIA_SEGMENT_TARGET_CLEARANCE = VIA_RADIUS + 0.25
+const VIA_SEGMENT_FALLOFF_DISTANCE = 0.5
+const VIA_BORDER_EXTRA_CLEARANCE = 0.15
+const VIA_BORDER_TARGET_CLEARANCE =
   VIA_SEGMENT_TARGET_CLEARANCE + VIA_BORDER_EXTRA_CLEARANCE + 0.1
-export const VIA_BORDER_FALLOFF_DISTANCE = VIA_BORDER_TARGET_CLEARANCE + 0.05
-export const VIA_VIA_REPULSION_STRENGTH = 0.034
-export const VIA_SEGMENT_REPULSION_STRENGTH = 0.18
-export const POINT_SEGMENT_REPULSION_STRENGTH = 0.06
-export const REPULSION_TAIL_RATIO = 0.08
-export const REPULSION_FALLOFF = 18
-export const INTERSECTION_FORCE_BOOST = 3.5
-export const VIA_SEGMENT_INTERSECTION_FORCE_BOOST = 12
-export const BORDER_REPULSION_STRENGTH = 0.03
-export const BORDER_REPULSION_TAIL_RATIO = 0.08
-export const BORDER_REPULSION_FALLOFF = 20
-export const VIA_BORDER_REPULSION_TAIL_RATIO = 0.015
-export const VIA_BORDER_REPULSION_FALLOFF = 80
-export const SHAPE_RESTORE_STRENGTH = 0.14
-export const PATH_SMOOTHING_STRENGTH = 0.22
-export const TIGHTENING_FORCE_STRENGTH = 0.55
-export const MAX_TIGHTENING_MOVE_PER_STEP = 0.02
-export const END_SEGMENT_ORTHOGONAL_FORCE_STRENGTH = 1.1
-export const MAX_END_SEGMENT_ORTHOGONAL_MOVE_PER_STEP = 0.06
-export const CLEARANCE_PROJECTION_RATIO = 0.9
-export const POINT_SEGMENT_CLEARANCE_PROJECTION_RATIO = 1.05
-export const VIA_SEGMENT_CLEARANCE_PROJECTION_RATIO = 1.35
-export const CLEARANCE_PROJECTION_PASSES = 3
-export const MAX_CLEARANCE_CORRECTION = 0.02
-export const VIA_SEGMENT_MAX_CLEARANCE_CORRECTION_MULTIPLIER = 3
-export const FINAL_CLEARANCE_PROJECTION_PASSES = 8
-export const FINAL_MAX_CLEARANCE_CORRECTION = 0.03
-export const STEP_SIZE = 0.85
-export const MAX_NODE_MOVE_PER_STEP = 0.012
-export const MIN_STEP_DECAY = 0.25
-export const FORCE_VECTOR_DISPLAY_MULTIPLIER = 5
+const VIA_BORDER_FALLOFF_DISTANCE = VIA_BORDER_TARGET_CLEARANCE + 0.05
+const VIA_VIA_REPULSION_STRENGTH = 0.034
+const VIA_SEGMENT_REPULSION_STRENGTH = 0.18
+const POINT_SEGMENT_REPULSION_STRENGTH = 0.06
+const REPULSION_TAIL_RATIO = 0.08
+const REPULSION_FALLOFF = 18
+const INTERSECTION_FORCE_BOOST = 3.5
+const VIA_SEGMENT_INTERSECTION_FORCE_BOOST = 12
+const BORDER_REPULSION_STRENGTH = 0.03
+const BORDER_REPULSION_TAIL_RATIO = 0.08
+const BORDER_REPULSION_FALLOFF = 20
+const VIA_BORDER_REPULSION_TAIL_RATIO = 0.015
+const VIA_BORDER_REPULSION_FALLOFF = 80
+const SHAPE_RESTORE_STRENGTH = 0.14
+const PATH_SMOOTHING_STRENGTH = 0.22
+const TIGHTENING_FORCE_STRENGTH = 0.55
+const MAX_TIGHTENING_MOVE_PER_STEP = 0.02
+const END_SEGMENT_ORTHOGONAL_FORCE_STRENGTH = 1.1
+const MAX_END_SEGMENT_ORTHOGONAL_MOVE_PER_STEP = 0.06
+const CLEARANCE_PROJECTION_RATIO = 0.9
+const POINT_SEGMENT_CLEARANCE_PROJECTION_RATIO = 1.05
+const VIA_SEGMENT_CLEARANCE_PROJECTION_RATIO = 1.35
+const CLEARANCE_PROJECTION_PASSES = 3
+const MAX_CLEARANCE_CORRECTION = 0.02
+const VIA_SEGMENT_MAX_CLEARANCE_CORRECTION_MULTIPLIER = 3
+const FINAL_CLEARANCE_PROJECTION_PASSES = 8
+const FINAL_MAX_CLEARANCE_CORRECTION = 0.03
+const STEP_SIZE = 0.85
+const MAX_NODE_MOVE_PER_STEP = 0.012
+const MIN_STEP_DECAY = 0.25
+const FORCE_VECTOR_DISPLAY_MULTIPLIER = 5
+const DEFAULT_ASSIGNMENT_MARGIN = 0.2
+const DEFAULT_TOTAL_STEPS_PER_NODE = 60
 
-const ROUNDING_PRECISION = 10_000
+const ROUNDING_PRECISION = 1_000
 const POSITION_EPSILON = 1e-6
 const BOUNDARY_INSET = 1 / ROUNDING_PRECISION
 
 const roundCoordinate = (value: number) =>
   Math.round(value * ROUNDING_PRECISION) / ROUNDING_PRECISION
-
-const addVector = (left: Vector, right: Vector): Vector => ({
-  x: left.x + right.x,
-  y: left.y + right.y,
-})
 
 const subtractVector = (left: Vector, right: Vector): Vector => ({
   x: left.x - right.x,
@@ -169,28 +177,6 @@ const isOutsideExpandedBounds = (
 
 const getVectorMagnitude = (vector: Vector) => Math.hypot(vector.x, vector.y)
 
-const normalizeVector = (vector: Vector, fallbackSeed: number): Vector => {
-  const magnitude = getVectorMagnitude(vector)
-  if (magnitude > POSITION_EPSILON) {
-    return scaleVector(vector, 1 / magnitude)
-  }
-
-  const angle = fallbackSeed * 1.618_033_988_75
-  return {
-    x: Math.cos(angle),
-    y: Math.sin(angle),
-  }
-}
-
-const getPerpendicularVector = (
-  vector: Vector,
-  fallbackSeed: number,
-): Vector => {
-  const normal = normalizeVector({ x: -vector.y, y: vector.x }, fallbackSeed)
-
-  return fallbackSeed % 2 === 0 ? normal : scaleVector(normal, -1)
-}
-
 const clampVectorMagnitude = (vector: Vector, maxMagnitude: number) => {
   const magnitude = getVectorMagnitude(vector)
   if (magnitude <= maxMagnitude || magnitude <= POSITION_EPSILON) {
@@ -198,6 +184,46 @@ const clampVectorMagnitude = (vector: Vector, maxMagnitude: number) => {
   }
 
   return scaleVector(vector, maxMagnitude / magnitude)
+}
+
+const getNodeBounds = (node: NodeWithPortPoints, margin = 0): Bounds => ({
+  minX: node.center.x - node.width / 2 - margin,
+  maxX: node.center.x + node.width / 2 + margin,
+  minY: node.center.y - node.height / 2 - margin,
+  maxY: node.center.y + node.height / 2 + margin,
+})
+
+const isPointInsideNode = (
+  point: { x: number; y: number },
+  node: NodeWithPortPoints,
+  margin = 0,
+) => {
+  const bounds = getNodeBounds(node, margin)
+  return (
+    point.x >= bounds.minX &&
+    point.x <= bounds.maxX &&
+    point.y >= bounds.minY &&
+    point.y <= bounds.maxY
+  )
+}
+
+const findNodeIndexForRoute = (
+  route: HighDensityRoute,
+  nodes: NodeWithPortPoints[],
+  margin: number,
+): number => {
+  const routePoints = route.route.map(({ x, y }) => ({ x, y }))
+  const viaPoints = route.vias.map(({ x, y }) => ({ x, y }))
+  const points = [...routePoints, ...viaPoints]
+
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
+    if (points.every((point) => isPointInsideNode(point, node, margin))) {
+      return i
+    }
+  }
+
+  return -1
 }
 
 const getEndpointOrthogonalLockAxis = (
@@ -290,17 +316,6 @@ const getClearanceForceMagnitude = (
   return tailMagnitude < 1e-5 ? 0 : tailMagnitude
 }
 
-const getSampleBounds = (sample: Sample): Bounds => ({
-  minX:
-    sample.nodeWithPortPoints.center.x - sample.nodeWithPortPoints.width / 2,
-  maxX:
-    sample.nodeWithPortPoints.center.x + sample.nodeWithPortPoints.width / 2,
-  minY:
-    sample.nodeWithPortPoints.center.y - sample.nodeWithPortPoints.height / 2,
-  maxY:
-    sample.nodeWithPortPoints.center.y + sample.nodeWithPortPoints.height / 2,
-})
-
 const clampNodeToBounds = (node: MutableNode, bounds: Bounds) => {
   const inset = node.boundaryPadding > 0 ? BOUNDARY_INSET : 0
   const minX = bounds.minX + node.boundaryPadding + inset
@@ -374,7 +389,7 @@ const getMaxCorrectionForElement = (
     ? maxCorrection * VIA_SEGMENT_MAX_CLEARANCE_CORRECTION_MULTIPLIER
     : maxCorrection
 
-const buildMutableRoutes = (routes: HighDensityIntraNodeRoute[]) => {
+const buildMutableRoutes = (routes: HighDensityRoute[]) => {
   let nextForceIndex = 0
   const mutableRoutes: MutableRoute[] = routes.map((route) => {
     const nodes: MutableNode[] = []
@@ -646,8 +661,8 @@ const getBorderForce = (
   }
 }
 
-const deriveVias = (route: HighDensityIntraNodeRoute) => {
-  const vias: HighDensityIntraNodeRoute["vias"] = []
+const deriveVias = (route: HighDensityRoute) => {
+  const vias: HighDensityRoute["vias"] = []
 
   for (let index = 0; index < route.route.length - 1; index += 1) {
     const current = route.route[index]
@@ -686,13 +701,13 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            x: ownerNode.fixed ? point.x : roundCoordinate(ownerNode.x),
-            y: ownerNode.fixed ? point.y : roundCoordinate(ownerNode.y),
+            x: roundCoordinate(ownerNode.x),
+            y: roundCoordinate(ownerNode.y),
           }
         : point
     })
 
-    const nextRoute: HighDensityIntraNodeRoute = {
+    const nextRoute: HighDensityRoute = {
       ...route,
       route: nextRoutePoints,
       vias: [],
@@ -899,7 +914,6 @@ const resolveClearanceConstraints = (
     ) {
       const mutableRoute = mutableRoutes[routeIndex]
       if (!mutableRoute) continue
-      const lastMovableNodeIndex = mutableRoute.nodes.length - 2
 
       for (
         let nodeIndex = 0;
@@ -932,12 +946,11 @@ const resolveClearanceConstraints = (
 }
 
 export const runForceDirectedImprovement = (
-  sample: Sample,
-  routes: HighDensityIntraNodeRoute[],
+  bounds: Bounds,
+  routes: HighDensityRoute[],
   totalSteps: number,
   options?: ForceImproveOptions,
 ): ForceImproveResult => {
-  const bounds = getSampleBounds(sample)
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
@@ -1345,4 +1358,209 @@ export const runForceDirectedImprovement = (
     forceVectors,
     stepsCompleted: totalSteps,
   }
+}
+
+export class HighDensityForceImproveSolver extends BaseSolver {
+  readonly sampleEntries: ForceImproveSampleEntry[]
+  readonly originalHdRoutes: HighDensityRoute[]
+  readonly originalNodeWithPortPoints: NodeWithPortPoints[]
+  readonly colorMap: Record<string, string>
+  readonly totalStepsPerNode: number
+  readonly nodeAssignmentMargin: number
+
+  improvedRoutesByIndex = new Map<number, HighDensityRoute>()
+  activeSampleIndex = 0
+  latestVisualization: GraphicsObject = {}
+
+  constructor(params: {
+    nodeWithPortPoints: NodeWithPortPoints[]
+    hdRoutes: HighDensityRoute[]
+    totalStepsPerNode?: number
+    nodeAssignmentMargin?: number
+    colorMap?: Record<string, string>
+  }) {
+    super()
+    this.originalHdRoutes = params.hdRoutes
+    this.originalNodeWithPortPoints = params.nodeWithPortPoints
+    this.colorMap = params.colorMap ?? {}
+    this.totalStepsPerNode =
+      params.totalStepsPerNode ?? DEFAULT_TOTAL_STEPS_PER_NODE
+    this.nodeAssignmentMargin =
+      params.nodeAssignmentMargin ?? DEFAULT_ASSIGNMENT_MARGIN
+
+    const routeIndexesByNode = new Map<number, number[]>()
+    for (let i = 0; i < params.hdRoutes.length; i++) {
+      const nodeIndex = findNodeIndexForRoute(
+        params.hdRoutes[i],
+        params.nodeWithPortPoints,
+        this.nodeAssignmentMargin,
+      )
+      if (nodeIndex === -1) continue
+      const routeIndexes = routeIndexesByNode.get(nodeIndex) ?? []
+      routeIndexes.push(i)
+      routeIndexesByNode.set(nodeIndex, routeIndexes)
+    }
+
+    this.sampleEntries = Array.from(routeIndexesByNode.entries()).map(
+      ([nodeIndex, routeIndexes]) => ({
+        node: params.nodeWithPortPoints[nodeIndex],
+        routeIndexes,
+      }),
+    )
+
+    this.MAX_ITERATIONS = Math.max(this.sampleEntries.length * 10, 1_000)
+    this.stats = {
+      sampleCount: this.sampleEntries.length,
+      improvedNodeCount: 0,
+      improvedRouteCount: 0,
+      totalStepsPerNode: this.totalStepsPerNode,
+    }
+  }
+
+  override getSolverName(): string {
+    return "HighDensityForceImproveSolver"
+  }
+
+  override getConstructorParams() {
+    return [
+      {
+        nodeWithPortPoints: this.originalNodeWithPortPoints,
+        hdRoutes: this.originalHdRoutes,
+        totalStepsPerNode: this.totalStepsPerNode,
+        nodeAssignmentMargin: this.nodeAssignmentMargin,
+        colorMap: this.colorMap,
+      },
+    ] as const
+  }
+
+  override _step() {
+    const sampleEntry = this.sampleEntries[this.activeSampleIndex]
+
+    if (!sampleEntry) {
+      this.solved = true
+      return
+    }
+
+    const bounds = getNodeBounds(sampleEntry.node)
+    const inputRoutes = sampleEntry.routeIndexes.map(
+      (routeIndex) => this.originalHdRoutes[routeIndex],
+    )
+    const result = runForceDirectedImprovement(
+      bounds,
+      inputRoutes,
+      this.totalStepsPerNode,
+      { includeForceVectors: true },
+    )
+
+    for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
+      this.improvedRoutesByIndex.set(
+        sampleEntry.routeIndexes[i],
+        result.routes[i],
+      )
+    }
+
+    this.latestVisualization = createForceImproveVisualization({
+      node: sampleEntry.node,
+      routes: result.routes,
+      forceVectors: result.forceVectors,
+      colorMap: this.colorMap,
+    })
+
+    this.activeSampleIndex += 1
+    this.stats = {
+      sampleCount: this.sampleEntries.length,
+      improvedNodeCount: this.activeSampleIndex,
+      improvedRouteCount: this.improvedRoutesByIndex.size,
+      totalStepsPerNode: this.totalStepsPerNode,
+    }
+
+    if (this.activeSampleIndex >= this.sampleEntries.length) {
+      this.solved = true
+    }
+  }
+
+  getOutput(): HighDensityRoute[] {
+    return this.originalHdRoutes.map(
+      (route, index) => this.improvedRoutesByIndex.get(index) ?? route,
+    )
+  }
+
+  override visualize(): GraphicsObject {
+    if (!this.solved) {
+      return this.latestVisualization
+    }
+
+    return createForceImproveVisualization({
+      routes: this.getOutput(),
+      colorMap: this.colorMap,
+    })
+  }
+}
+
+const createForceImproveVisualization = (params: {
+  node?: NodeWithPortPoints
+  routes: HighDensityRoute[]
+  forceVectors?: ForceVector[]
+  colorMap?: Record<string, string>
+}): GraphicsObject => {
+  const lines: NonNullable<GraphicsObject["lines"]> = []
+  const circles: NonNullable<GraphicsObject["circles"]> = []
+  const rects: NonNullable<GraphicsObject["rects"]> = []
+
+  if (params.node) {
+    rects.push({
+      center: params.node.center,
+      width: params.node.width,
+      height: params.node.height,
+      stroke: "rgba(14,165,233,0.7)",
+      fill: "rgba(14,165,233,0.04)",
+      label: params.node.capacityMeshNodeId,
+    })
+  }
+
+  for (const route of params.routes) {
+    const strokeColor = params.colorMap?.[route.connectionName] ?? "#0ea5e9"
+    for (let i = 0; i < route.route.length - 1; i++) {
+      const start = route.route[i]
+      const end = route.route[i + 1]
+      if (start.z !== end.z) continue
+      lines.push({
+        points: [
+          { x: start.x, y: start.y },
+          { x: end.x, y: end.y },
+        ],
+        strokeColor:
+          start.z === 0 ? strokeColor : safeTransparentize(strokeColor, 0.5),
+        strokeWidth: route.traceThickness,
+        layer: `z${start.z}`,
+        strokeDash: start.z !== 0 ? [0.1, 0.3] : undefined,
+      })
+    }
+
+    for (const via of route.vias) {
+      circles.push({
+        center: { x: via.x, y: via.y },
+        radius: route.viaDiameter / 2,
+        stroke: strokeColor,
+        fill: "rgba(14,165,233,0.12)",
+      })
+    }
+  }
+
+  for (const forceVector of params.forceVectors ?? []) {
+    lines.push({
+      points: [
+        { x: forceVector.x, y: forceVector.y },
+        {
+          x: forceVector.x + forceVector.dx * FORCE_VECTOR_DISPLAY_MULTIPLIER,
+          y: forceVector.y + forceVector.dy * FORCE_VECTOR_DISPLAY_MULTIPLIER,
+        },
+      ],
+      strokeColor: "rgba(244,63,94,0.85)",
+      strokeWidth: 0.06,
+      strokeDash: [0.08, 0.08],
+    })
+  }
+
+  return { lines, circles, rects }
 }

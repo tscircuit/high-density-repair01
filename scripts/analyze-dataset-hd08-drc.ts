@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { performance } from "node:perf_hooks"
 import { parseArgs } from "node:util"
 import { runDrcCheck, type DrcIssue } from "../lib/drc-check"
-import type { HighDensityRepair01Input } from "../lib/types"
+import type { HighDensityRepair01Input } from "../lib/types/types"
 
 type FailureSummary = {
   issueCount: number
