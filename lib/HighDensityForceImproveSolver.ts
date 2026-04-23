@@ -951,13 +951,14 @@ const collectProjectionSegments = (
   return segments
 }
 
-const applyProjectionViaMove = (
-  routes: HighDensityRoute[],
-  via: ProjectionViaNode,
-  dx: number,
-  dy: number,
-  node: NodeWithPortPoints,
-) => {
+const applyProjectionViaMove = (params: {
+  routes: HighDensityRoute[]
+  via: ProjectionViaNode
+  dx: number
+  dy: number
+  node: NodeWithPortPoints
+}) => {
+  const { routes, via, dx, dy, node } = params
   if (!via.movable) return false
 
   via.x += dx
@@ -976,11 +977,12 @@ const applyProjectionViaMove = (
   return true
 }
 
-const projectViaViaClearance = (
-  routes: HighDensityRoute[],
-  node: NodeWithPortPoints,
-  vias: ProjectionViaNode[],
-) => {
+const projectViaViaClearance = (params: {
+  routes: HighDensityRoute[]
+  node: NodeWithPortPoints
+  vias: ProjectionViaNode[]
+}) => {
+  const { routes, node, vias } = params
   let changed = false
 
   for (let leftIndex = 0; leftIndex < vias.length; leftIndex += 1) {
@@ -1018,33 +1020,34 @@ const projectViaViaClearance = (
 
       const move = Math.min(MAX_VIA_MOVE_PER_PASS, penetration / movableCount)
       changed =
-        applyProjectionViaMove(
+        applyProjectionViaMove({
           routes,
-          left,
-          directionX * move,
-          directionY * move,
+          via: left,
+          dx: directionX * move,
+          dy: directionY * move,
           node,
-        ) || changed
+        }) || changed
       changed =
-        applyProjectionViaMove(
+        applyProjectionViaMove({
           routes,
-          right,
-          -directionX * move,
-          -directionY * move,
+          via: right,
+          dx: -directionX * move,
+          dy: -directionY * move,
           node,
-        ) || changed
+        }) || changed
     }
   }
 
   return changed
 }
 
-const projectViaSegmentClearance = (
-  routes: HighDensityRoute[],
-  node: NodeWithPortPoints,
-  vias: ProjectionViaNode[],
-  segments: ProjectionSegment[],
-) => {
+const projectViaSegmentClearance = (params: {
+  routes: HighDensityRoute[]
+  node: NodeWithPortPoints
+  vias: ProjectionViaNode[]
+  segments: ProjectionSegment[]
+}) => {
+  const { routes, node, vias, segments } = params
   let changed = false
 
   for (let viaIndex = 0; viaIndex < vias.length; viaIndex += 1) {
@@ -1085,27 +1088,28 @@ const projectViaSegmentClearance = (
       const move = Math.min(MAX_VIA_MOVE_PER_PASS, penetration)
 
       changed =
-        applyProjectionViaMove(
+        applyProjectionViaMove({
           routes,
           via,
-          directionX * move,
-          directionY * move,
+          dx: directionX * move,
+          dy: directionY * move,
           node,
-        ) || changed
+        }) || changed
     }
   }
 
   return changed
 }
 
-const applyProjectionRoutePointMove = (
-  routes: HighDensityRoute[],
-  routeIndex: number,
-  pointIndex: number,
-  dx: number,
-  dy: number,
-  node: NodeWithPortPoints,
-) => {
+const applyProjectionRoutePointMove = (params: {
+  routes: HighDensityRoute[]
+  routeIndex: number
+  pointIndex: number
+  dx: number
+  dy: number
+  node: NodeWithPortPoints
+}) => {
+  const { routes, routeIndex, pointIndex, dx, dy, node } = params
   const route = routes[routeIndex]
   if (!route || pointIndex <= 0 || pointIndex >= route.route.length - 1) {
     return false
@@ -1132,41 +1136,43 @@ const applyProjectionRoutePointMove = (
   return changed
 }
 
-const distributeProjectionSegmentMove = (
-  routes: HighDensityRoute[],
-  segment: ProjectionSegment,
-  dx: number,
-  dy: number,
-  node: NodeWithPortPoints,
-  t: number,
-) => {
+const distributeProjectionSegmentMove = (params: {
+  routes: HighDensityRoute[]
+  segment: ProjectionSegment
+  dx: number
+  dy: number
+  node: NodeWithPortPoints
+  t: number
+}) => {
+  const { routes, segment, dx, dy, node, t } = params
   const startWeight = 1 - clampUnitInterval(t)
   const endWeight = clampUnitInterval(t)
-  const movedStart = applyProjectionRoutePointMove(
+  const movedStart = applyProjectionRoutePointMove({
     routes,
-    segment.routeIndex,
-    segment.startIndex,
-    dx * startWeight,
-    dy * startWeight,
+    routeIndex: segment.routeIndex,
+    pointIndex: segment.startIndex,
+    dx: dx * startWeight,
+    dy: dy * startWeight,
     node,
-  )
-  const movedEnd = applyProjectionRoutePointMove(
+  })
+  const movedEnd = applyProjectionRoutePointMove({
     routes,
-    segment.routeIndex,
-    segment.endIndex,
-    dx * endWeight,
-    dy * endWeight,
+    routeIndex: segment.routeIndex,
+    pointIndex: segment.endIndex,
+    dx: dx * endWeight,
+    dy: dy * endWeight,
     node,
-  )
+  })
 
   return movedStart || movedEnd
 }
 
-const projectSegmentSegmentClearance = (
-  routes: HighDensityRoute[],
-  node: NodeWithPortPoints,
-  segments: ProjectionSegment[],
-) => {
+const projectSegmentSegmentClearance = (params: {
+  routes: HighDensityRoute[]
+  node: NodeWithPortPoints
+  segments: ProjectionSegment[]
+}) => {
+  const { routes, node, segments } = params
   let changed = false
 
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
@@ -1220,23 +1226,23 @@ const projectSegmentSegmentClearance = (
       const move = Math.min(MAX_TRACE_MOVE_PER_PASS, penetration / 2)
 
       changed =
-        distributeProjectionSegmentMove(
+        distributeProjectionSegmentMove({
           routes,
-          left,
-          directionX * move,
-          directionY * move,
+          segment: left,
+          dx: directionX * move,
+          dy: directionY * move,
           node,
-          candidate.leftT,
-        ) || changed
+          t: candidate.leftT,
+        }) || changed
       changed =
-        distributeProjectionSegmentMove(
+        distributeProjectionSegmentMove({
           routes,
-          right,
-          -directionX * move,
-          -directionY * move,
+          segment: right,
+          dx: -directionX * move,
+          dy: -directionY * move,
           node,
-          candidate.rightT,
-        ) || changed
+          t: candidate.rightT,
+        }) || changed
     }
   }
 
@@ -1250,20 +1256,24 @@ const applyProjectionClearance = (
   for (let pass = 0; pass < VIA_PROJECTION_PASSES; pass += 1) {
     const vias = collectProjectionViaNodes(routes)
     const segments = collectProjectionSegments(routes)
-    const didAdjustViaVia = projectViaViaClearance(routes, node, vias)
-    const didAdjustViaSegment = projectViaSegmentClearance(
+    const viaToViaChanged = projectViaViaClearance({
+      routes,
+      node,
+      vias,
+    })
+    const viaToSegmentChanged = projectViaSegmentClearance({
       routes,
       node,
       vias,
       segments,
-    )
-    const didAdjustSegmentSegment = projectSegmentSegmentClearance(
+    })
+    const segmentToSegmentChanged = projectSegmentSegmentClearance({
       routes,
       node,
       segments,
-    )
+    })
 
-    if (!didAdjustViaVia && !didAdjustViaSegment && !didAdjustSegmentSegment) {
+    if (!viaToViaChanged && !viaToSegmentChanged && !segmentToSegmentChanged) {
       break
     }
   }
