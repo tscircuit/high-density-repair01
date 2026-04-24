@@ -11,3 +11,4 @@ bun.lockb
 tscircuit-autorouter
 hd-cache.tscircuit.com
 tmp
+benchmark-result.json
