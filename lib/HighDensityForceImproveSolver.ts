@@ -210,6 +210,55 @@ const clampUnitInterval = (value: number) => Math.max(0, Math.min(value, 1))
 const clampValue = (value: number, minValue: number, maxValue: number) =>
   Math.max(minValue, Math.min(value, maxValue))
 
+const arePointsCoincident = (
+  left: { x: number; y: number },
+  right: { x: number; y: number },
+) => areSameXY(left, right, POSITION_EPSILON)
+
+const areSameLayerCoincidentPoints = (
+  left: { x: number; y: number; z: number },
+  right: { x: number; y: number; z: number },
+) => left.z === right.z && arePointsCoincident(left, right)
+
+const isFixedTerminalRunPoint = (
+  routePoints: Array<{ x: number; y: number; z: number }>,
+  pointIndex: number,
+) => {
+  const point = routePoints[pointIndex]
+  if (!point) return false
+
+  const isSameTerminalPoint = (candidate?: {
+    x: number
+    y: number
+    z: number
+  }) =>
+    candidate !== undefined && areSameLayerCoincidentPoints(candidate, point)
+
+  let matchesStartRun = pointIndex > 0
+  for (let index = 0; index < pointIndex && matchesStartRun; index += 1) {
+    matchesStartRun = isSameTerminalPoint(routePoints[index])
+  }
+
+  let matchesEndRun = pointIndex < routePoints.length - 1
+  for (
+    let index = pointIndex + 1;
+    index < routePoints.length && matchesEndRun;
+    index += 1
+  ) {
+    matchesEndRun = isSameTerminalPoint(routePoints[index])
+  }
+
+  return matchesStartRun || matchesEndRun
+}
+
+const isFixedRoutePoint = (
+  routePoints: Array<{ x: number; y: number; z: number }>,
+  pointIndex: number,
+) =>
+  pointIndex === 0 ||
+  pointIndex === routePoints.length - 1 ||
+  isFixedTerminalRunPoint(routePoints, pointIndex)
+
 const isOutsideExpandedBounds = (
   pointX: number,
   pointY: number,
@@ -382,6 +431,7 @@ const clampMutableRoutesToBounds = (
 ) => {
   for (const mutableRoute of mutableRoutes) {
     for (const node of mutableRoute.nodes) {
+      if (node.fixed) continue
       clampNodeToBounds(node, bounds)
     }
   }
@@ -456,13 +506,14 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
       if (
         lastNode &&
         previousPoint &&
-        previousPoint.x === point.x &&
-        previousPoint.y === point.y
+        previousPoint.z !== point.z &&
+        arePointsCoincident(previousPoint, point)
       ) {
         lastNode.boundaryPadding = Math.max(
           lastNode.boundaryPadding,
           route.viaDiameter / 2,
         )
+        lastNode.fixed = lastNode.fixed || isFixedRoutePoint(route.route, index)
         lastNode.pointIndexes.push(index)
         pointNodeIndexes[index] = lastNodeIndex
         continue
@@ -475,7 +526,7 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
         originalY: point.y,
         boundaryPadding: 0,
         pointIndexes: [index],
-        fixed: index === 0 || index === route.route.length - 1,
+        fixed: isFixedRoutePoint(route.route, index),
         forceIndex: nextForceIndex,
       })
       pointNodeIndexes[index] = nodes.length - 1
