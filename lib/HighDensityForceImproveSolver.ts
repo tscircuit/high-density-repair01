@@ -867,6 +867,52 @@ const deriveVias = (route: HighDensityRoute) => {
   return vias
 }
 
+const areExactlySameXY = (
+  left: { x: number; y: number },
+  right: { x: number; y: number },
+) => left.x === right.x && left.y === right.y
+
+const preserveFixedTerminalRuns = (
+  originalRoute: HighDensityRoute,
+  improvedRoute: HighDensityRoute,
+) => {
+  const originalStart = originalRoute.route[0]
+  const originalEnd = originalRoute.route.at(-1)
+  if (!originalStart || !originalEnd) return
+
+  for (let index = 0; index < originalRoute.route.length; index += 1) {
+    const originalPoint = originalRoute.route[index]
+    const improvedPoint = improvedRoute.route[index]
+    if (
+      !originalPoint ||
+      !improvedPoint ||
+      !areExactlySameXY(originalPoint, originalStart)
+    ) {
+      break
+    }
+
+    improvedPoint.x = originalStart.x
+    improvedPoint.y = originalStart.y
+  }
+
+  for (let index = originalRoute.route.length - 1; index >= 0; index -= 1) {
+    const originalPoint = originalRoute.route[index]
+    const improvedPoint = improvedRoute.route[index]
+    if (
+      !originalPoint ||
+      !improvedPoint ||
+      !areExactlySameXY(originalPoint, originalEnd)
+    ) {
+      break
+    }
+
+    improvedPoint.x = originalEnd.x
+    improvedPoint.y = originalEnd.y
+  }
+
+  improvedRoute.vias = deriveVias(improvedRoute)
+}
+
 const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
   mutableRoutes.map(({ route, nodes, pointNodeIndexes }) => {
     const nextRoutePoints = route.route.map((point, pointIndex) => {
@@ -1946,6 +1992,12 @@ export const runForceDirectedImprovement = (
   )
 
   const improvedRoutes = materializeRoutes(mutableRoutes)
+  for (let routeIndex = 0; routeIndex < routes.length; routeIndex += 1) {
+    const originalRoute = routes[routeIndex]
+    const improvedRoute = improvedRoutes[routeIndex]
+    if (!originalRoute || !improvedRoute) continue
+    preserveFixedTerminalRuns(originalRoute, improvedRoute)
+  }
 
   return {
     routes: improvedRoutes,
@@ -2049,9 +2101,16 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     applyProjectionClearance(sampleEntry.node, result.routes)
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
+      const routeIndex = sampleEntry.routeIndexes[i]
+      const originalRoute = this.originalHdRoutes[routeIndex]
+      const improvedRoute = result.routes[i]
+      if (originalRoute && improvedRoute) {
+        preserveFixedTerminalRuns(originalRoute, improvedRoute)
+      }
+
       this.improvedRoutesByIndex.set(
-        sampleEntry.routeIndexes[i],
-        result.routes[i],
+        routeIndex,
+        improvedRoute ?? this.originalHdRoutes[routeIndex],
       )
     }
 
