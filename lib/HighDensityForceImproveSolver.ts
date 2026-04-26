@@ -459,10 +459,12 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
         previousPoint.x === point.x &&
         previousPoint.y === point.y
       ) {
-        lastNode.boundaryPadding = Math.max(
-          lastNode.boundaryPadding,
-          route.viaDiameter / 2,
-        )
+        if (previousPoint.z !== point.z) {
+          lastNode.boundaryPadding = Math.max(
+            lastNode.boundaryPadding,
+            route.viaDiameter / 2,
+          )
+        }
         lastNode.pointIndexes.push(index)
         pointNodeIndexes[index] = lastNodeIndex
         continue
