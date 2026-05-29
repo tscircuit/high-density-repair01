@@ -37,6 +37,7 @@ type MutableNode = {
   boundaryPadding: number
   pointIndexes: number[]
   fixed: boolean
+  skipBoundsClamp: boolean
   forceIndex: number
 }
 
@@ -126,6 +127,7 @@ export type ForceImproveResult = {
 
 export type ForceImproveOptions = {
   includeForceVectors?: boolean
+  skipBoundsClampPointIndexes?: ReadonlySet<string>
 }
 
 const TARGET_CLEARANCE = 0.2
@@ -288,6 +290,42 @@ const findNodeIndexForRoute = (
   return bestNodeIndex
 }
 
+const getPointContainingNodeCount = (
+  point: { x: number; y: number },
+  nodes: NodeWithPortPoints[],
+  margin: number,
+) => {
+  let containingNodeCount = 0
+
+  for (const node of nodes) {
+    if (isPointInsideNode(point, node, margin)) {
+      containingNodeCount += 1
+    }
+  }
+
+  return containingNodeCount
+}
+
+const getSkipBoundsClampPointIndexes = (params: {
+  routes: HighDensityRoute[]
+  nodes: NodeWithPortPoints[]
+  margin: number
+}) => {
+  const pointIndexes = new Set<string>()
+
+  params.routes.forEach((route, localRouteIndex) => {
+    route.route.forEach((point, pointIndex) => {
+      if (
+        getPointContainingNodeCount(point, params.nodes, params.margin) > 1
+      ) {
+        pointIndexes.add(`${localRouteIndex}:${pointIndex}`)
+      }
+    })
+  })
+
+  return pointIndexes
+}
+
 const getEndpointOrthogonalLockAxis = (
   endpoint: MutableNode,
   adjacentNode: MutableNode,
@@ -395,6 +433,7 @@ const clampMutableRoutesToBounds = (
 ) => {
   for (const mutableRoute of mutableRoutes) {
     for (const node of mutableRoute.nodes) {
+      if (node.skipBoundsClamp) continue
       clampNodeToBounds(node, bounds)
     }
   }
@@ -451,9 +490,12 @@ const getMaxCorrectionForElement = (
     ? maxCorrection * VIA_SEGMENT_MAX_CLEARANCE_CORRECTION_MULTIPLIER
     : maxCorrection
 
-const buildMutableRoutes = (routes: HighDensityRoute[]) => {
+const buildMutableRoutes = (
+  routes: HighDensityRoute[],
+  skipBoundsClampPointIndexes?: ReadonlySet<string>,
+) => {
   let nextForceIndex = 0
-  const mutableRoutes: MutableRoute[] = routes.map((route) => {
+  const mutableRoutes: MutableRoute[] = routes.map((route, routeIndex) => {
     const nodes: MutableNode[] = []
     const pointNodeIndexes = new Int32Array(route.route.length)
     pointNodeIndexes.fill(-1)
@@ -479,6 +521,9 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
           )
         }
         lastNode.pointIndexes.push(index)
+        lastNode.skipBoundsClamp =
+          lastNode.skipBoundsClamp ||
+          Boolean(skipBoundsClampPointIndexes?.has(`${routeIndex}:${index}`))
         pointNodeIndexes[index] = lastNodeIndex
         continue
       }
@@ -491,6 +536,9 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
         boundaryPadding: 0,
         pointIndexes: [index],
         fixed: index === 0 || index === route.route.length - 1,
+        skipBoundsClamp: Boolean(
+          skipBoundsClampPointIndexes?.has(`${routeIndex}:${index}`),
+        ),
         forceIndex: nextForceIndex,
       })
       pointNodeIndexes[index] = nodes.length - 1
@@ -1519,7 +1567,10 @@ export const runForceDirectedImprovement = (
   totalSteps: number,
   options?: ForceImproveOptions,
 ): ForceImproveResult => {
-  const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
+  const { mutableRoutes, totalNodeCount } = buildMutableRoutes(
+    routes,
+    options?.skipBoundsClampPointIndexes,
+  )
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
   const nodeForces = new Float64Array(totalNodeCount * 2)
@@ -2004,11 +2055,16 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     const inputRoutes = sampleEntry.routeIndexes.map(
       (routeIndex) => this.originalHdRoutes[routeIndex],
     )
+    const skipBoundsClampPointIndexes = getSkipBoundsClampPointIndexes({
+      routes: inputRoutes,
+      nodes: this.originalNodeWithPortPoints,
+      margin: this.nodeAssignmentMargin,
+    })
     const result = runForceDirectedImprovement(
       bounds,
       inputRoutes,
       this.totalStepsPerNode,
-      { includeForceVectors: true },
+      { includeForceVectors: true, skipBoundsClampPointIndexes },
     )
     applyProjectionClearance(sampleEntry.node, result.routes)
 
