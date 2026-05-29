@@ -315,9 +315,7 @@ const getSkipBoundsClampPointIndexes = (params: {
 
   params.routes.forEach((route, localRouteIndex) => {
     route.route.forEach((point, pointIndex) => {
-      if (
-        getPointContainingNodeCount(point, params.nodes, params.margin) > 1
-      ) {
+      if (getPointContainingNodeCount(point, params.nodes, params.margin) > 1) {
         pointIndexes.add(`${localRouteIndex}:${pointIndex}`)
       }
     })
