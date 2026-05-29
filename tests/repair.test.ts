@@ -3,6 +3,18 @@ import { runDrcCheck } from "../lib/drc-check"
 import { repairSample } from "../lib/repair"
 import type { HighDensityRepair01Input } from "../lib/types/types"
 import { HighDensityForceImproveSolver } from "lib/HighDensityForceImproveSolver"
+import type {
+  HighDensityRoute,
+  NodeWithPortPoints,
+} from "lib/types/high-density-types"
+
+type ForceImproveInput = {
+  nodeWithPortPoints: NodeWithPortPoints[]
+  hdRoutes: HighDensityRoute[]
+  colorMap?: Record<string, string>
+  totalStepsPerNode?: number
+  nodeAssignmentMargin?: number
+}
 
 const createOutOfBoundsSample = (): HighDensityRepair01Input => ({
   adjacentObstacles: [],
@@ -225,6 +237,29 @@ test("HighDensityForceImproveSolver returns improved routes as solver output", (
 
   expect(output).toBeDefined()
   expect(runDrcCheck(sample.nodeWithPortPoints, output).ok).toBe(true)
+})
+
+test("HighDensityForceImproveSolver preserves coincident route endpoints across node boundaries", async () => {
+  const fixtureEntries = (await Bun.file(
+    new URL(
+      "../pages/highDensityForceImproveSolver_input.fixture.json",
+      import.meta.url,
+    ),
+  ).json()) as ForceImproveInput[]
+  const fixture = fixtureEntries[0]!
+  const solver = new HighDensityForceImproveSolver({
+    nodeWithPortPoints: fixture.nodeWithPortPoints,
+    hdRoutes: fixture.hdRoutes,
+    colorMap: fixture.colorMap,
+    totalStepsPerNode: fixture.totalStepsPerNode,
+    nodeAssignmentMargin: fixture.nodeAssignmentMargin,
+  })
+
+  solver.solve()
+
+  const output = solver.getOutput()
+  expect(output[2]?.route.at(-1)).toEqual(output[6]?.route[0])
+  expect(output[5]?.route.at(-1)).toEqual(output[2]?.route[0])
 })
 
 test("repairSample can normalize routes that attach on the wrong port layer", () => {
