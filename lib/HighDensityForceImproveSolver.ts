@@ -186,6 +186,8 @@ const MIN_STEP_DECAY = 0.25
 const FORCE_VECTOR_DISPLAY_MULTIPLIER = 5
 const DEFAULT_ASSIGNMENT_MARGIN = 0.2
 const DEFAULT_TOTAL_STEPS_PER_NODE = 60
+const FORCE_CONVERGENCE_POSITION_TOLERANCE = 1e-4
+const FORCE_CONVERGENCE_STABLE_STEPS = 4
 
 const ROUNDING_PRECISION = 1_000
 const POSITION_EPSILON = 1e-6
@@ -1546,11 +1548,21 @@ export const runForceDirectedImprovement = (
   const segments = buildSegmentObstacles(mutableRoutes)
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
+  const mutableNodes = mutableRoutes.flatMap((route) => route.nodes)
+  const previousNodePositions = new Float64Array(mutableNodes.length * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
   clampMutableRoutesToBounds(mutableRoutes, bounds)
   let forceVectors: ForceVector[] = []
+  let stepsCompleted = 0
+  let consecutiveStableSteps = 0
 
   for (let stepIndex = 0; stepIndex < totalSteps; stepIndex += 1) {
+    for (let nodeIndex = 0; nodeIndex < mutableNodes.length; nodeIndex += 1) {
+      const node = mutableNodes[nodeIndex]!
+      previousNodePositions[nodeIndex * 2] = node.x
+      previousNodePositions[nodeIndex * 2 + 1] = node.y
+    }
+
     const progress =
       totalSteps <= 1 ? 0 : stepIndex / Math.max(totalSteps - 1, 1)
     const stepDecay = MIN_STEP_DECAY + (1 - progress) * (1 - MIN_STEP_DECAY)
@@ -1919,6 +1931,29 @@ export const runForceDirectedImprovement = (
       CLEARANCE_PROJECTION_PASSES,
       MAX_CLEARANCE_CORRECTION,
     )
+
+    let maxNodeMovement = 0
+    for (let nodeIndex = 0; nodeIndex < mutableNodes.length; nodeIndex += 1) {
+      const node = mutableNodes[nodeIndex]!
+      const movement = Math.hypot(
+        node.x - previousNodePositions[nodeIndex * 2]!,
+        node.y - previousNodePositions[nodeIndex * 2 + 1]!,
+      )
+      maxNodeMovement = Math.max(maxNodeMovement, movement)
+    }
+
+    stepsCompleted = stepIndex + 1
+    consecutiveStableSteps =
+      maxNodeMovement <= FORCE_CONVERGENCE_POSITION_TOLERANCE
+        ? consecutiveStableSteps + 1
+        : 0
+
+    if (
+      stepsCompleted >= Math.min(DEFAULT_TOTAL_STEPS_PER_NODE, totalSteps) &&
+      consecutiveStableSteps >= FORCE_CONVERGENCE_STABLE_STEPS
+    ) {
+      break
+    }
   }
 
   resolveClearanceConstraints(
@@ -1936,7 +1971,7 @@ export const runForceDirectedImprovement = (
   return {
     routes: improvedRoutes,
     forceVectors,
-    stepsCompleted: totalSteps,
+    stepsCompleted,
   }
 }
 
@@ -1951,6 +1986,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
   improvedRoutesByIndex = new Map<number, HighDensityRoute>()
   activeSampleIndex = 0
   latestVisualization: GraphicsObject = {}
+  forceStepsCompleted = 0
+  convergedNodeCount = 0
 
   constructor(params: {
     nodeWithPortPoints: NodeWithPortPoints[]
@@ -1995,6 +2032,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       improvedNodeCount: 0,
       improvedRouteCount: 0,
       totalStepsPerNode: this.totalStepsPerNode,
+      forceStepsCompleted: this.forceStepsCompleted,
+      convergedNodeCount: this.convergedNodeCount,
     }
   }
 
@@ -2032,6 +2071,10 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       this.totalStepsPerNode,
       { includeForceVectors: true },
     )
+    this.forceStepsCompleted += result.stepsCompleted
+    if (result.stepsCompleted < this.totalStepsPerNode) {
+      this.convergedNodeCount += 1
+    }
     applyProjectionClearance(sampleEntry.node, result.routes)
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
@@ -2055,6 +2098,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       improvedNodeCount: this.activeSampleIndex,
       improvedRouteCount: this.improvedRoutesByIndex.size,
       totalStepsPerNode: this.totalStepsPerNode,
+      forceStepsCompleted: this.forceStepsCompleted,
+      convergedNodeCount: this.convergedNodeCount,
     }
 
     if (this.activeSampleIndex >= this.sampleEntries.length) {
