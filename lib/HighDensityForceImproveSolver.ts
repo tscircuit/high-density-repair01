@@ -91,6 +91,8 @@ export type SegmentPairBarrierSelector = {
   rightStartPointIndex: number
 }
 
+type PreconditionMoveBias = "balanced" | "left" | "right"
+
 type SegmentSpatialLayerIndex = {
   index: Flatbush
   segments: SegmentObstacle[]
@@ -1250,12 +1252,23 @@ const findNewProperSegmentCrossings = (
   return selectors
 }
 
+const countUniqueRoutePairCrossings = (
+  selectors: SegmentPairBarrierSelector[],
+) =>
+  new Set(
+    selectors.map(
+      ({ leftRouteIndex, rightRouteIndex }) =>
+        `${leftRouteIndex}:${rightRouteIndex}`,
+    ),
+  ).size
+
 const preconditionRoutesForNewCrossings = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
   selectors: SegmentPairBarrierSelector[]
+  moveBias: PreconditionMoveBias
 }) => {
-  const { routes, node, selectors } = params
+  const { routes, node, selectors, moveBias } = params
   const preconditionedRoutes = structuredClone(routes)
   const originalSegments = collectProjectionSegments(routes)
   const originalSegmentsByKey = new Map(
@@ -1312,23 +1325,40 @@ const preconditionRoutesForNewCrossings = (params: {
         (candidate.leftPoint.y - candidate.rightPoint.y) * barrier.directionY
       const penetration = barrier.requiredDistance - signedDistance
       if (penetration <= 0) continue
-      const move = Math.min(MAX_TRACE_MOVE_PER_PASS, penetration / 2)
-      distributeProjectionSegmentMove({
-        routes: preconditionedRoutes,
-        segment: left,
-        dx: barrier.directionX * move,
-        dy: barrier.directionY * move,
-        node,
-        t: candidate.leftT,
-      })
-      distributeProjectionSegmentMove({
-        routes: preconditionedRoutes,
-        segment: right,
-        dx: -barrier.directionX * move,
-        dy: -barrier.directionY * move,
-        node,
-        t: candidate.rightT,
-      })
+      const leftWeight =
+        moveBias === "right" ? 0 : moveBias === "left" ? 1 : 0.5
+      const rightWeight =
+        moveBias === "left" ? 0 : moveBias === "right" ? 1 : 0.5
+      const movableSideCount = Number(leftWeight > 0) + Number(rightWeight > 0)
+      const totalMove = Math.min(
+        MAX_TRACE_MOVE_PER_PASS * movableSideCount,
+        penetration,
+      )
+      const leftMove = Math.min(MAX_TRACE_MOVE_PER_PASS, totalMove * leftWeight)
+      const rightMove = Math.min(
+        MAX_TRACE_MOVE_PER_PASS,
+        totalMove * rightWeight,
+      )
+      if (leftMove > 0) {
+        distributeProjectionSegmentMove({
+          routes: preconditionedRoutes,
+          segment: left,
+          dx: barrier.directionX * leftMove,
+          dy: barrier.directionY * leftMove,
+          node,
+          t: candidate.leftT,
+        })
+      }
+      if (rightMove > 0) {
+        distributeProjectionSegmentMove({
+          routes: preconditionedRoutes,
+          segment: right,
+          dx: -barrier.directionX * rightMove,
+          dy: -barrier.directionY * rightMove,
+          node,
+          t: candidate.rightT,
+        })
+      }
     }
   }
 
@@ -2409,21 +2439,38 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       inputRoutes,
       baselineResult.routes,
     )
-    const result =
-      segmentPairBarrierSelectors.length === 0
-        ? baselineResult
-        : runForceDirectedImprovement(
-            bounds,
-            preconditionRoutesForNewCrossings({
-              routes: inputRoutes,
-              node: sampleEntry.node,
-              selectors: segmentPairBarrierSelectors,
-            }),
-            this.totalStepsPerNode,
-            { includeForceVectors: true },
-          )
-    if (result !== baselineResult) {
-      applyProjectionClearance(sampleEntry.node, result.routes)
+    let result = baselineResult
+    if (segmentPairBarrierSelectors.length > 0) {
+      let bestNewCrossingCount = countUniqueRoutePairCrossings(
+        segmentPairBarrierSelectors,
+      )
+      const moveBiases: PreconditionMoveBias[] = ["balanced", "left", "right"]
+
+      for (const moveBias of moveBiases) {
+        const candidateResult = runForceDirectedImprovement(
+          bounds,
+          preconditionRoutesForNewCrossings({
+            routes: inputRoutes,
+            node: sampleEntry.node,
+            selectors: segmentPairBarrierSelectors,
+            moveBias,
+          }),
+          this.totalStepsPerNode,
+          {
+            includeForceVectors: true,
+            segmentPairBarrierSelectors,
+          },
+        )
+        applyProjectionClearance(sampleEntry.node, candidateResult.routes)
+        const newCrossingCount = countUniqueRoutePairCrossings(
+          findNewProperSegmentCrossings(inputRoutes, candidateResult.routes),
+        )
+        if (newCrossingCount < bestNewCrossingCount) {
+          result = candidateResult
+          bestNewCrossingCount = newCrossingCount
+        }
+        if (newCrossingCount === 0) break
+      }
     }
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {

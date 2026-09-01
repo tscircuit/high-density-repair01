@@ -72,6 +72,14 @@ const getTargetRoutes = (routes: HighDensityRoute[]) => {
   return { left, right }
 }
 
+const getNeighborRoute = (routes: HighDensityRoute[]) => {
+  const route = routes.find(
+    (candidate) => candidate.connectionName === "source_trace_99",
+  )
+  if (!route) throw new Error("Missing Bug 94 neighboring route")
+  return route
+}
+
 test("force improvement preserves Bug 94 trace ordering", async () => {
   const fixturePath = fileURLToPath(
     new URL("./fixtures/bugreport94-force-input.json", import.meta.url),
@@ -100,9 +108,15 @@ test("force improvement preserves Bug 94 trace ordering", async () => {
   const solver = new HighDensityForceImproveSolver(fixture)
   solver.solve()
   const guardedTarget = getTargetRoutes(solver.getOutput())
+  const guardedNeighbor = getNeighborRoute(solver.getOutput())
   const requiredDistance =
     (guardedTarget.left.traceThickness + guardedTarget.right.traceThickness) / 2
   expect(
     getMinimumRouteDistance(guardedTarget.left, guardedTarget.right),
   ).toBeGreaterThanOrEqual(requiredDistance)
+  expect(
+    getMinimumRouteDistance(guardedTarget.left, guardedNeighbor),
+  ).toBeGreaterThanOrEqual(
+    (guardedTarget.left.traceThickness + guardedNeighbor.traceThickness) / 2,
+  )
 }, 30_000)
