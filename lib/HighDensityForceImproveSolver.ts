@@ -1250,6 +1250,254 @@ const findNewProperSegmentCrossings = (
   return selectors
 }
 
+const getRoutePairKey = (leftRouteIndex: number, rightRouteIndex: number) =>
+  `${Math.min(leftRouteIndex, rightRouteIndex)}:${Math.max(leftRouteIndex, rightRouteIndex)}`
+
+const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
+  const segments = collectProjectionSegments(routes)
+  const violatingRoutePairs = new Set<string>()
+  for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
+    const left = segments[leftIndex]
+    if (!left) continue
+    for (
+      let rightIndex = leftIndex + 1;
+      rightIndex < segments.length;
+      rightIndex += 1
+    ) {
+      const right = segments[rightIndex]
+      if (
+        !right ||
+        left.z !== right.z ||
+        left.rootConnectionName === right.rootConnectionName
+      ) {
+        continue
+      }
+      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      if (!candidate) continue
+      const distance = Math.hypot(
+        candidate.leftPoint.x - candidate.rightPoint.x,
+        candidate.leftPoint.y - candidate.rightPoint.y,
+      )
+      if (distance + POSITION_EPSILON < left.traceRadius + right.traceRadius) {
+        violatingRoutePairs.add(
+          getRoutePairKey(left.routeIndex, right.routeIndex),
+        )
+      }
+    }
+  }
+  return violatingRoutePairs
+}
+
+const findAlignedTopologyCandidate = (params: {
+  originalRoutes: HighDensityRoute[]
+  guardedRoutes: HighDensityRoute[]
+  node: NodeWithPortPoints
+  crossingSelectors: SegmentPairBarrierSelector[]
+  protectedSelectors: SegmentPairBarrierSelector[]
+}) => {
+  const {
+    originalRoutes,
+    guardedRoutes,
+    node,
+    crossingSelectors,
+    protectedSelectors,
+  } = params
+  const originalSegmentsByKey = new Map(
+    collectProjectionSegments(originalRoutes).map((segment) => [
+      `${segment.routeIndex}:${segment.startIndex}`,
+      segment,
+    ]),
+  )
+  const guardedSegmentsByKey = new Map(
+    collectProjectionSegments(guardedRoutes).map((segment) => [
+      `${segment.routeIndex}:${segment.startIndex}`,
+      segment,
+    ]),
+  )
+  const baselineViolationPairs = getRoutePairClearanceViolations(guardedRoutes)
+  const protectedRoutePairs = new Set(
+    protectedSelectors.map(({ leftRouteIndex, rightRouteIndex }) =>
+      getRoutePairKey(leftRouteIndex, rightRouteIndex),
+    ),
+  )
+  const bounds = getInsetNodeBounds(node, POSITION_EPSILON)
+
+  for (const selector of crossingSelectors) {
+    const guardedLeft = guardedSegmentsByKey.get(
+      `${selector.leftRouteIndex}:${selector.leftStartPointIndex}`,
+    )
+    const guardedRight = guardedSegmentsByKey.get(
+      `${selector.rightRouteIndex}:${selector.rightStartPointIndex}`,
+    )
+    if (!guardedLeft || !guardedRight) continue
+    const [guardedCrossing] = getProjectionSegmentDistanceCandidates(
+      guardedLeft,
+      guardedRight,
+    )
+    if (
+      !guardedCrossing ||
+      Math.hypot(
+        guardedCrossing.leftPoint.x - guardedCrossing.rightPoint.x,
+        guardedCrossing.leftPoint.y - guardedCrossing.rightPoint.y,
+      ) > POSITION_EPSILON ||
+      guardedCrossing.leftT <= POSITION_EPSILON ||
+      guardedCrossing.leftT >= 1 - POSITION_EPSILON ||
+      guardedCrossing.rightT <= POSITION_EPSILON ||
+      guardedCrossing.rightT >= 1 - POSITION_EPSILON
+    ) {
+      continue
+    }
+
+    for (const movableSide of ["right", "left"] as const) {
+      const movableRouteIndex =
+        movableSide === "left"
+          ? selector.leftRouteIndex
+          : selector.rightRouteIndex
+      const movableStartIndex =
+        movableSide === "left"
+          ? selector.leftStartPointIndex
+          : selector.rightStartPointIndex
+      const fixedRouteIndex =
+        movableSide === "left"
+          ? selector.rightRouteIndex
+          : selector.leftRouteIndex
+      const fixedStartIndex =
+        movableSide === "left"
+          ? selector.rightStartPointIndex
+          : selector.leftStartPointIndex
+      const originalMovableRoute = originalRoutes[movableRouteIndex]
+      const guardedMovableRoute = guardedRoutes[movableRouteIndex]
+      const originalFixedSegment = originalSegmentsByKey.get(
+        `${fixedRouteIndex}:${fixedStartIndex}`,
+      )
+      const guardedFixedSegment = guardedSegmentsByKey.get(
+        `${fixedRouteIndex}:${fixedStartIndex}`,
+      )
+      if (
+        !originalMovableRoute ||
+        !guardedMovableRoute ||
+        !originalFixedSegment ||
+        !guardedFixedSegment
+      ) {
+        continue
+      }
+      const corridorLayer = originalMovableRoute.route[movableStartIndex]?.z
+
+      for (const corridorExpansion of [2]) {
+        const corridorPointIndexes: number[] = []
+        for (
+          let pointIndex = movableStartIndex - corridorExpansion;
+          pointIndex <= movableStartIndex + 1 + corridorExpansion;
+          pointIndex += 1
+        ) {
+          const point = originalMovableRoute.route[pointIndex]
+          if (
+            !point ||
+            pointIndex <= 0 ||
+            pointIndex >= originalMovableRoute.route.length - 1 ||
+            point.z !== corridorLayer ||
+            [
+              originalMovableRoute.route[pointIndex - 1],
+              originalMovableRoute.route[pointIndex + 1],
+            ].some(
+              (adjacentPoint) => adjacentPoint && adjacentPoint.z !== point.z,
+            )
+          ) {
+            continue
+          }
+          corridorPointIndexes.push(pointIndex)
+        }
+        if (corridorPointIndexes.length === 0) continue
+
+        for (const [originalAnchor, guardedAnchor] of [
+          [originalFixedSegment.start, guardedFixedSegment.start],
+          [originalFixedSegment.end, guardedFixedSegment.end],
+        ] as const) {
+          for (const scale of [1.51, 1.25, 1.75, 2]) {
+            const candidateRoutes = [...guardedRoutes]
+            const candidateRoute = structuredClone(guardedMovableRoute)
+            candidateRoutes[movableRouteIndex] = candidateRoute
+            let insideBounds = true
+            for (const pointIndex of corridorPointIndexes) {
+              const originalPoint = originalMovableRoute.route[pointIndex]
+              const candidatePoint = candidateRoute.route[pointIndex]
+              if (!originalPoint || !candidatePoint) continue
+              const x =
+                guardedAnchor.x + (originalPoint.x - originalAnchor.x) * scale
+              const y =
+                guardedAnchor.y + (originalPoint.y - originalAnchor.y) * scale
+              if (
+                x <= bounds.minX ||
+                x >= bounds.maxX ||
+                y <= bounds.minY ||
+                y >= bounds.maxY
+              ) {
+                insideBounds = false
+                break
+              }
+              candidatePoint.x = x
+              candidatePoint.y = y
+            }
+            if (!insideBounds) continue
+            candidateRoute.vias = deriveVias(candidateRoute)
+            let evaluatedRoutes = candidateRoutes
+            let candidateViolationPairs =
+              getRoutePairClearanceViolations(evaluatedRoutes)
+            const closureRouteIndexes = new Set<number>()
+            for (const pairKey of candidateViolationPairs) {
+              if (baselineViolationPairs.has(pairKey)) continue
+              const [leftRouteIndex, rightRouteIndex] = pairKey
+                .split(":")
+                .map(Number)
+              if (
+                leftRouteIndex === movableRouteIndex &&
+                rightRouteIndex !== movableRouteIndex
+              ) {
+                closureRouteIndexes.add(rightRouteIndex)
+              } else if (
+                rightRouteIndex === movableRouteIndex &&
+                leftRouteIndex !== movableRouteIndex
+              ) {
+                closureRouteIndexes.add(leftRouteIndex)
+              }
+            }
+            if (closureRouteIndexes.size > 0) {
+              const projectedRoutes = applySelectedRouteSegmentClearance(
+                node,
+                structuredClone(candidateRoutes),
+                closureRouteIndexes,
+              )
+              const projectedViolationPairs =
+                getRoutePairClearanceViolations(projectedRoutes)
+              const projectedPreservesProtectedClearance = [
+                ...protectedRoutePairs,
+              ].every((pairKey) => !projectedViolationPairs.has(pairKey))
+              if (
+                projectedPreservesProtectedClearance &&
+                projectedViolationPairs.size < candidateViolationPairs.size
+              ) {
+                evaluatedRoutes = projectedRoutes
+                candidateViolationPairs = projectedViolationPairs
+              }
+            }
+            const preservesProtectedClearance = [...protectedRoutePairs].every(
+              (pairKey) => !candidateViolationPairs.has(pairKey),
+            )
+            if (
+              preservesProtectedClearance &&
+              candidateViolationPairs.size < baselineViolationPairs.size
+            ) {
+              return evaluatedRoutes
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return undefined
+}
+
 const preconditionRoutesForNewCrossings = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
@@ -1555,8 +1803,9 @@ const projectSegmentSegmentClearance = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
   segments: ProjectionSegment[]
+  movableRouteIndexes?: ReadonlySet<number>
 }) => {
-  const { routes, node, segments } = params
+  const { routes, node, segments, movableRouteIndexes } = params
   let changed = false
 
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
@@ -1603,6 +1852,12 @@ const projectSegmentSegmentClearance = (params: {
       const distance = Math.hypot(separationX, separationY)
       const penetration = requiredDistance - distance
       if (penetration <= 0) continue
+      const leftMovable =
+        !movableRouteIndexes || movableRouteIndexes.has(left.routeIndex)
+      const rightMovable =
+        !movableRouteIndexes || movableRouteIndexes.has(right.routeIndex)
+      const movableCount = Number(leftMovable) + Number(rightMovable)
+      if (movableCount === 0) continue
 
       const leftVectorX = left.end.x - left.start.x
       const leftVectorY = left.end.y - left.start.y
@@ -1620,26 +1875,30 @@ const projectSegmentSegmentClearance = (params: {
           : fallbackMagnitude > POSITION_EPSILON
             ? (leftVectorX / fallbackMagnitude) * fallbackSign
             : 0
-      const move = Math.min(MAX_TRACE_MOVE_PER_PASS, penetration / 2)
+      const move = Math.min(MAX_TRACE_MOVE_PER_PASS, penetration / movableCount)
 
-      changed =
-        distributeProjectionSegmentMove({
-          routes,
-          segment: left,
-          dx: directionX * move,
-          dy: directionY * move,
-          node,
-          t: candidate.leftT,
-        }) || changed
-      changed =
-        distributeProjectionSegmentMove({
-          routes,
-          segment: right,
-          dx: -directionX * move,
-          dy: -directionY * move,
-          node,
-          t: candidate.rightT,
-        }) || changed
+      if (leftMovable) {
+        changed =
+          distributeProjectionSegmentMove({
+            routes,
+            segment: left,
+            dx: directionX * move,
+            dy: directionY * move,
+            node,
+            t: candidate.leftT,
+          }) || changed
+      }
+      if (rightMovable) {
+        changed =
+          distributeProjectionSegmentMove({
+            routes,
+            segment: right,
+            dx: -directionX * move,
+            dy: -directionY * move,
+            node,
+            t: candidate.rightT,
+          }) || changed
+      }
     }
   }
 
@@ -1679,6 +1938,27 @@ const applyProjectionClearance = (
     route.vias = deriveVias(route)
   }
 
+  return routes
+}
+
+const applySelectedRouteSegmentClearance = (
+  node: NodeWithPortPoints,
+  routes: HighDensityRoute[],
+  movableRouteIndexes: ReadonlySet<number>,
+) => {
+  for (let pass = 0; pass < VIA_PROJECTION_PASSES; pass += 1) {
+    const changed = projectSegmentSegmentClearance({
+      routes,
+      node,
+      segments: collectProjectionSegments(routes),
+      movableRouteIndexes,
+    })
+    if (!changed) break
+  }
+  for (const routeIndex of movableRouteIndexes) {
+    const route = routes[routeIndex]
+    if (route) route.vias = deriveVias(route)
+  }
   return routes
 }
 const resolveClearanceConstraints = (
@@ -2409,7 +2689,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       inputRoutes,
       baselineResult.routes,
     )
-    const result =
+    let result =
       segmentPairBarrierSelectors.length === 0
         ? baselineResult
         : runForceDirectedImprovement(
@@ -2424,6 +2704,23 @@ export class HighDensityForceImproveSolver extends BaseSolver {
           )
     if (result !== baselineResult) {
       applyProjectionClearance(sampleEntry.node, result.routes)
+      const residualCrossingSelectors = findNewProperSegmentCrossings(
+        inputRoutes,
+        result.routes,
+      )
+      if (residualCrossingSelectors.length > 0) {
+        const alignedRoutes = findAlignedTopologyCandidate({
+          originalRoutes: inputRoutes,
+          guardedRoutes: result.routes,
+          node: sampleEntry.node,
+          crossingSelectors: residualCrossingSelectors,
+          protectedSelectors: [
+            ...segmentPairBarrierSelectors,
+            ...residualCrossingSelectors,
+          ],
+        })
+        if (alignedRoutes) result = { ...result, routes: alignedRoutes }
+      }
     }
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
