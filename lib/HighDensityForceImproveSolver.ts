@@ -1262,15 +1262,38 @@ const countUniqueRoutePairCrossings = (
     ),
   ).size
 
+const getPrimaryRoutePairSelectors = (
+  selectors: SegmentPairBarrierSelector[],
+) => {
+  const seenRoutePairs = new Set<string>()
+  return selectors.filter(({ leftRouteIndex, rightRouteIndex }) => {
+    const key = `${leftRouteIndex}:${rightRouteIndex}`
+    if (seenRoutePairs.has(key)) return false
+    seenRoutePairs.add(key)
+    return true
+  })
+}
+
 const preconditionRoutesForNewCrossings = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
   selectors: SegmentPairBarrierSelector[]
   moveBias: PreconditionMoveBias
+  directionReferenceRoutes?: HighDensityRoute[]
+  passCount?: number
+  translateWholeSegments?: boolean
 }) => {
-  const { routes, node, selectors, moveBias } = params
+  const {
+    routes,
+    node,
+    selectors,
+    moveBias,
+    directionReferenceRoutes = routes,
+    passCount = 3,
+    translateWholeSegments = false,
+  } = params
   const preconditionedRoutes = structuredClone(routes)
-  const originalSegments = collectProjectionSegments(routes)
+  const originalSegments = collectProjectionSegments(directionReferenceRoutes)
   const originalSegmentsByKey = new Map(
     originalSegments.map((segment) => [
       `${segment.routeIndex}:${segment.startIndex}`,
@@ -1302,7 +1325,7 @@ const preconditionRoutesForNewCrossings = (params: {
     ]
   })
 
-  for (let pass = 0; pass < 3; pass += 1) {
+  for (let pass = 0; pass < passCount; pass += 1) {
     const currentSegments = collectProjectionSegments(preconditionedRoutes)
     const currentSegmentsByKey = new Map(
       currentSegments.map((segment) => [
@@ -1340,7 +1363,10 @@ const preconditionRoutesForNewCrossings = (params: {
         totalMove * rightWeight,
       )
       if (leftMove > 0) {
-        distributeProjectionSegmentMove({
+        const moveSegment = translateWholeSegments
+          ? translateProjectionSegment
+          : distributeProjectionSegmentMove
+        moveSegment({
           routes: preconditionedRoutes,
           segment: left,
           dx: barrier.directionX * leftMove,
@@ -1350,7 +1376,10 @@ const preconditionRoutesForNewCrossings = (params: {
         })
       }
       if (rightMove > 0) {
-        distributeProjectionSegmentMove({
+        const moveSegment = translateWholeSegments
+          ? translateProjectionSegment
+          : distributeProjectionSegmentMove
+        moveSegment({
           routes: preconditionedRoutes,
           segment: right,
           dx: -barrier.directionX * rightMove,
@@ -1578,6 +1607,34 @@ const distributeProjectionSegmentMove = (params: {
     node,
   })
 
+  return movedStart || movedEnd
+}
+
+const translateProjectionSegment = (params: {
+  routes: HighDensityRoute[]
+  segment: ProjectionSegment
+  dx: number
+  dy: number
+  node: NodeWithPortPoints
+  t: number
+}) => {
+  const { routes, segment, dx, dy, node } = params
+  const movedStart = applyProjectionRoutePointMove({
+    routes,
+    routeIndex: segment.routeIndex,
+    pointIndex: segment.startIndex,
+    dx,
+    dy,
+    node,
+  })
+  const movedEnd = applyProjectionRoutePointMove({
+    routes,
+    routeIndex: segment.routeIndex,
+    pointIndex: segment.endIndex,
+    dx,
+    dy,
+    node,
+  })
   return movedStart || movedEnd
 }
 
@@ -2456,12 +2513,18 @@ export class HighDensityForceImproveSolver extends BaseSolver {
             moveBias,
           }),
           this.totalStepsPerNode,
-          {
-            includeForceVectors: true,
-            segmentPairBarrierSelectors,
-          },
+          { includeForceVectors: true },
         )
         applyProjectionClearance(sampleEntry.node, candidateResult.routes)
+        candidateResult.routes = preconditionRoutesForNewCrossings({
+          routes: candidateResult.routes,
+          directionReferenceRoutes: inputRoutes,
+          node: sampleEntry.node,
+          selectors: getPrimaryRoutePairSelectors(segmentPairBarrierSelectors),
+          moveBias,
+          passCount: 40,
+          translateWholeSegments: true,
+        })
         const newCrossingCount = countUniqueRoutePairCrossings(
           findNewProperSegmentCrossings(inputRoutes, candidateResult.routes),
         )
