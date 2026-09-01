@@ -1250,6 +1250,94 @@ const findNewProperSegmentCrossings = (
   return selectors
 }
 
+const preconditionRoutesForNewCrossings = (params: {
+  routes: HighDensityRoute[]
+  node: NodeWithPortPoints
+  selectors: SegmentPairBarrierSelector[]
+}) => {
+  const { routes, node, selectors } = params
+  const preconditionedRoutes = structuredClone(routes)
+  const originalSegments = collectProjectionSegments(routes)
+  const originalSegmentsByKey = new Map(
+    originalSegments.map((segment) => [
+      `${segment.routeIndex}:${segment.startIndex}`,
+      segment,
+    ]),
+  )
+  const barriers = selectors.flatMap((selector) => {
+    const left = originalSegmentsByKey.get(
+      `${selector.leftRouteIndex}:${selector.leftStartPointIndex}`,
+    )
+    const right = originalSegmentsByKey.get(
+      `${selector.rightRouteIndex}:${selector.rightStartPointIndex}`,
+    )
+    if (!left || !right) return []
+    const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+    if (!candidate) return []
+    const separationX = candidate.leftPoint.x - candidate.rightPoint.x
+    const separationY = candidate.leftPoint.y - candidate.rightPoint.y
+    const distance = Math.hypot(separationX, separationY)
+    if (distance <= POSITION_EPSILON) return []
+    return [
+      {
+        selector,
+        directionX: separationX / distance,
+        directionY: separationY / distance,
+        requiredDistance:
+          left.traceRadius + right.traceRadius + CLEARANCE_SLACK,
+      },
+    ]
+  })
+
+  for (let pass = 0; pass < 3; pass += 1) {
+    const currentSegments = collectProjectionSegments(preconditionedRoutes)
+    const currentSegmentsByKey = new Map(
+      currentSegments.map((segment) => [
+        `${segment.routeIndex}:${segment.startIndex}`,
+        segment,
+      ]),
+    )
+    for (const barrier of barriers) {
+      const left = currentSegmentsByKey.get(
+        `${barrier.selector.leftRouteIndex}:${barrier.selector.leftStartPointIndex}`,
+      )
+      const right = currentSegmentsByKey.get(
+        `${barrier.selector.rightRouteIndex}:${barrier.selector.rightStartPointIndex}`,
+      )
+      if (!left || !right) continue
+      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      if (!candidate) continue
+      const signedDistance =
+        (candidate.leftPoint.x - candidate.rightPoint.x) * barrier.directionX +
+        (candidate.leftPoint.y - candidate.rightPoint.y) * barrier.directionY
+      const penetration = barrier.requiredDistance - signedDistance
+      if (penetration <= 0) continue
+      const move = Math.min(MAX_TRACE_MOVE_PER_PASS, penetration / 2)
+      distributeProjectionSegmentMove({
+        routes: preconditionedRoutes,
+        segment: left,
+        dx: barrier.directionX * move,
+        dy: barrier.directionY * move,
+        node,
+        t: candidate.leftT,
+      })
+      distributeProjectionSegmentMove({
+        routes: preconditionedRoutes,
+        segment: right,
+        dx: -barrier.directionX * move,
+        dy: -barrier.directionY * move,
+        node,
+        t: candidate.rightT,
+      })
+    }
+  }
+
+  for (const route of preconditionedRoutes) {
+    route.vias = deriveVias(route)
+  }
+  return preconditionedRoutes
+}
+
 const applyProjectionViaMove = (params: {
   routes: HighDensityRoute[]
   via: ProjectionViaNode
@@ -2316,6 +2404,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       this.totalStepsPerNode,
       { includeForceVectors: true },
     )
+    applyProjectionClearance(sampleEntry.node, baselineResult.routes)
     const segmentPairBarrierSelectors = findNewProperSegmentCrossings(
       inputRoutes,
       baselineResult.routes,
@@ -2325,14 +2414,17 @@ export class HighDensityForceImproveSolver extends BaseSolver {
         ? baselineResult
         : runForceDirectedImprovement(
             bounds,
-            inputRoutes,
+            preconditionRoutesForNewCrossings({
+              routes: inputRoutes,
+              node: sampleEntry.node,
+              selectors: segmentPairBarrierSelectors,
+            }),
             this.totalStepsPerNode,
-            {
-              includeForceVectors: true,
-              segmentPairBarrierSelectors,
-            },
+            { includeForceVectors: true },
           )
-    applyProjectionClearance(sampleEntry.node, result.routes)
+    if (result !== baselineResult) {
+      applyProjectionClearance(sampleEntry.node, result.routes)
+    }
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
       this.improvedRoutesByIndex.set(
