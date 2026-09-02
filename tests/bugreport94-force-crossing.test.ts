@@ -73,16 +73,6 @@ const createReproVisualization = (
     ],
     lines,
     circles,
-    texts: Object.entries(REPRO_TRACE_COLORS).map(
-      ([traceName, color], index) => ({
-        x: node.center.x - node.width / 2,
-        y: node.center.y + node.height / 2 + 0.18 + index * 0.18,
-        text: traceName,
-        anchorSide: "center_left",
-        color,
-        fontSize: 0.12,
-      }),
-    ),
   }
 }
 
@@ -187,17 +177,9 @@ test("force improvement preserves Bug 94 trace ordering", async () => {
   )
 
   await expect(
-    stackGraphicsHorizontally(
-      [
-        createReproVisualization(baseline.routes, node),
-        createReproVisualization(solver.getOutput(), node),
-      ],
-      {
-        titles: [
-          "Before: force pass creates an overlap",
-          "After: ordering and neighbor clearance preserved",
-        ],
-      },
-    ),
+    stackGraphicsHorizontally([
+      createReproVisualization(baseline.routes, node),
+      createReproVisualization(solver.getOutput(), node),
+    ]),
   ).toMatchGraphicsSvg(import.meta.path)
 }, 30_000)
