@@ -115,6 +115,38 @@ type ProjectionSegment = {
   traceRadius: number
 }
 
+type ProjectionSegmentIndex = Array<
+  Array<ProjectionSegment | undefined> | undefined
+>
+
+type RoutePair = readonly [number, number]
+
+const indexProjectionSegments = (
+  segments: ProjectionSegment[],
+): ProjectionSegmentIndex => {
+  const index: ProjectionSegmentIndex = []
+  for (const segment of segments) {
+    const routeSegments = index[segment.routeIndex] ?? []
+    routeSegments[segment.startIndex] = segment
+    index[segment.routeIndex] = routeSegments
+  }
+  return index
+}
+
+const getRoutePair = (
+  leftRouteIndex: number,
+  rightRouteIndex: number,
+): RoutePair =>
+  leftRouteIndex < rightRouteIndex
+    ? [leftRouteIndex, rightRouteIndex]
+    : [rightRouteIndex, leftRouteIndex]
+
+const includesRoutePair = (pairs: RoutePair[], candidate: RoutePair) =>
+  pairs.some(
+    ([leftRouteIndex, rightRouteIndex]) =>
+      leftRouteIndex === candidate[0] && rightRouteIndex === candidate[1],
+  )
+
 export type ForceVector = {
   kind: "point" | "via"
   routeIndex: number
@@ -1039,15 +1071,8 @@ const findNewProperSegmentCrossings = (
 ): SegmentPairSelector[] => {
   const candidateSegments = collectProjectionSegments(candidateRoutes)
   const originalSegments = collectProjectionSegments(originalRoutes)
-  const originalSegmentsByKey = new Map<string, ProjectionSegment>()
-  for (const segment of originalSegments) {
-    originalSegmentsByKey.set(
-      `${segment.routeIndex}:${segment.startIndex}`,
-      segment,
-    )
-  }
+  const originalSegmentIndex = indexProjectionSegments(originalSegments)
   const selectors: SegmentPairSelector[] = []
-  const selectorKeys = new Set<string>()
 
   for (
     let leftIndex = 0;
@@ -1094,12 +1119,10 @@ const findNewProperSegmentCrossings = (
         continue
       }
 
-      const originalLeft = originalSegmentsByKey.get(
-        `${left.routeIndex}:${left.startIndex}`,
-      )
-      const originalRight = originalSegmentsByKey.get(
-        `${right.routeIndex}:${right.startIndex}`,
-      )
+      const originalLeft =
+        originalSegmentIndex[left.routeIndex]?.[left.startIndex]
+      const originalRight =
+        originalSegmentIndex[right.routeIndex]?.[right.startIndex]
       if (!originalLeft || !originalRight) continue
       const [originalCandidate] = getProjectionSegmentDistanceCandidates(
         originalLeft,
@@ -1134,15 +1157,24 @@ const findNewProperSegmentCrossings = (
 
       for (const leftSegment of leftCorridor) {
         for (const rightSegment of rightCorridor) {
-          const selectorKey = `${left.routeIndex}:${leftSegment.startIndex}:${right.routeIndex}:${rightSegment.startIndex}`
-          if (selectorKeys.has(selectorKey)) continue
-          selectorKeys.add(selectorKey)
-          selectors.push({
+          const selector = {
             leftRouteIndex: left.routeIndex,
             leftStartPointIndex: leftSegment.startIndex,
             rightRouteIndex: right.routeIndex,
             rightStartPointIndex: rightSegment.startIndex,
-          })
+          }
+          if (
+            selectors.some(
+              (existing) =>
+                existing.leftRouteIndex === selector.leftRouteIndex &&
+                existing.leftStartPointIndex === selector.leftStartPointIndex &&
+                existing.rightRouteIndex === selector.rightRouteIndex &&
+                existing.rightStartPointIndex === selector.rightStartPointIndex,
+            )
+          ) {
+            continue
+          }
+          selectors.push(selector)
         }
       }
     }
@@ -1151,12 +1183,9 @@ const findNewProperSegmentCrossings = (
   return selectors
 }
 
-const getRoutePairKey = (leftRouteIndex: number, rightRouteIndex: number) =>
-  `${Math.min(leftRouteIndex, rightRouteIndex)}:${Math.max(leftRouteIndex, rightRouteIndex)}`
-
 const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
   const segments = collectProjectionSegments(routes)
-  const violatingRoutePairs = new Set<string>()
+  const violatingRoutePairs: RoutePair[] = []
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
@@ -1180,9 +1209,10 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
         candidate.leftPoint.y - candidate.rightPoint.y,
       )
       if (distance + POSITION_EPSILON < left.traceRadius + right.traceRadius) {
-        violatingRoutePairs.add(
-          getRoutePairKey(left.routeIndex, right.routeIndex),
-        )
+        const pair = getRoutePair(left.routeIndex, right.routeIndex)
+        if (!includesRoutePair(violatingRoutePairs, pair)) {
+          violatingRoutePairs.push(pair)
+        }
       }
     }
   }
@@ -1203,33 +1233,28 @@ const findAlignedTopologyCandidate = (params: {
     crossingSelectors,
     protectedSelectors,
   } = params
-  const originalSegmentsByKey = new Map(
-    collectProjectionSegments(originalRoutes).map((segment) => [
-      `${segment.routeIndex}:${segment.startIndex}`,
-      segment,
-    ]),
+  const originalSegmentIndex = indexProjectionSegments(
+    collectProjectionSegments(originalRoutes),
   )
-  const guardedSegmentsByKey = new Map(
-    collectProjectionSegments(guardedRoutes).map((segment) => [
-      `${segment.routeIndex}:${segment.startIndex}`,
-      segment,
-    ]),
+  const guardedSegmentIndex = indexProjectionSegments(
+    collectProjectionSegments(guardedRoutes),
   )
   const baselineViolationPairs = getRoutePairClearanceViolations(guardedRoutes)
-  const protectedRoutePairs = new Set(
-    protectedSelectors.map(({ leftRouteIndex, rightRouteIndex }) =>
-      getRoutePairKey(leftRouteIndex, rightRouteIndex),
-    ),
+  const protectedRoutePairs = protectedSelectors.map(
+    ({ leftRouteIndex, rightRouteIndex }) =>
+      getRoutePair(leftRouteIndex, rightRouteIndex),
   )
   const bounds = getInsetNodeBounds(node, POSITION_EPSILON)
 
   for (const selector of crossingSelectors) {
-    const guardedLeft = guardedSegmentsByKey.get(
-      `${selector.leftRouteIndex}:${selector.leftStartPointIndex}`,
-    )
-    const guardedRight = guardedSegmentsByKey.get(
-      `${selector.rightRouteIndex}:${selector.rightStartPointIndex}`,
-    )
+    const guardedLeft =
+      guardedSegmentIndex[selector.leftRouteIndex]?.[
+        selector.leftStartPointIndex
+      ]
+    const guardedRight =
+      guardedSegmentIndex[selector.rightRouteIndex]?.[
+        selector.rightStartPointIndex
+      ]
     if (!guardedLeft || !guardedRight) continue
     const [guardedCrossing] = getProjectionSegmentDistanceCandidates(
       guardedLeft,
@@ -1268,12 +1293,10 @@ const findAlignedTopologyCandidate = (params: {
           : selector.leftStartPointIndex
       const originalMovableRoute = originalRoutes[movableRouteIndex]
       const guardedMovableRoute = guardedRoutes[movableRouteIndex]
-      const originalFixedSegment = originalSegmentsByKey.get(
-        `${fixedRouteIndex}:${fixedStartIndex}`,
-      )
-      const guardedFixedSegment = guardedSegmentsByKey.get(
-        `${fixedRouteIndex}:${fixedStartIndex}`,
-      )
+      const originalFixedSegment =
+        originalSegmentIndex[fixedRouteIndex]?.[fixedStartIndex]
+      const guardedFixedSegment =
+        guardedSegmentIndex[fixedRouteIndex]?.[fixedStartIndex]
       if (
         !originalMovableRoute ||
         !guardedMovableRoute ||
@@ -1345,11 +1368,18 @@ const findAlignedTopologyCandidate = (params: {
             let candidateViolationPairs =
               getRoutePairClearanceViolations(evaluatedRoutes)
             const closureRouteIndexes = new Set<number>()
-            for (const pairKey of candidateViolationPairs) {
-              if (baselineViolationPairs.has(pairKey)) continue
-              const [leftRouteIndex, rightRouteIndex] = pairKey
-                .split(":")
-                .map(Number)
+            for (const [
+              leftRouteIndex,
+              rightRouteIndex,
+            ] of candidateViolationPairs) {
+              if (
+                includesRoutePair(baselineViolationPairs, [
+                  leftRouteIndex,
+                  rightRouteIndex,
+                ])
+              ) {
+                continue
+              }
               if (
                 leftRouteIndex === movableRouteIndex &&
                 rightRouteIndex !== movableRouteIndex
@@ -1370,23 +1400,24 @@ const findAlignedTopologyCandidate = (params: {
               )
               const projectedViolationPairs =
                 getRoutePairClearanceViolations(projectedRoutes)
-              const projectedPreservesProtectedClearance = [
-                ...protectedRoutePairs,
-              ].every((pairKey) => !projectedViolationPairs.has(pairKey))
+              const projectedPreservesProtectedClearance =
+                protectedRoutePairs.every(
+                  (pair) => !includesRoutePair(projectedViolationPairs, pair),
+                )
               if (
                 projectedPreservesProtectedClearance &&
-                projectedViolationPairs.size < candidateViolationPairs.size
+                projectedViolationPairs.length < candidateViolationPairs.length
               ) {
                 evaluatedRoutes = projectedRoutes
                 candidateViolationPairs = projectedViolationPairs
               }
             }
-            const preservesProtectedClearance = [...protectedRoutePairs].every(
-              (pairKey) => !candidateViolationPairs.has(pairKey),
+            const preservesProtectedClearance = protectedRoutePairs.every(
+              (pair) => !includesRoutePair(candidateViolationPairs, pair),
             )
             if (
               preservesProtectedClearance &&
-              candidateViolationPairs.size < baselineViolationPairs.size
+              candidateViolationPairs.length < baselineViolationPairs.length
             ) {
               return evaluatedRoutes
             }
@@ -1407,19 +1438,16 @@ const preconditionRoutesForNewCrossings = (params: {
   const { routes, node, selectors } = params
   const preconditionedRoutes = structuredClone(routes)
   const originalSegments = collectProjectionSegments(routes)
-  const originalSegmentsByKey = new Map(
-    originalSegments.map((segment) => [
-      `${segment.routeIndex}:${segment.startIndex}`,
-      segment,
-    ]),
-  )
+  const originalSegmentIndex = indexProjectionSegments(originalSegments)
   const barriers = selectors.flatMap((selector) => {
-    const left = originalSegmentsByKey.get(
-      `${selector.leftRouteIndex}:${selector.leftStartPointIndex}`,
-    )
-    const right = originalSegmentsByKey.get(
-      `${selector.rightRouteIndex}:${selector.rightStartPointIndex}`,
-    )
+    const left =
+      originalSegmentIndex[selector.leftRouteIndex]?.[
+        selector.leftStartPointIndex
+      ]
+    const right =
+      originalSegmentIndex[selector.rightRouteIndex]?.[
+        selector.rightStartPointIndex
+      ]
     if (!left || !right) return []
     const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
     if (!candidate) return []
@@ -1440,19 +1468,16 @@ const preconditionRoutesForNewCrossings = (params: {
 
   for (let pass = 0; pass < 3; pass += 1) {
     const currentSegments = collectProjectionSegments(preconditionedRoutes)
-    const currentSegmentsByKey = new Map(
-      currentSegments.map((segment) => [
-        `${segment.routeIndex}:${segment.startIndex}`,
-        segment,
-      ]),
-    )
+    const currentSegmentIndex = indexProjectionSegments(currentSegments)
     for (const barrier of barriers) {
-      const left = currentSegmentsByKey.get(
-        `${barrier.selector.leftRouteIndex}:${barrier.selector.leftStartPointIndex}`,
-      )
-      const right = currentSegmentsByKey.get(
-        `${barrier.selector.rightRouteIndex}:${barrier.selector.rightStartPointIndex}`,
-      )
+      const left =
+        currentSegmentIndex[barrier.selector.leftRouteIndex]?.[
+          barrier.selector.leftStartPointIndex
+        ]
+      const right =
+        currentSegmentIndex[barrier.selector.rightRouteIndex]?.[
+          barrier.selector.rightStartPointIndex
+        ]
       if (!left || !right) continue
       const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
       if (!candidate) continue
