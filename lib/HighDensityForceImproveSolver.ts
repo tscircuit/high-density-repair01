@@ -67,24 +67,13 @@ type ForceElement = PointForceElement | ViaForceElement
 
 type SegmentObstacle = {
   obstacleIndex: number
-  routeIndex: number
-  startPointIndex: number
   rootConnectionName: string
   z: number
-  traceRadius: number
   startNode: MutableNode
   endNode: MutableNode
 }
 
-type SegmentPairBarrier = {
-  left: SegmentObstacle
-  right: SegmentObstacle
-  directionX: number
-  directionY: number
-  requiredDistance: number
-}
-
-export type SegmentPairBarrierSelector = {
+type SegmentPairSelector = {
   leftRouteIndex: number
   leftStartPointIndex: number
   rightRouteIndex: number
@@ -144,7 +133,6 @@ export type ForceImproveResult = {
 
 export type ForceImproveOptions = {
   includeForceVectors?: boolean
-  segmentPairBarrierSelectors?: SegmentPairBarrierSelector[]
 }
 
 // The first and last trace segments encode pad escape/arrival geometry.
@@ -623,11 +611,8 @@ const buildSegmentObstacles = (routes: MutableRoute[]): SegmentObstacle[] => {
       if (!startNode || !endNode || !routePoint) continue
       segments.push({
         obstacleIndex: segments.length,
-        routeIndex,
-        startPointIndex: routePointIndex,
         rootConnectionName: mutableRoute.rootConnectionName,
         z: routePoint.z,
-        traceRadius: (mutableRoute.route.traceThickness ?? 0.1) / 2,
         startNode,
         endNode,
       })
@@ -635,90 +620,6 @@ const buildSegmentObstacles = (routes: MutableRoute[]): SegmentObstacle[] => {
   }
 
   return segments
-}
-
-const buildSegmentPairBarriers = (
-  segments: SegmentObstacle[],
-  selectors: SegmentPairBarrierSelector[],
-): SegmentPairBarrier[] => {
-  const segmentsByKey = new Map<string, SegmentObstacle>()
-  for (const segment of segments) {
-    segmentsByKey.set(
-      `${segment.routeIndex}:${segment.startPointIndex}`,
-      segment,
-    )
-  }
-
-  return selectors.flatMap((selector) => {
-    const left = segmentsByKey.get(
-      `${selector.leftRouteIndex}:${selector.leftStartPointIndex}`,
-    )
-    const right = segmentsByKey.get(
-      `${selector.rightRouteIndex}:${selector.rightStartPointIndex}`,
-    )
-    if (!left || !right || left.z !== right.z) return []
-
-    const [candidate] = getProjectionSegmentDistanceCandidates(
-      { start: left.startNode, end: left.endNode },
-      { start: right.startNode, end: right.endNode },
-    )
-    if (!candidate) return []
-
-    const separationX = candidate.leftPoint.x - candidate.rightPoint.x
-    const separationY = candidate.leftPoint.y - candidate.rightPoint.y
-    const distance = Math.hypot(separationX, separationY)
-    if (distance <= POSITION_EPSILON) return []
-
-    return [
-      {
-        left,
-        right,
-        directionX: separationX / distance,
-        directionY: separationY / distance,
-        requiredDistance:
-          left.traceRadius + right.traceRadius + CLEARANCE_SLACK,
-      },
-    ]
-  })
-}
-
-const appendSegmentPairBarrierCorrections = (
-  barriers: SegmentPairBarrier[],
-  nodeCorrections: Float64Array,
-  maxCorrection: number,
-): void => {
-  for (const barrier of barriers) {
-    const [candidate] = getProjectionSegmentDistanceCandidates(
-      { start: barrier.left.startNode, end: barrier.left.endNode },
-      { start: barrier.right.startNode, end: barrier.right.endNode },
-    )
-    if (!candidate) continue
-
-    const separationX = candidate.leftPoint.x - candidate.rightPoint.x
-    const separationY = candidate.leftPoint.y - candidate.rightPoint.y
-    const signedDistance =
-      separationX * barrier.directionX + separationY * barrier.directionY
-    const penetration = barrier.requiredDistance - signedDistance
-    if (penetration <= 0) continue
-
-    const magnitude = Math.min(maxCorrection, penetration / 2)
-    const correctionX = barrier.directionX * magnitude
-    const correctionY = barrier.directionY * magnitude
-    distributeForceToSegmentPoints(
-      barrier.left,
-      correctionX,
-      correctionY,
-      nodeCorrections,
-      candidate.leftT,
-    )
-    distributeForceToSegmentPoints(
-      barrier.right,
-      -correctionX,
-      -correctionY,
-      nodeCorrections,
-      candidate.rightT,
-    )
-  }
 }
 
 const addForceToNode = (
@@ -1135,7 +1036,7 @@ const findClosestAdjacentProjectionSegment = (
 const findNewProperSegmentCrossings = (
   originalRoutes: HighDensityRoute[],
   candidateRoutes: HighDensityRoute[],
-): SegmentPairBarrierSelector[] => {
+): SegmentPairSelector[] => {
   const candidateSegments = collectProjectionSegments(candidateRoutes)
   const originalSegments = collectProjectionSegments(originalRoutes)
   const originalSegmentsByKey = new Map<string, ProjectionSegment>()
@@ -1145,7 +1046,7 @@ const findNewProperSegmentCrossings = (
       segment,
     )
   }
-  const selectors: SegmentPairBarrierSelector[] = []
+  const selectors: SegmentPairSelector[] = []
   const selectorKeys = new Set<string>()
 
   for (
@@ -1292,8 +1193,8 @@ const findAlignedTopologyCandidate = (params: {
   originalRoutes: HighDensityRoute[]
   guardedRoutes: HighDensityRoute[]
   node: NodeWithPortPoints
-  crossingSelectors: SegmentPairBarrierSelector[]
-  protectedSelectors: SegmentPairBarrierSelector[]
+  crossingSelectors: SegmentPairSelector[]
+  protectedSelectors: SegmentPairSelector[]
 }) => {
   const {
     originalRoutes,
@@ -1501,7 +1402,7 @@ const findAlignedTopologyCandidate = (params: {
 const preconditionRoutesForNewCrossings = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
-  selectors: SegmentPairBarrierSelector[]
+  selectors: SegmentPairSelector[]
 }) => {
   const { routes, node, selectors } = params
   const preconditionedRoutes = structuredClone(routes)
@@ -1966,7 +1867,6 @@ const resolveClearanceConstraints = (
   mutableRoutes: MutableRoute[],
   forceElements: ForceElement[],
   segments: SegmentObstacle[],
-  segmentPairBarriers: SegmentPairBarrier[],
   nodeCorrections: Float64Array,
   passCount = CLEARANCE_PROJECTION_PASSES,
   maxCorrection = MAX_CLEARANCE_CORRECTION,
@@ -1974,11 +1874,6 @@ const resolveClearanceConstraints = (
   for (let passIndex = 0; passIndex < passCount; passIndex += 1) {
     nodeCorrections.fill(0)
     const segmentSpatialIndex = buildSegmentSpatialIndex(segments)
-    appendSegmentPairBarrierCorrections(
-      segmentPairBarriers,
-      nodeCorrections,
-      maxCorrection,
-    )
 
     for (let leftIndex = 0; leftIndex < forceElements.length; leftIndex += 1) {
       const leftElement = forceElements[leftIndex]
@@ -2190,10 +2085,6 @@ export const runForceDirectedImprovement = (
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
-  const segmentPairBarriers = buildSegmentPairBarriers(
-    segments,
-    options?.segmentPairBarrierSelectors ?? [],
-  )
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
@@ -2565,7 +2456,6 @@ export const runForceDirectedImprovement = (
       mutableRoutes,
       forceElements,
       segments,
-      segmentPairBarriers,
       nodeCorrections,
       CLEARANCE_PROJECTION_PASSES,
       MAX_CLEARANCE_CORRECTION,
@@ -2577,7 +2467,6 @@ export const runForceDirectedImprovement = (
     mutableRoutes,
     forceElements,
     segments,
-    segmentPairBarriers,
     nodeCorrections,
     FINAL_CLEARANCE_PROJECTION_PASSES,
     FINAL_MAX_CLEARANCE_CORRECTION,
