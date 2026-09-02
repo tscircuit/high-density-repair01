@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { stackGraphicsHorizontally, type GraphicsObject } from "graphics-debug"
 import { fileURLToPath } from "node:url"
 import {
   HighDensityForceImproveSolver,
@@ -18,6 +19,72 @@ type SolverFixture = {
 }
 
 const INTERSECTION_EPSILON = 1e-6
+const REPRO_TRACE_COLORS: Record<string, string> = {
+  source_trace_108: "#ef4444",
+  source_trace_138: "#2563eb",
+  source_trace_99: "#16a34a",
+}
+
+const createReproVisualization = (
+  routes: HighDensityRoute[],
+  node: NodeWithPortPoints,
+): GraphicsObject => {
+  const lines: NonNullable<GraphicsObject["lines"]> = []
+  const circles: NonNullable<GraphicsObject["circles"]> = []
+
+  for (const route of routes) {
+    const rootConnectionName = route.rootConnectionName ?? route.connectionName
+    const color = REPRO_TRACE_COLORS[rootConnectionName]
+    if (!color) continue
+
+    for (let index = 0; index < route.route.length - 1; index += 1) {
+      const start = route.route[index]
+      const end = route.route[index + 1]
+      if (!start || !end || start.z !== end.z) continue
+      lines.push({
+        points: [start, end],
+        strokeColor: color,
+        strokeWidth: route.traceThickness,
+        strokeDash: start.z === 0 ? undefined : [0.08, 0.08],
+        label: rootConnectionName,
+      })
+    }
+
+    for (const via of route.vias) {
+      circles.push({
+        center: via,
+        radius: route.viaDiameter / 2,
+        stroke: color,
+        fill: "rgba(255,255,255,0.7)",
+        label: rootConnectionName,
+      })
+    }
+  }
+
+  return {
+    coordinateSystem: "cartesian",
+    rects: [
+      {
+        center: node.center,
+        width: node.width,
+        height: node.height,
+        stroke: "#94a3b8",
+      },
+    ],
+    lines,
+    circles,
+    texts: Object.entries(REPRO_TRACE_COLORS).map(
+      ([traceName, color], index) => ({
+        x: node.center.x - node.width / 2,
+        y: node.center.y + node.height / 2 + 0.18 + index * 0.18,
+        text: traceName,
+        anchorSide: "center_left",
+        color,
+        fontSize: 0.12,
+      }),
+    ),
+  }
+}
 
 const getMinimumRouteDistance = (
   left: HighDensityRoute,
@@ -118,4 +185,19 @@ test("force improvement preserves Bug 94 trace ordering", async () => {
   ).toBeGreaterThanOrEqual(
     (guardedTarget.left.traceThickness + guardedNeighbor.traceThickness) / 2,
   )
+
+  await expect(
+    stackGraphicsHorizontally(
+      [
+        createReproVisualization(baseline.routes, node),
+        createReproVisualization(solver.getOutput(), node),
+      ],
+      {
+        titles: [
+          "Before: force pass creates an overlap",
+          "After: ordering and neighbor clearance preserved",
+        ],
+      },
+    ),
+  ).toMatchGraphicsSvg(import.meta.path)
 }, 30_000)
