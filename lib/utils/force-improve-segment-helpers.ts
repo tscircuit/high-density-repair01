@@ -1,3 +1,9 @@
+import type { HighDensityRoute } from "../types/high-density-types"
+import {
+  areSameXY,
+  getRouteRootConnectionName,
+} from "./force-improve-route-helpers"
+
 type Vector = {
   x: number
   y: number
@@ -6,6 +12,15 @@ type Vector = {
 type SegmentGeometry = {
   start: Vector
   end: Vector
+}
+
+export type ProjectionSegment = SegmentGeometry & {
+  routeIndex: number
+  rootConnectionName: string
+  startIndex: number
+  endIndex: number
+  z: number
+  traceRadius: number
 }
 
 type SegmentDistanceCandidate = {
@@ -29,6 +44,37 @@ const lerpVector = (start: Vector, end: Vector, t: number): Vector => ({
   x: start.x + (end.x - start.x) * t,
   y: start.y + (end.y - start.y) * t,
 })
+
+export const collectProjectionSegments = (
+  routes: HighDensityRoute[],
+): ProjectionSegment[] => {
+  const segments: ProjectionSegment[] = []
+
+  for (let routeIndex = 0; routeIndex < routes.length; routeIndex += 1) {
+    const route = routes[routeIndex]
+    if (!route) continue
+
+    for (let index = 0; index < route.route.length - 1; index += 1) {
+      const start = route.route[index]
+      const end = route.route[index + 1]
+      if (!start || !end) continue
+      if (start.z !== end.z || areSameXY(start, end)) continue
+
+      segments.push({
+        routeIndex,
+        rootConnectionName: getRouteRootConnectionName(route),
+        startIndex: index,
+        endIndex: index + 1,
+        start,
+        end,
+        z: start.z,
+        traceRadius: (route.traceThickness ?? 0.1) / 2,
+      })
+    }
+  }
+
+  return segments
+}
 
 export const pointToProjectionSegment = (
   point: Vector,
