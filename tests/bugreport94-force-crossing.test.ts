@@ -1,5 +1,9 @@
 import { expect, test } from "bun:test"
-import { stackGraphicsHorizontally, type GraphicsObject } from "graphics-debug"
+import {
+  getSvgFromGraphicsObject,
+  stackGraphicsHorizontally,
+  type GraphicsObject,
+} from "graphics-debug"
 import { fileURLToPath } from "node:url"
 import {
   HighDensityForceImproveSolver,
@@ -176,10 +180,17 @@ test("force improvement preserves Bug 94 trace ordering", async () => {
     (guardedTarget.left.traceThickness + guardedNeighbor.traceThickness) / 2,
   )
 
-  await expect(
-    stackGraphicsHorizontally([
-      createReproVisualization(baseline.routes, node),
-      createReproVisualization(solver.getOutput(), node),
-    ]),
-  ).toMatchGraphicsSvg(import.meta.path)
+  const graphics = stackGraphicsHorizontally([
+    createReproVisualization(baseline.routes, node),
+    createReproVisualization(solver.getOutput(), node),
+  ])
+  const snapshotPath = fileURLToPath(
+    new URL(
+      "./__snapshots__/bugreport94-force-crossing.snap.svg",
+      import.meta.url,
+    ),
+  )
+  expect(getSvgFromGraphicsObject(graphics)).toBe(
+    await Bun.file(snapshotPath).text(),
+  )
 }, 30_000)
