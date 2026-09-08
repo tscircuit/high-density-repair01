@@ -1,3 +1,5 @@
+import type { FixedObstacleContext } from "../types/FixedObstacle"
+import { FixedObstacleMoveGuard } from "./FixedObstacleMoveGuard"
 import { getMovingPointSegmentContact } from "./getMovingPointSegmentContact"
 
 type Point = { x: number; y: number }
@@ -64,6 +66,7 @@ const segmentDistanceSquared = (
  * constrain movement. Points are checked together to preserve vias.
  */
 export class TraceSegmentMoveGuard {
+  private readonly fixedObstacleGuard?: FixedObstacleMoveGuard
   private readonly originalPoints = new Map<Point, Point>()
   private readonly pairClearance = new Map<Segment, Map<Segment, number>>()
   private readonly segmentsByPoint = new Map<Point, Segment[]>()
@@ -72,7 +75,13 @@ export class TraceSegmentMoveGuard {
   constructor(
     segments: Segment[],
     private readonly epsilon = 2e-6,
+    obstacleContext?: FixedObstacleContext,
   ) {
+    if (obstacleContext) {
+      this.fixedObstacleGuard = new FixedObstacleMoveGuard(
+        segments, obstacleContext.obstacles, obstacleContext.traceClearance, obstacleContext.connMap,
+      )
+    }
     for (const segment of segments) {
       for (const point of [segment.start, segment.end]) {
         this.originalPoints.set(point, { x: point.x, y: point.y })
@@ -281,6 +290,8 @@ export class TraceSegmentMoveGuard {
       }
       scale = lo
     }
-    return { x: dx * scale, y: dy * scale }
+    return this.fixedObstacleGuard
+      ? this.fixedObstacleGuard.constrain(points, dx * scale, dy * scale)
+      : { x: dx * scale, y: dy * scale }
   }
 }

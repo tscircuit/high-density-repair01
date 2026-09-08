@@ -1,3 +1,4 @@
+import type { FixedObstacleContext } from "./types/FixedObstacle"
 import {
   TraceSegmentMoveGuard,
   type Segment,
@@ -122,6 +123,7 @@ export type ForceImproveResult = {
 }
 
 export type ForceImproveOptions = {
+  obstacleContext?: FixedObstacleContext
   includeForceVectors?: boolean
 }
 
@@ -949,6 +951,7 @@ const projectionMoveGuards = new WeakMap<
 >()
 const getProjectionMoveGuard = (
   routes: HighDensityRoute[],
+  obstacleContext?: FixedObstacleContext,
 ): TraceSegmentMoveGuard => {
   let guard = projectionMoveGuards.get(routes)
   if (!guard) {
@@ -970,7 +973,7 @@ const getProjectionMoveGuard = (
         })
       }
     }
-    guard = new TraceSegmentMoveGuard(segments)
+    guard = new TraceSegmentMoveGuard(segments, undefined, obstacleContext)
     projectionMoveGuards.set(routes, guard)
   }
   return guard
@@ -1597,7 +1600,11 @@ export const runForceDirectedImprovement = (
       })
     }
   }
-  const moveGuard = new TraceSegmentMoveGuard(guardSegments)
+  const moveGuard = new TraceSegmentMoveGuard(
+    guardSegments,
+    undefined,
+    options?.obstacleContext,
+  )
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
@@ -2008,6 +2015,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
   readonly colorMap: Record<string, string>
   readonly totalStepsPerNode: number
   readonly nodeAssignmentMargin: number
+  readonly obstacleContext?: FixedObstacleContext
 
   improvedRoutesByIndex = new Map<number, HighDensityRoute>()
   activeSampleIndex = 0
@@ -2019,8 +2027,10 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     totalStepsPerNode?: number
     nodeAssignmentMargin?: number
     colorMap?: Record<string, string>
+    obstacleContext?: FixedObstacleContext
   }) {
     super()
+    this.obstacleContext = params.obstacleContext
     this.originalHdRoutes = params.hdRoutes
     this.originalNodeWithPortPoints = params.nodeWithPortPoints
     this.colorMap = params.colorMap ?? {}
@@ -2071,6 +2081,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
         totalStepsPerNode: this.totalStepsPerNode,
         nodeAssignmentMargin: this.nodeAssignmentMargin,
         colorMap: this.colorMap,
+        obstacleContext: this.obstacleContext,
       },
     ] as const
   }
@@ -2087,12 +2098,35 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     const inputRoutes = sampleEntry.routeIndexes.map(
       (routeIndex) => this.originalHdRoutes[routeIndex],
     )
+    const radius = Math.max(
+      ...inputRoutes.map(
+        (route): number =>
+          Math.max(route.traceThickness, route.viaDiameter) / 2,
+      ),
+    )
+    const obstacleContext = this.obstacleContext && {
+      ...this.obstacleContext,
+      obstacles: this.obstacleContext.obstacles.filter((obstacle): boolean => {
+        const reach =
+          Math.hypot(obstacle.width, obstacle.height) / 2 +
+          radius +
+          this.obstacleContext!.traceClearance +
+          this.nodeAssignmentMargin
+        return (
+          obstacle.center.x + reach >= bounds.minX &&
+          obstacle.center.x - reach <= bounds.maxX &&
+          obstacle.center.y + reach >= bounds.minY &&
+          obstacle.center.y - reach <= bounds.maxY
+        )
+      }),
+    }
     const result = runForceDirectedImprovement(
       bounds,
       inputRoutes,
       this.totalStepsPerNode,
-      { includeForceVectors: true },
+      { includeForceVectors: true, obstacleContext },
     )
+    getProjectionMoveGuard(result.routes, obstacleContext)
     applyProjectionClearance(sampleEntry.node, result.routes)
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
