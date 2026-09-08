@@ -1,3 +1,4 @@
+import { TraceSegmentMoveGuard } from "./utils/TraceSegmentMoveGuard"
 import Flatbush from "flatbush"
 import type { GraphicsObject } from "graphics-debug"
 import { BaseSolver } from "./BaseSolver"
@@ -19,11 +20,6 @@ import {
   pointToProjectionSegment,
   type ProjectionSegment,
 } from "./utils/force-improve-segment-helpers"
-import {
-  findAlignedTopologyCandidate,
-  findNewProperSegmentCrossings,
-  preconditionRoutesForNewCrossings,
-} from "./utils/high-density-force-improve-topology"
 
 type Vector = {
   x: number
@@ -75,6 +71,7 @@ type ForceElement = PointForceElement | ViaForceElement
 
 type SegmentObstacle = {
   obstacleIndex: number
+  traceRadius: number
   rootConnectionName: string
   z: number
   startNode: MutableNode
@@ -194,9 +191,6 @@ const CLEARANCE_SLACK = 0.015
 const VIA_PROJECTION_PASSES = 10
 const MAX_VIA_MOVE_PER_PASS = 0.04
 const MAX_TRACE_MOVE_PER_PASS = 0.025
-
-const roundCoordinate = (value: number) =>
-  Math.round(value * ROUNDING_PRECISION) / ROUNDING_PRECISION
 
 const subtractVector = (left: Vector, right: Vector): Vector => ({
   x: left.x - right.x,
@@ -406,6 +400,27 @@ const clampNodeToBounds = (node: MutableNode, bounds: Bounds) => {
   node.y = clampValue(node.y, minY, maxY)
 }
 
+const moveMutableNode = (
+  node: MutableNode,
+  dx: number,
+  dy: number,
+  bounds: Bounds,
+  moveGuard: TraceSegmentMoveGuard,
+): void => {
+  const x = node.x
+  const y = node.y
+  node.x += dx
+  node.y += dy
+  clampNodeToBounds(node, bounds)
+  const targetDx = node.x - x
+  const targetDy = node.y - y
+  node.x = x
+  node.y = y
+  const move = moveGuard.constrain([node], targetDx, targetDy)
+  node.x += move.x
+  node.y += move.y
+}
+
 const clampMutableRoutesToBounds = (
   mutableRoutes: MutableRoute[],
   bounds: Bounds,
@@ -592,7 +607,9 @@ const buildSegmentObstacles = (routes: MutableRoute[]): SegmentObstacle[] => {
     ) {
       const startNode = mutableRoute.nodes[nodeIndex]
       const endNode = mutableRoute.nodes[nodeIndex + 1]
-      const routePointIndex = startNode?.pointIndexes[0]
+      // A collapsed via node includes both layers. Its outgoing segment
+      // follows the last route point, not the incoming via endpoint.
+      const routePointIndex = startNode?.pointIndexes.at(-1)
       const routePoint =
         routePointIndex === undefined
           ? undefined
@@ -601,6 +618,7 @@ const buildSegmentObstacles = (routes: MutableRoute[]): SegmentObstacle[] => {
       if (!startNode || !endNode || !routePoint) continue
       segments.push({
         obstacleIndex: segments.length,
+        traceRadius: mutableRoute.route.traceThickness / 2,
         rootConnectionName: mutableRoute.rootConnectionName,
         z: routePoint.z,
         startNode,
@@ -830,8 +848,9 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            x: roundCoordinate(ownerNode.x),
-            y: roundCoordinate(ownerNode.y),
+            // Quantizing after constrained movement can recreate a contact.
+            x: ownerNode.x,
+            y: ownerNode.y,
           }
         : point
     })
@@ -845,15 +864,6 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
     nextRoute.vias = deriveVias(nextRoute)
     return nextRoute
   })
-
-const clampProjectionViaToNode = (
-  via: ProjectionViaNode,
-  node: NodeWithPortPoints,
-) => {
-  const bounds = getInsetNodeBounds(node, via.radius + POSITION_EPSILON)
-  via.x = clampValue(via.x, bounds.minX, bounds.maxX)
-  via.y = clampValue(via.y, bounds.minY, bounds.maxY)
-}
 
 const collectProjectionViaNodes = (
   routes: HighDensityRoute[],
@@ -924,6 +934,21 @@ const collectProjectionViaNodes = (
   return viaNodes
 }
 
+const projectionMoveGuards = new WeakMap<
+  HighDensityRoute[],
+  TraceSegmentMoveGuard
+>()
+const getProjectionMoveGuard = (
+  routes: HighDensityRoute[],
+): TraceSegmentMoveGuard => {
+  let guard = projectionMoveGuards.get(routes)
+  if (!guard) {
+    guard = new TraceSegmentMoveGuard(collectProjectionSegments(routes))
+    projectionMoveGuards.set(routes, guard)
+  }
+  return guard
+}
+
 const applyProjectionViaMove = (params: {
   routes: HighDensityRoute[]
   via: ProjectionViaNode
@@ -934,15 +959,20 @@ const applyProjectionViaMove = (params: {
   const { routes, via, dx, dy, node } = params
   if (!via.movable) return false
 
-  via.x += dx
-  via.y += dy
-  clampProjectionViaToNode(via, node)
-
   const route = routes[via.routeIndex]
   if (!route) return false
-  for (const pointIndex of via.pointIndexes) {
-    const point = route.route[pointIndex]
-    if (!point) continue
+  const points = via.pointIndexes
+    .map((pointIndex) => route.route[pointIndex]!)
+    .filter(Boolean)
+  const bounds = getInsetNodeBounds(node, via.radius + POSITION_EPSILON)
+  const move = getProjectionMoveGuard(routes).constrain(
+    points,
+    clampValue(via.x + dx, bounds.minX, bounds.maxX) - via.x,
+    clampValue(via.y + dy, bounds.minY, bounds.maxY) - via.y,
+  )
+  via.x += move.x
+  via.y += move.y
+  for (const point of points) {
     point.x = via.x
     point.y = via.y
   }
@@ -1094,14 +1124,20 @@ const applyProjectionRoutePointMove = (params: {
   }
 
   const bounds = getInsetNodeBounds(node, POSITION_EPSILON)
-  let changed = false
-  for (const candidateIndex of pointIndexes) {
-    const point = route.route[candidateIndex]
-    if (!point) continue
-    point.x = clampValue(point.x + dx, bounds.minX, bounds.maxX)
-    point.y = clampValue(point.y + dy, bounds.minY, bounds.maxY)
-    changed = true
+  const points = pointIndexes
+    .map((index) => route.route[index]!)
+    .filter(Boolean)
+  const point = route.route[pointIndex]!
+  const move = getProjectionMoveGuard(routes).constrain(
+    points,
+    clampValue(point.x + dx, bounds.minX, bounds.maxX) - point.x,
+    clampValue(point.y + dy, bounds.minY, bounds.maxY) - point.y,
+  )
+  for (const point of points) {
+    point.x += move.x
+    point.y += move.y
   }
+  const changed = move.x !== 0 || move.y !== 0
 
   return changed
 }
@@ -1279,32 +1315,13 @@ const applyProjectionClearance = (
   return routes
 }
 
-const applySelectedRouteSegmentClearance = (
-  node: NodeWithPortPoints,
-  routes: HighDensityRoute[],
-  movableRouteIndexes: ReadonlySet<number>,
-) => {
-  for (let pass = 0; pass < VIA_PROJECTION_PASSES; pass += 1) {
-    const changed = projectSegmentSegmentClearance({
-      routes,
-      node,
-      segments: collectProjectionSegments(routes),
-      movableRouteIndexes,
-    })
-    if (!changed) break
-  }
-  for (const routeIndex of movableRouteIndexes) {
-    const route = routes[routeIndex]
-    if (route) route.vias = deriveVias(route)
-  }
-  return routes
-}
 const resolveClearanceConstraints = (
   bounds: Bounds,
   mutableRoutes: MutableRoute[],
   forceElements: ForceElement[],
   segments: SegmentObstacle[],
   nodeCorrections: Float64Array,
+  moveGuard: TraceSegmentMoveGuard,
   passCount = CLEARANCE_PROJECTION_PASSES,
   maxCorrection = MAX_CLEARANCE_CORRECTION,
 ) => {
@@ -1504,8 +1521,7 @@ const resolveClearanceConstraints = (
           correctionY *= correctionScale
         }
 
-        node.x += correctionX
-        node.y += correctionY
+        moveMutableNode(node, correctionX, correctionY, bounds, moveGuard)
       }
     }
 
@@ -1522,6 +1538,13 @@ export const runForceDirectedImprovement = (
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
+  const moveGuard = new TraceSegmentMoveGuard(
+    segments.map((segment) => ({
+      ...segment,
+      start: segment.startNode,
+      end: segment.endNode,
+    })),
+  )
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
@@ -1882,8 +1905,13 @@ export const runForceDirectedImprovement = (
           movementY *= movementScale
         }
 
-        node.x += movementX + tighteningMoveX + orthogonalMoveX
-        node.y += movementY + tighteningMoveY + orthogonalMoveY
+        moveMutableNode(
+          node,
+          movementX + tighteningMoveX + orthogonalMoveX,
+          movementY + tighteningMoveY + orthogonalMoveY,
+          bounds,
+          moveGuard,
+        )
       }
     }
 
@@ -1894,6 +1922,7 @@ export const runForceDirectedImprovement = (
       forceElements,
       segments,
       nodeCorrections,
+      moveGuard,
       CLEARANCE_PROJECTION_PASSES,
       MAX_CLEARANCE_CORRECTION,
     )
@@ -1905,6 +1934,7 @@ export const runForceDirectedImprovement = (
     forceElements,
     segments,
     nodeCorrections,
+    moveGuard,
     FINAL_CLEARANCE_PROJECTION_PASSES,
     FINAL_MAX_CLEARANCE_CORRECTION,
   )
@@ -2004,56 +2034,13 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     const inputRoutes = sampleEntry.routeIndexes.map(
       (routeIndex) => this.originalHdRoutes[routeIndex],
     )
-    const baselineResult = runForceDirectedImprovement(
+    const result = runForceDirectedImprovement(
       bounds,
       inputRoutes,
       this.totalStepsPerNode,
       { includeForceVectors: true },
     )
-    applyProjectionClearance(sampleEntry.node, baselineResult.routes)
-    const segmentPairBarrierSelectors = findNewProperSegmentCrossings(
-      inputRoutes,
-      baselineResult.routes,
-    )
-    let result =
-      segmentPairBarrierSelectors.length === 0
-        ? baselineResult
-        : runForceDirectedImprovement(
-            bounds,
-            preconditionRoutesForNewCrossings(
-              {
-                routes: inputRoutes,
-                node: sampleEntry.node,
-                selectors: segmentPairBarrierSelectors,
-              },
-              distributeProjectionSegmentMove,
-            ),
-            this.totalStepsPerNode,
-            { includeForceVectors: true },
-          )
-    if (result !== baselineResult) {
-      applyProjectionClearance(sampleEntry.node, result.routes)
-      const residualCrossingSelectors = findNewProperSegmentCrossings(
-        inputRoutes,
-        result.routes,
-      )
-      if (residualCrossingSelectors.length > 0) {
-        const alignedRoutes = findAlignedTopologyCandidate(
-          {
-            originalRoutes: inputRoutes,
-            guardedRoutes: result.routes,
-            node: sampleEntry.node,
-            crossingSelectors: residualCrossingSelectors,
-            protectedSelectors: [
-              ...segmentPairBarrierSelectors,
-              ...residualCrossingSelectors,
-            ],
-          },
-          applySelectedRouteSegmentClearance,
-        )
-        if (alignedRoutes) result = { ...result, routes: alignedRoutes }
-      }
-    }
+    applyProjectionClearance(sampleEntry.node, result.routes)
 
     for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
       this.improvedRoutesByIndex.set(
