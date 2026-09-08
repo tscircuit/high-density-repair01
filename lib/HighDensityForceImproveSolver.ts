@@ -1,4 +1,7 @@
-import { TraceSegmentMoveGuard } from "./utils/TraceSegmentMoveGuard"
+import {
+  TraceSegmentMoveGuard,
+  type Segment,
+} from "./utils/TraceSegmentMoveGuard"
 import Flatbush from "flatbush"
 import type { GraphicsObject } from "graphics-debug"
 import { BaseSolver } from "./BaseSolver"
@@ -391,10 +394,15 @@ const getClearanceForceMagnitude = (
 
 const clampNodeToBounds = (node: MutableNode, bounds: Bounds) => {
   const inset = node.boundaryPadding > 0 ? BOUNDARY_INSET : 0
-  const minX = bounds.minX + node.boundaryPadding + inset
-  const maxX = bounds.maxX - node.boundaryPadding - inset
-  const minY = bounds.minY + node.boundaryPadding + inset
-  const maxY = bounds.maxY - node.boundaryPadding - inset
+  // A virtual node inset can already exclude an input via. Preserve that
+  // original overhang so a legal tangential move does not require an unsafe
+  // simultaneous inward displacement on the other axis.
+  const originalX = clampValue(node.originalX, bounds.minX, bounds.maxX)
+  const originalY = clampValue(node.originalY, bounds.minY, bounds.maxY)
+  const minX = Math.min(bounds.minX + node.boundaryPadding + inset, originalX)
+  const maxX = Math.max(bounds.maxX - node.boundaryPadding - inset, originalX)
+  const minY = Math.min(bounds.minY + node.boundaryPadding + inset, originalY)
+  const maxY = Math.max(bounds.maxY - node.boundaryPadding - inset, originalY)
 
   node.x = clampValue(node.x, minX, maxX)
   node.y = clampValue(node.y, minY, maxY)
@@ -424,10 +432,11 @@ const moveMutableNode = (
 const clampMutableRoutesToBounds = (
   mutableRoutes: MutableRoute[],
   bounds: Bounds,
+  moveGuard: TraceSegmentMoveGuard,
 ) => {
   for (const mutableRoute of mutableRoutes) {
     for (const node of mutableRoute.nodes) {
-      clampNodeToBounds(node, bounds)
+      moveMutableNode(node, 0, 0, bounds, moveGuard)
     }
   }
 }
@@ -943,7 +952,25 @@ const getProjectionMoveGuard = (
 ): TraceSegmentMoveGuard => {
   let guard = projectionMoveGuards.get(routes)
   if (!guard) {
-    guard = new TraceSegmentMoveGuard(collectProjectionSegments(routes))
+    const segments: Segment[] = collectProjectionSegments(routes)
+    for (const via of collectProjectionViaNodes(routes)) {
+      const route = routes[via.routeIndex]!
+      const points = via.pointIndexes.map((index) => route.route[index]!)
+      const minZ = Math.min(...points.map((point) => point.z))
+      const maxZ = Math.max(...points.map((point) => point.z))
+      for (let z = minZ; z <= maxZ; z++) {
+        segments.push({
+          start: points[0]!,
+          end: points[0]!,
+          z,
+          traceRadius: via.radius,
+          rootConnectionName: via.rootConnectionName,
+          isVia: true,
+          clearance: RELAXED_VIA_CLEARANCE,
+        })
+      }
+    }
+    guard = new TraceSegmentMoveGuard(segments)
     projectionMoveGuards.set(routes, guard)
   }
   return guard
@@ -967,8 +994,16 @@ const applyProjectionViaMove = (params: {
   const bounds = getInsetNodeBounds(node, via.radius + POSITION_EPSILON)
   const move = getProjectionMoveGuard(routes).constrain(
     points,
-    clampValue(via.x + dx, bounds.minX, bounds.maxX) - via.x,
-    clampValue(via.y + dy, bounds.minY, bounds.maxY) - via.y,
+    clampValue(
+      via.x + dx,
+      Math.min(bounds.minX, via.x),
+      Math.max(bounds.maxX, via.x),
+    ) - via.x,
+    clampValue(
+      via.y + dy,
+      Math.min(bounds.minY, via.y),
+      Math.max(bounds.maxY, via.y),
+    ) - via.y,
   )
   via.x += move.x
   via.y += move.y
@@ -1525,7 +1560,7 @@ const resolveClearanceConstraints = (
       }
     }
 
-    clampMutableRoutesToBounds(mutableRoutes, bounds)
+    clampMutableRoutesToBounds(mutableRoutes, bounds, moveGuard)
   }
 }
 
@@ -1538,17 +1573,35 @@ export const runForceDirectedImprovement = (
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
-  const moveGuard = new TraceSegmentMoveGuard(
-    segments.map((segment) => ({
-      ...segment,
-      start: segment.startNode,
-      end: segment.endNode,
-    })),
-  )
+  const guardSegments: Segment[] = segments.map((segment) => ({
+    ...segment,
+    start: segment.startNode,
+    end: segment.endNode,
+  }))
+  for (const element of forceElements) {
+    if (element.kind !== "via") continue
+    const route = mutableRoutes[element.routeIndex]!.route
+    const zs = element.node.pointIndexes.map((index) => route.route[index]!.z)
+    const minZ = Math.min(...zs),
+      maxZ = Math.max(...zs)
+    if (minZ === maxZ) continue
+    for (let z = minZ; z <= maxZ; z++) {
+      guardSegments.push({
+        start: element.node,
+        end: element.node,
+        z,
+        traceRadius: route.viaDiameter / 2,
+        rootConnectionName: element.rootConnectionName,
+        isVia: true,
+        clearance: RELAXED_VIA_CLEARANCE,
+      })
+    }
+  }
+  const moveGuard = new TraceSegmentMoveGuard(guardSegments)
   const nodeForces = new Float64Array(totalNodeCount * 2)
   const nodeCorrections = new Float64Array(totalNodeCount * 2)
   const includeForceVectors = options?.includeForceVectors ?? true
-  clampMutableRoutesToBounds(mutableRoutes, bounds)
+  clampMutableRoutesToBounds(mutableRoutes, bounds, moveGuard)
   let forceVectors: ForceVector[] = []
 
   for (let stepIndex = 0; stepIndex < totalSteps; stepIndex += 1) {
@@ -1915,7 +1968,7 @@ export const runForceDirectedImprovement = (
       }
     }
 
-    clampMutableRoutesToBounds(mutableRoutes, bounds)
+    clampMutableRoutesToBounds(mutableRoutes, bounds, moveGuard)
     resolveClearanceConstraints(
       bounds,
       mutableRoutes,
