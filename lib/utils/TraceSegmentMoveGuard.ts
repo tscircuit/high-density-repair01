@@ -79,7 +79,10 @@ export class TraceSegmentMoveGuard {
   ) {
     if (obstacleContext) {
       this.fixedObstacleGuard = new FixedObstacleMoveGuard(
-        segments, obstacleContext.obstacles, obstacleContext.traceClearance, obstacleContext.connMap,
+        segments,
+        obstacleContext.obstacles,
+        obstacleContext.traceClearance,
+        obstacleContext.connMap,
       )
     }
     for (const segment of segments) {
