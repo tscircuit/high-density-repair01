@@ -1,10 +1,14 @@
+import { getMovingPointSegmentContact } from "./getMovingPointSegmentContact"
+
 type Point = { x: number; y: number }
 
-type Segment = {
+export type Segment = {
   start: Point
   end: Point
   z: number
   traceRadius: number
+  isVia?: boolean
+  clearance?: number
   rootConnectionName: string
 }
 
@@ -55,8 +59,9 @@ const segmentDistanceSquared = (
 /**
  * A force step must not change trace ordering or worsen an existing copper
  * overlap. First-contact events prevent tunneling; a line search retains the
- * original separation up to the trace radii. Same-net copper and other layers
- * do not constrain movement. Points are checked together to preserve vias.
+ * original separation up to the trace radii. Via annuli additionally preserve
+ * their configured clearance. Same-net copper and other layers do not
+ * constrain movement. Points are checked together to preserve vias.
  */
 export class TraceSegmentMoveGuard {
   private readonly originalPoints = new Map<Point, Point>()
@@ -129,7 +134,10 @@ export class TraceSegmentMoveGuard {
         if (segment.rootConnectionName === obstacle.rootConnectionName) continue
         const c = obstacle.start
         const d = obstacle.end
-        const radius = segment.traceRadius + obstacle.traceRadius
+        const radius =
+          segment.traceRadius +
+          obstacle.traceRadius +
+          Math.max(segment.clearance ?? 0, obstacle.clearance ?? 0)
         if (
           radius > 0 &&
           Math.max(c.x, d.x) + radius >= minX &&
@@ -158,7 +166,26 @@ export class TraceSegmentMoveGuard {
             cached.set(obstacle, minDistanceSquared)
           }
           clearancePairs.push({ segment, obstacle, minDistanceSquared })
+          if (segment.isVia || obstacle.isVia) {
+            const via = segment.isVia ? segment : obstacle
+            const other = segment.isVia ? obstacle : segment
+            const movement = { x: dx, y: dy }
+            const stationary = { x: 0, y: 0 }
+            firstContact = Math.min(
+              firstContact,
+              getMovingPointSegmentContact(
+                via.start,
+                other.start,
+                other.end,
+                movedPoints.has(via.start) ? movement : stationary,
+                movedPoints.has(other.start) ? movement : stationary,
+                movedPoints.has(other.end) ? movement : stationary,
+                Math.sqrt(minDistanceSquared),
+              ),
+            )
+          }
         }
+        if (segment.isVia || obstacle.isVia) continue
         if (
           Math.max(c.x, d.x) < minX ||
           Math.min(c.x, d.x) > maxX ||
