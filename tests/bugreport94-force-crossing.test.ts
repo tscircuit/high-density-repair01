@@ -157,10 +157,14 @@ test("force improvement preserves Bug 94 trace ordering", async () => {
     fixture.totalStepsPerNode,
     { includeForceVectors: false },
   )
+  const inputTarget = getTargetRoutes(fixture.hdRoutes)
   const baselineTarget = getTargetRoutes(baseline.routes)
   expect(
     getMinimumRouteDistance(baselineTarget.left, baselineTarget.right),
-  ).toBeLessThanOrEqual(INTERSECTION_EPSILON)
+  ).toBeGreaterThanOrEqual(
+    getMinimumRouteDistance(inputTarget.left, inputTarget.right) -
+      INTERSECTION_EPSILON,
+  )
   const solver = new HighDensityForceImproveSolver(fixture)
   solver.solve()
   const guardedTarget = getTargetRoutes(solver.getOutput())

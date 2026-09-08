@@ -49,7 +49,7 @@ export const deriveVias = (
 export const areSameXY = (
   left: Vector,
   right: Vector,
-  coordinateMatchEpsilon = 1e-3,
+  coordinateMatchEpsilon = 0,
 ) =>
   Math.abs(left.x - right.x) <= coordinateMatchEpsilon &&
   Math.abs(left.y - right.y) <= coordinateMatchEpsilon
@@ -67,7 +67,7 @@ export const getInsetNodeBounds = (
 export const getCoincidentPointIndexes = (
   points: Vector[],
   pointIndex: number,
-  coordinateMatchEpsilon = 1e-3,
+  coordinateMatchEpsilon = 0,
 ) => {
   const point = points[pointIndex]
   if (!point) return []
