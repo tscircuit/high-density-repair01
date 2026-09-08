@@ -1,1 +1,872 @@
-{"node":{"capacityMeshNodeId":"topology_merge_494","center":{"x":-6.096,"y":5.038978999999999},"width":0.9722720000000002,"height":3.4620420000000003,"portPoints":[{"portPointId":"ce2352_pp0_z1::1","x":-6.582136,"y":5.038978782208716,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"source_trace_2","nextPortPointId":"ce2398_pp0_z1::1"},{"portPointId":"ce2398_pp0_z1::1","x":-5.609864,"y":5.327482318507263,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"source_trace_2","prevPortPointId":"ce2352_pp0_z1::1"},{"portPointId":"ce2352_pp0_z0::0","x":-6.582136,"y":5.038978782208716,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"source_trace_3","nextPortPointId":"ce2398_pp0_z0::0"},{"portPointId":"ce2398_pp0_z0::0","x":-5.609864,"y":5.471734086656537,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"source_trace_3","prevPortPointId":"ce2352_pp0_z0::0"},{"portPointId":"ce2356_pp1_z1::1","x":-6.582136,"y":6.423795756441743,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"source_trace_14","nextPortPointId":"ce2398_pp4_z1::1"},{"portPointId":"ce2398_pp4_z1::1","x":-5.609864,"y":6.481496463701452,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"source_trace_14","prevPortPointId":"ce2356_pp1_z1::1"},{"portPointId":"ce2398_pp2_z1::1","x":-5.609864,"y":5.904489391104358,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"source_trace_46","nextPortPointId":"ce2354_pp0_z1::1"},{"portPointId":"ce2354_pp0_z1::1","x":-6.582136,"y":5.731387269325229,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"source_trace_46","prevPortPointId":"ce2398_pp2_z1::1"},{"portPointId":"ce2275_pp1_z0::0","x":-6.093033999999999,"y":6.77,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"source_trace_45","nextPortPointId":"ce2356_pp1_z0::0"},{"portPointId":"ce2356_pp1_z0::0","x":-6.582136,"y":6.423795756441743,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"source_trace_45","prevPortPointId":"ce2275_pp1_z0::0"},{"portPointId":"ce2390_pp0_z1::1","x":-6.291168000000001,"y":3.3079579999999993,"z":1,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"source_trace_11","nextPortPointId":"ce2275_pp0_z0::0"},{"portPointId":"ce2275_pp0_z0::0","x":-6.4191020000000005,"y":6.77,"z":0,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"source_trace_11","prevPortPointId":"ce2390_pp0_z1::1"},{"portPointId":"ce2354_pp1_z0::0","x":-6.582136,"y":5.731387269325229,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"source_trace_8","nextPortPointId":"ce2399_pp0_z0::0"},{"portPointId":"ce2399_pp0_z0::0","x":-5.769932,"y":6.7700000000000005,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"source_trace_8","prevPortPointId":"ce2354_pp1_z0::0"},{"portPointId":"ce2350_pp1_z0::0","x":-6.582136,"y":4.346570295092203,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"source_trace_7","nextPortPointId":"ce2398_pp1_z0::0"},{"portPointId":"ce2398_pp1_z0::0","x":-5.609864,"y":6.337244695552179,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"source_trace_7","prevPortPointId":"ce2350_pp1_z0::0"},{"portPointId":"ce2392_pp1_z0::0","x":-6.096,"y":3.3079579999999993,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"source_trace_6","nextPortPointId":"ce2397_pp1_z0::0"},{"portPointId":"ce2397_pp1_z0::0","x":-5.609864,"y":4.1734683911043575,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"source_trace_6","prevPortPointId":"ce2392_pp1_z0::0"}],"portPointsInPairs":[[{"portPointId":"ce2352_pp0_z1::1","x":-6.582136,"y":5.038978782208716,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"source_trace_2","nextPortPointId":"ce2398_pp0_z1::1"},{"portPointId":"ce2398_pp0_z1::1","x":-5.609864,"y":5.327482318507263,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"source_trace_2","prevPortPointId":"ce2352_pp0_z1::1"}],[{"portPointId":"ce2352_pp0_z0::0","x":-6.582136,"y":5.038978782208716,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"source_trace_3","nextPortPointId":"ce2398_pp0_z0::0"},{"portPointId":"ce2398_pp0_z0::0","x":-5.609864,"y":5.471734086656537,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"source_trace_3","prevPortPointId":"ce2352_pp0_z0::0"}],[{"portPointId":"ce2356_pp1_z1::1","x":-6.582136,"y":6.423795756441743,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"source_trace_14","nextPortPointId":"ce2398_pp4_z1::1"},{"portPointId":"ce2398_pp4_z1::1","x":-5.609864,"y":6.481496463701452,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"source_trace_14","prevPortPointId":"ce2356_pp1_z1::1"}],[{"portPointId":"ce2398_pp2_z1::1","x":-5.609864,"y":5.904489391104358,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"source_trace_46","nextPortPointId":"ce2354_pp0_z1::1"},{"portPointId":"ce2354_pp0_z1::1","x":-6.582136,"y":5.731387269325229,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"source_trace_46","prevPortPointId":"ce2398_pp2_z1::1"}],[{"portPointId":"ce2275_pp1_z0::0","x":-6.093033999999999,"y":6.77,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"source_trace_45","nextPortPointId":"ce2356_pp1_z0::0"},{"portPointId":"ce2356_pp1_z0::0","x":-6.582136,"y":6.423795756441743,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"source_trace_45","prevPortPointId":"ce2275_pp1_z0::0"}],[{"portPointId":"ce2390_pp0_z1::1","x":-6.291168000000001,"y":3.3079579999999993,"z":1,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"source_trace_11","nextPortPointId":"ce2275_pp0_z0::0"},{"portPointId":"ce2275_pp0_z0::0","x":-6.4191020000000005,"y":6.77,"z":0,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"source_trace_11","prevPortPointId":"ce2390_pp0_z1::1"}],[{"portPointId":"ce2354_pp1_z0::0","x":-6.582136,"y":5.731387269325229,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"source_trace_8","nextPortPointId":"ce2399_pp0_z0::0"},{"portPointId":"ce2399_pp0_z0::0","x":-5.769932,"y":6.7700000000000005,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"source_trace_8","prevPortPointId":"ce2354_pp1_z0::0"}],[{"portPointId":"ce2350_pp1_z0::0","x":-6.582136,"y":4.346570295092203,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"source_trace_7","nextPortPointId":"ce2398_pp1_z0::0"},{"portPointId":"ce2398_pp1_z0::0","x":-5.609864,"y":6.337244695552179,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"source_trace_7","prevPortPointId":"ce2350_pp1_z0::0"}],[{"portPointId":"ce2392_pp1_z0::0","x":-6.096,"y":3.3079579999999993,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"source_trace_6","nextPortPointId":"ce2397_pp1_z0::0"},{"portPointId":"ce2397_pp1_z0::0","x":-5.609864,"y":4.1734683911043575,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"source_trace_6","prevPortPointId":"ce2392_pp1_z0::0"}]],"availableZ":[0,1]},"routes":[{"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"source_trace_2","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2352_pp0_z1::1","x":-6.582136,"y":5.038978782208716,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"connectivity_net42","nextPortPointId":"ce2398_pp0_z1::1"},{"x":-6.528120888888889,"y":5.08989138235294,"z":1},{"x":-6.474105777777778,"y":5.140803764705882,"z":1},{"x":-6.420090666666667,"y":5.191716147058823,"z":1},{"x":-6.366075555555556,"y":5.242628529411764,"z":1},{"x":-6.312060444444445,"y":5.293540911764705,"z":1},{"x":-6.2580453333333335,"y":5.344453294117646,"z":1},{"x":-6.204030222222222,"y":5.344453294117646,"z":1},{"x":-6.150015111111111,"y":5.344453294117646,"z":1},{"x":-6.096,"y":5.344453294117646,"z":1},{"x":-6.041984888888889,"y":5.344453294117646,"z":1},{"x":-5.987969777777778,"y":5.344453294117646,"z":1},{"x":-5.933954666666667,"y":5.344453294117646,"z":1},{"x":-5.879939555555556,"y":5.344453294117646,"z":1},{"x":-5.8259244444444445,"y":5.344453294117646,"z":1},{"x":-5.771909333333333,"y":5.344453294117646,"z":1},{"x":-5.717894222222222,"y":5.344453294117646,"z":1},{"x":-5.663879111111111,"y":5.344453294117646,"z":1},{"portPointId":"ce2398_pp0_z1::1","x":-5.609864,"y":5.327482318507263,"z":1,"connectionName":"source_trace_2__source_net_2_mst28","rootConnectionName":"connectivity_net42","prevPortPointId":"ce2352_pp0_z1::1"}],"vias":[]},{"connectionName":"source_trace_46__source_net_46","rootConnectionName":"source_trace_46","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2398_pp2_z1::1","x":-5.609864,"y":5.904489391104358,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"connectivity_net0","nextPortPointId":"ce2354_pp0_z1::1"},{"x":-5.663879111111111,"y":5.853577117647058,"z":1},{"x":-5.717894222222222,"y":5.802664735294117,"z":1},{"x":-5.771909333333333,"y":5.7517523529411765,"z":1},{"x":-5.8259244444444445,"y":5.7517523529411765,"z":1},{"x":-5.879939555555556,"y":5.7517523529411765,"z":1},{"x":-5.933954666666667,"y":5.7517523529411765,"z":1},{"x":-5.987969777777778,"y":5.7517523529411765,"z":1},{"x":-6.041984888888889,"y":5.7517523529411765,"z":1},{"x":-6.096,"y":5.7517523529411765,"z":1},{"x":-6.150015111111111,"y":5.7517523529411765,"z":1},{"x":-6.204030222222222,"y":5.7517523529411765,"z":1},{"x":-6.2580453333333335,"y":5.7517523529411765,"z":1},{"x":-6.312060444444445,"y":5.7517523529411765,"z":1},{"x":-6.366075555555556,"y":5.7517523529411765,"z":1},{"x":-6.420090666666667,"y":5.7517523529411765,"z":1},{"x":-6.474105777777778,"y":5.7517523529411765,"z":1},{"x":-6.528120888888889,"y":5.7517523529411765,"z":1},{"portPointId":"ce2354_pp0_z1::1","x":-6.582136,"y":5.731387269325229,"z":1,"connectionName":"source_trace_46__source_net_46","rootConnectionName":"connectivity_net0","prevPortPointId":"ce2398_pp2_z1::1"}],"vias":[]},{"connectionName":"source_trace_8__source_net_8","rootConnectionName":"source_trace_8","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2354_pp1_z0::0","x":-6.582136,"y":5.731387269325229,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"connectivity_net36","nextPortPointId":"ce2399_pp0_z0::0"},{"x":-6.528120888888889,"y":5.802664735294117,"z":0},{"x":-6.474105777777778,"y":5.853577117647058,"z":0},{"x":-6.420090666666667,"y":5.9044894999999995,"z":0},{"x":-6.366075555555556,"y":5.95540188235294,"z":0},{"x":-6.312060444444445,"y":6.006314264705882,"z":0},{"x":-6.2580453333333335,"y":6.0572266470588225,"z":0},{"x":-6.204030222222222,"y":6.108139029411764,"z":0},{"x":-6.150015111111111,"y":6.159051411764706,"z":0},{"x":-6.096,"y":6.209963794117646,"z":0},{"x":-6.041984888888889,"y":6.260876176470587,"z":0},{"x":-5.987969777777778,"y":6.311788558823529,"z":0},{"x":-5.933954666666667,"y":6.36270094117647,"z":0},{"x":-5.879939555555556,"y":6.413613323529411,"z":0},{"x":-5.8259244444444445,"y":6.464525705882352,"z":0},{"x":-5.771909333333333,"y":6.515438088235293,"z":0},{"x":-5.717894222222222,"y":6.566350470588235,"z":0},{"x":-5.717894222222222,"y":6.617262852941176,"z":0},{"x":-5.717894222222222,"y":6.668175235294117,"z":0},{"x":-5.717894222222222,"y":6.719087617647058,"z":0},{"portPointId":"ce2399_pp0_z0::0","x":-5.769932,"y":6.7700000000000005,"z":0,"connectionName":"source_trace_8__source_net_8","rootConnectionName":"connectivity_net36","prevPortPointId":"ce2354_pp1_z0::0"}],"vias":[]},{"connectionName":"source_trace_6__source_net_6","rootConnectionName":"source_trace_6","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2392_pp1_z0::0","x":-6.096,"y":3.3079579999999993,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"connectivity_net38","nextPortPointId":"ce2397_pp1_z0::0"},{"x":-6.041984888888889,"y":3.3588703823529404,"z":0},{"x":-5.987969777777778,"y":3.4097827647058816,"z":0},{"x":-5.933954666666667,"y":3.4606951470588228,"z":0},{"x":-5.879939555555556,"y":3.511607529411764,"z":0},{"x":-5.8259244444444445,"y":3.5625199117647055,"z":0},{"x":-5.771909333333333,"y":3.613432294117646,"z":0},{"x":-5.717894222222222,"y":3.664344676470588,"z":0},{"x":-5.663879111111111,"y":3.7152570588235285,"z":0},{"x":-5.609864,"y":3.76616944117647,"z":0},{"x":-5.609864,"y":3.817081823529411,"z":0},{"x":-5.609864,"y":3.8679942058823524,"z":0},{"x":-5.609864,"y":3.9189065882352936,"z":0},{"x":-5.609864,"y":3.9698189705882347,"z":0},{"x":-5.609864,"y":4.020731352941176,"z":0},{"x":-5.609864,"y":4.071643735294117,"z":0},{"x":-5.609864,"y":4.122556117647059,"z":0},{"portPointId":"ce2397_pp1_z0::0","x":-5.609864,"y":4.1734683911043575,"z":0,"connectionName":"source_trace_6__source_net_6","rootConnectionName":"connectivity_net38","prevPortPointId":"ce2392_pp1_z0::0"}],"vias":[]},{"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"source_trace_14","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2356_pp1_z1::1","x":-6.582136,"y":6.423795756441743,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"connectivity_net30","nextPortPointId":"ce2398_pp4_z1::1"},{"x":-6.528120888888889,"y":6.515438088235293,"z":1},{"x":-6.474105777777778,"y":6.515438088235293,"z":1},{"x":-6.420090666666667,"y":6.515438088235293,"z":1},{"x":-6.366075555555556,"y":6.515438088235293,"z":1},{"x":-6.312060444444445,"y":6.515438088235293,"z":1},{"x":-6.2580453333333335,"y":6.515438088235293,"z":1},{"x":-6.204030222222222,"y":6.515438088235293,"z":1},{"x":-6.150015111111111,"y":6.515438088235293,"z":1},{"x":-6.096,"y":6.515438088235293,"z":1},{"x":-6.041984888888889,"y":6.515438088235293,"z":1},{"x":-5.987969777777778,"y":6.515438088235293,"z":1},{"x":-5.933954666666667,"y":6.515438088235293,"z":1},{"x":-5.879939555555556,"y":6.515438088235293,"z":1},{"x":-5.8259244444444445,"y":6.515438088235293,"z":1},{"x":-5.771909333333333,"y":6.515438088235293,"z":1},{"x":-5.717894222222222,"y":6.515438088235293,"z":1},{"x":-5.663879111111111,"y":6.515438088235293,"z":1},{"portPointId":"ce2398_pp4_z1::1","x":-5.609864,"y":6.481496463701452,"z":1,"connectionName":"source_trace_14__source_net_14_mst0","rootConnectionName":"connectivity_net30","prevPortPointId":"ce2356_pp1_z1::1"}],"vias":[]},{"connectionName":"source_trace_45__source_net_45","rootConnectionName":"source_trace_45","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2275_pp1_z0::0","x":-6.093033999999999,"y":6.77,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"connectivity_net1","nextPortPointId":"ce2356_pp1_z0::0"},{"x":-6.096,"y":6.719087617647058,"z":0},{"x":-6.150015111111111,"y":6.668175235294117,"z":0},{"x":-6.204030222222222,"y":6.617262852941176,"z":0},{"x":-6.204030222222222,"y":6.566350470588235,"z":0},{"x":-6.150015111111111,"y":6.515438088235293,"z":0},{"x":-6.150015111111111,"y":6.464525705882352,"z":0},{"x":-6.150015111111111,"y":6.413613323529411,"z":0},{"x":-6.150015111111111,"y":6.36270094117647,"z":0},{"x":-6.150015111111111,"y":6.311788558823529,"z":0},{"x":-6.204030222222222,"y":6.260876176470587,"z":0},{"x":-6.2580453333333335,"y":6.209963794117646,"z":0},{"x":-6.312060444444445,"y":6.159051411764706,"z":0},{"x":-6.366075555555556,"y":6.159051411764706,"z":0},{"x":-6.420090666666667,"y":6.209963794117646,"z":0},{"x":-6.474105777777778,"y":6.260876176470587,"z":0},{"x":-6.528120888888889,"y":6.311788558823529,"z":0},{"x":-6.582136,"y":6.36270094117647,"z":0},{"x":-6.582136,"y":6.413613323529411,"z":0},{"portPointId":"ce2356_pp1_z0::0","x":-6.582136,"y":6.423795756441743,"z":0,"connectionName":"source_trace_45__source_net_45","rootConnectionName":"connectivity_net1","prevPortPointId":"ce2275_pp1_z0::0"}],"vias":[]},{"connectionName":"source_trace_11__source_net_11","rootConnectionName":"source_trace_11","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2390_pp0_z1::1","x":-6.291168000000001,"y":3.3079579999999993,"z":1,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"connectivity_net33","nextPortPointId":"ce2275_pp0_z0::0"},{"x":-6.312060444444445,"y":3.3588703823529404,"z":1},{"x":-6.366075555555556,"y":3.4097827647058816,"z":1},{"x":-6.366075555555556,"y":3.4606951470588228,"z":1},{"x":-6.366075555555556,"y":3.511607529411764,"z":1},{"x":-6.366075555555556,"y":3.5625199117647055,"z":1},{"x":-6.366075555555556,"y":3.613432294117646,"z":1},{"x":-6.366075555555556,"y":3.664344676470588,"z":1},{"x":-6.366075555555556,"y":3.7152570588235285,"z":1},{"x":-6.366075555555556,"y":3.76616944117647,"z":1},{"x":-6.366075555555556,"y":3.817081823529411,"z":1},{"x":-6.366075555555556,"y":3.8679942058823524,"z":1},{"x":-6.366075555555556,"y":3.9189065882352936,"z":1},{"x":-6.366075555555556,"y":3.9698189705882347,"z":1},{"x":-6.366075555555556,"y":4.020731352941176,"z":1},{"x":-6.366075555555556,"y":4.071643735294117,"z":1},{"x":-6.366075555555556,"y":4.122556117647059,"z":1},{"x":-6.366075555555556,"y":4.173468499999999,"z":1},{"x":-6.366075555555556,"y":4.224380882352941,"z":1},{"x":-6.366075555555556,"y":4.224380882352941,"z":0},{"x":-6.312060444444445,"y":4.275293264705882,"z":0},{"x":-6.366075555555556,"y":4.326205647058823,"z":0},{"x":-6.366075555555556,"y":4.377118029411764,"z":0},{"x":-6.312060444444445,"y":4.428030411764706,"z":0},{"x":-6.312060444444445,"y":4.478942794117646,"z":0},{"x":-6.2580453333333335,"y":4.529855176470587,"z":0},{"x":-6.2580453333333335,"y":4.5807675588235295,"z":0},{"x":-6.312060444444445,"y":4.63167994117647,"z":0},{"x":-6.312060444444445,"y":4.682592323529411,"z":0},{"x":-6.312060444444445,"y":4.733504705882352,"z":0},{"x":-6.312060444444445,"y":4.784417088235293,"z":0},{"x":-6.312060444444445,"y":4.835329470588235,"z":0},{"x":-6.312060444444445,"y":4.8862418529411755,"z":0},{"x":-6.312060444444445,"y":4.937154235294116,"z":0},{"x":-6.312060444444445,"y":4.988066617647058,"z":0},{"x":-6.312060444444445,"y":5.038978999999999,"z":0},{"x":-6.2580453333333335,"y":5.08989138235294,"z":0},{"x":-6.204030222222222,"y":5.140803764705882,"z":0},{"x":-6.204030222222222,"y":5.191716147058823,"z":0},{"x":-6.204030222222222,"y":5.242628529411764,"z":0},{"x":-6.204030222222222,"y":5.293540911764705,"z":0},{"x":-6.150015111111111,"y":5.344453294117646,"z":0},{"x":-6.204030222222222,"y":5.395365676470588,"z":0},{"x":-6.2580453333333335,"y":5.446278058823529,"z":0},{"x":-6.2580453333333335,"y":5.497190441176469,"z":0},{"x":-6.2580453333333335,"y":5.548102823529411,"z":0},{"x":-6.2580453333333335,"y":5.599015205882353,"z":0},{"x":-6.204030222222222,"y":5.649927588235293,"z":0},{"x":-6.150015111111111,"y":5.700839970588234,"z":0},{"x":-6.096,"y":5.7517523529411765,"z":0},{"x":-6.041984888888889,"y":5.802664735294117,"z":0},{"x":-5.987969777777778,"y":5.853577117647058,"z":0},{"x":-5.933954666666667,"y":5.9044894999999995,"z":0},{"x":-5.879939555555556,"y":5.95540188235294,"z":0},{"x":-5.879939555555556,"y":5.95540188235294,"z":1},{"x":-5.933954666666667,"y":6.006314264705882,"z":1},{"x":-5.987969777777778,"y":6.0572266470588225,"z":1},{"x":-6.041984888888889,"y":6.108139029411764,"z":1},{"x":-6.096,"y":6.159051411764706,"z":1},{"x":-6.150015111111111,"y":6.209963794117646,"z":1},{"x":-6.204030222222222,"y":6.260876176470587,"z":1},{"x":-6.2580453333333335,"y":6.311788558823529,"z":1},{"x":-6.312060444444445,"y":6.311788558823529,"z":1},{"x":-6.312060444444445,"y":6.311788558823529,"z":0},{"x":-6.366075555555556,"y":6.36270094117647,"z":0},{"x":-6.366075555555556,"y":6.413613323529411,"z":0},{"x":-6.312060444444445,"y":6.464525705882352,"z":0},{"x":-6.2580453333333335,"y":6.515438088235293,"z":0},{"x":-6.2580453333333335,"y":6.566350470588235,"z":0},{"x":-6.312060444444445,"y":6.617262852941176,"z":0},{"x":-6.312060444444445,"y":6.668175235294117,"z":0},{"x":-6.312060444444445,"y":6.719087617647058,"z":0},{"x":-6.366075555555556,"y":6.769999999999999,"z":0},{"portPointId":"ce2275_pp0_z0::0","x":-6.4191020000000005,"y":6.77,"z":0,"connectionName":"source_trace_11__source_net_11","rootConnectionName":"connectivity_net33","prevPortPointId":"ce2390_pp0_z1::1"}],"vias":[{"x":-6.366075555555556,"y":4.224380882352941},{"x":-5.879939555555556,"y":5.95540188235294},{"x":-6.312060444444445,"y":6.311788558823529}]},{"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"source_trace_3","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2352_pp0_z0::0","x":-6.582136,"y":5.038978782208716,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"connectivity_net41","nextPortPointId":"ce2398_pp0_z0::0"},{"x":-6.582136,"y":5.08989138235294,"z":0},{"x":-6.582136,"y":5.140803764705882,"z":0},{"x":-6.528120888888889,"y":5.191716147058823,"z":0},{"x":-6.528120888888889,"y":5.242628529411764,"z":0},{"x":-6.528120888888889,"y":5.293540911764705,"z":0},{"x":-6.528120888888889,"y":5.344453294117646,"z":0},{"x":-6.528120888888889,"y":5.395365676470588,"z":0},{"x":-6.528120888888889,"y":5.446278058823529,"z":0},{"x":-6.474105777777778,"y":5.497190441176469,"z":0},{"x":-6.474105777777778,"y":5.497190441176469,"z":1},{"x":-6.420090666666667,"y":5.548102823529411,"z":1},{"x":-6.366075555555556,"y":5.599015205882353,"z":1},{"x":-6.312060444444445,"y":5.649927588235293,"z":1},{"x":-6.2580453333333335,"y":5.599015205882353,"z":1},{"x":-6.204030222222222,"y":5.599015205882353,"z":1},{"x":-6.150015111111111,"y":5.599015205882353,"z":1},{"x":-6.096,"y":5.599015205882353,"z":1},{"x":-6.041984888888889,"y":5.599015205882353,"z":1},{"x":-5.987969777777778,"y":5.599015205882353,"z":1},{"x":-5.933954666666667,"y":5.599015205882353,"z":1},{"x":-5.879939555555556,"y":5.599015205882353,"z":1},{"x":-5.8259244444444445,"y":5.599015205882353,"z":1},{"x":-5.771909333333333,"y":5.548102823529411,"z":1},{"x":-5.717894222222222,"y":5.548102823529411,"z":1},{"x":-5.717894222222222,"y":5.548102823529411,"z":0},{"x":-5.663879111111111,"y":5.497190441176469,"z":0},{"portPointId":"ce2398_pp0_z0::0","x":-5.609864,"y":5.471734086656537,"z":0,"connectionName":"source_trace_3__source_net_3_mst13","rootConnectionName":"connectivity_net41","prevPortPointId":"ce2352_pp0_z0::0"}],"vias":[{"x":-6.474105777777778,"y":5.497190441176469},{"x":-5.717894222222222,"y":5.548102823529411}]},{"connectionName":"source_trace_7__source_net_7","rootConnectionName":"source_trace_7","regionId":"topology_merge_494","traceThickness":0.1,"viaDiameter":0.3,"route":[{"portPointId":"ce2350_pp1_z0::0","x":-6.582136,"y":4.346570295092203,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"connectivity_net37","nextPortPointId":"ce2398_pp1_z0::0"},{"x":-6.528120888888889,"y":4.275293264705882,"z":0},{"x":-6.582136,"y":4.224380882352941,"z":0},{"x":-6.528120888888889,"y":4.173468499999999,"z":0},{"x":-6.474105777777778,"y":4.122556117647059,"z":0},{"x":-6.420090666666667,"y":4.122556117647059,"z":0},{"x":-6.366075555555556,"y":4.071643735294117,"z":0},{"x":-6.312060444444445,"y":4.122556117647059,"z":0},{"x":-6.2580453333333335,"y":4.173468499999999,"z":0},{"x":-6.204030222222222,"y":4.224380882352941,"z":0},{"x":-6.150015111111111,"y":4.275293264705882,"z":0},{"x":-6.096,"y":4.326205647058823,"z":0},{"x":-6.041984888888889,"y":4.377118029411764,"z":0},{"x":-5.987969777777778,"y":4.428030411764706,"z":0},{"x":-5.933954666666667,"y":4.478942794117646,"z":0},{"x":-5.879939555555556,"y":4.529855176470587,"z":0},{"x":-5.8259244444444445,"y":4.5807675588235295,"z":0},{"x":-5.771909333333333,"y":4.63167994117647,"z":0},{"x":-5.717894222222222,"y":4.682592323529411,"z":0},{"x":-5.663879111111111,"y":4.733504705882352,"z":0},{"x":-5.609864,"y":4.784417088235293,"z":0},{"x":-5.609864,"y":4.835329470588235,"z":0},{"x":-5.609864,"y":4.8862418529411755,"z":0},{"x":-5.609864,"y":4.937154235294116,"z":0},{"x":-5.663879111111111,"y":4.988066617647058,"z":0},{"x":-5.663879111111111,"y":5.038978999999999,"z":0},{"x":-5.663879111111111,"y":5.08989138235294,"z":0},{"x":-5.663879111111111,"y":5.140803764705882,"z":0},{"x":-5.717894222222222,"y":5.191716147058823,"z":0},{"x":-5.717894222222222,"y":5.242628529411764,"z":0},{"x":-5.717894222222222,"y":5.293540911764705,"z":0},{"x":-5.717894222222222,"y":5.344453294117646,"z":0},{"x":-5.717894222222222,"y":5.395365676470588,"z":0},{"x":-5.771909333333333,"y":5.446278058823529,"z":0},{"x":-5.8259244444444445,"y":5.497190441176469,"z":0},{"x":-5.879939555555556,"y":5.548102823529411,"z":0},{"x":-5.8259244444444445,"y":5.599015205882353,"z":0},{"x":-5.771909333333333,"y":5.649927588235293,"z":0},{"x":-5.771909333333333,"y":5.700839970588234,"z":0},{"x":-5.771909333333333,"y":5.7517523529411765,"z":0},{"x":-5.771909333333333,"y":5.802664735294117,"z":0},{"x":-5.771909333333333,"y":5.853577117647058,"z":0},{"x":-5.771909333333333,"y":5.9044894999999995,"z":0},{"x":-5.717894222222222,"y":5.95540188235294,"z":0},{"x":-5.771909333333333,"y":6.006314264705882,"z":0},{"x":-5.771909333333333,"y":6.0572266470588225,"z":0},{"x":-5.771909333333333,"y":6.108139029411764,"z":0},{"x":-5.771909333333333,"y":6.159051411764706,"z":0},{"x":-5.771909333333333,"y":6.209963794117646,"z":0},{"x":-5.771909333333333,"y":6.260876176470587,"z":0},{"x":-5.8259244444444445,"y":6.311788558823529,"z":0},{"x":-5.771909333333333,"y":6.36270094117647,"z":0},{"x":-5.717894222222222,"y":6.413613323529411,"z":0},{"x":-5.663879111111111,"y":6.464525705882352,"z":0},{"x":-5.609864,"y":6.413613323529411,"z":0},{"portPointId":"ce2398_pp1_z0::0","x":-5.609864,"y":6.337244695552179,"z":0,"connectionName":"source_trace_7__source_net_7","rootConnectionName":"connectivity_net37","prevPortPointId":"ce2350_pp1_z0::0"}],"vias":[]}]}
+{
+  "node": {
+    "capacityMeshNodeId": "topology_merge_494",
+    "center": { "x": -6.096, "y": 5.038978999999999 },
+    "width": 0.9722720000000002,
+    "height": 3.4620420000000003,
+    "portPoints": [
+      {
+        "portPointId": "ce2352_pp0_z1::1",
+        "x": -6.582136,
+        "y": 5.038978782208716,
+        "z": 1,
+        "connectionName": "source_trace_2__source_net_2_mst28",
+        "rootConnectionName": "source_trace_2",
+        "nextPortPointId": "ce2398_pp0_z1::1"
+      },
+      {
+        "portPointId": "ce2398_pp0_z1::1",
+        "x": -5.609864,
+        "y": 5.327482318507263,
+        "z": 1,
+        "connectionName": "source_trace_2__source_net_2_mst28",
+        "rootConnectionName": "source_trace_2",
+        "prevPortPointId": "ce2352_pp0_z1::1"
+      },
+      {
+        "portPointId": "ce2352_pp0_z0::0",
+        "x": -6.582136,
+        "y": 5.038978782208716,
+        "z": 0,
+        "connectionName": "source_trace_3__source_net_3_mst13",
+        "rootConnectionName": "source_trace_3",
+        "nextPortPointId": "ce2398_pp0_z0::0"
+      },
+      {
+        "portPointId": "ce2398_pp0_z0::0",
+        "x": -5.609864,
+        "y": 5.471734086656537,
+        "z": 0,
+        "connectionName": "source_trace_3__source_net_3_mst13",
+        "rootConnectionName": "source_trace_3",
+        "prevPortPointId": "ce2352_pp0_z0::0"
+      },
+      {
+        "portPointId": "ce2356_pp1_z1::1",
+        "x": -6.582136,
+        "y": 6.423795756441743,
+        "z": 1,
+        "connectionName": "source_trace_14__source_net_14_mst0",
+        "rootConnectionName": "source_trace_14",
+        "nextPortPointId": "ce2398_pp4_z1::1"
+      },
+      {
+        "portPointId": "ce2398_pp4_z1::1",
+        "x": -5.609864,
+        "y": 6.481496463701452,
+        "z": 1,
+        "connectionName": "source_trace_14__source_net_14_mst0",
+        "rootConnectionName": "source_trace_14",
+        "prevPortPointId": "ce2356_pp1_z1::1"
+      },
+      {
+        "portPointId": "ce2398_pp2_z1::1",
+        "x": -5.609864,
+        "y": 5.904489391104358,
+        "z": 1,
+        "connectionName": "source_trace_46__source_net_46",
+        "rootConnectionName": "source_trace_46",
+        "nextPortPointId": "ce2354_pp0_z1::1"
+      },
+      {
+        "portPointId": "ce2354_pp0_z1::1",
+        "x": -6.582136,
+        "y": 5.731387269325229,
+        "z": 1,
+        "connectionName": "source_trace_46__source_net_46",
+        "rootConnectionName": "source_trace_46",
+        "prevPortPointId": "ce2398_pp2_z1::1"
+      },
+      {
+        "portPointId": "ce2275_pp1_z0::0",
+        "x": -6.093033999999999,
+        "y": 6.77,
+        "z": 0,
+        "connectionName": "source_trace_45__source_net_45",
+        "rootConnectionName": "source_trace_45",
+        "nextPortPointId": "ce2356_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2356_pp1_z0::0",
+        "x": -6.582136,
+        "y": 6.423795756441743,
+        "z": 0,
+        "connectionName": "source_trace_45__source_net_45",
+        "rootConnectionName": "source_trace_45",
+        "prevPortPointId": "ce2275_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2390_pp0_z1::1",
+        "x": -6.291168000000001,
+        "y": 3.3079579999999993,
+        "z": 1,
+        "connectionName": "source_trace_11__source_net_11",
+        "rootConnectionName": "source_trace_11",
+        "nextPortPointId": "ce2275_pp0_z0::0"
+      },
+      {
+        "portPointId": "ce2275_pp0_z0::0",
+        "x": -6.4191020000000005,
+        "y": 6.77,
+        "z": 0,
+        "connectionName": "source_trace_11__source_net_11",
+        "rootConnectionName": "source_trace_11",
+        "prevPortPointId": "ce2390_pp0_z1::1"
+      },
+      {
+        "portPointId": "ce2354_pp1_z0::0",
+        "x": -6.582136,
+        "y": 5.731387269325229,
+        "z": 0,
+        "connectionName": "source_trace_8__source_net_8",
+        "rootConnectionName": "source_trace_8",
+        "nextPortPointId": "ce2399_pp0_z0::0"
+      },
+      {
+        "portPointId": "ce2399_pp0_z0::0",
+        "x": -5.769932,
+        "y": 6.7700000000000005,
+        "z": 0,
+        "connectionName": "source_trace_8__source_net_8",
+        "rootConnectionName": "source_trace_8",
+        "prevPortPointId": "ce2354_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2350_pp1_z0::0",
+        "x": -6.582136,
+        "y": 4.346570295092203,
+        "z": 0,
+        "connectionName": "source_trace_7__source_net_7",
+        "rootConnectionName": "source_trace_7",
+        "nextPortPointId": "ce2398_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2398_pp1_z0::0",
+        "x": -5.609864,
+        "y": 6.337244695552179,
+        "z": 0,
+        "connectionName": "source_trace_7__source_net_7",
+        "rootConnectionName": "source_trace_7",
+        "prevPortPointId": "ce2350_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2392_pp1_z0::0",
+        "x": -6.096,
+        "y": 3.3079579999999993,
+        "z": 0,
+        "connectionName": "source_trace_6__source_net_6",
+        "rootConnectionName": "source_trace_6",
+        "nextPortPointId": "ce2397_pp1_z0::0"
+      },
+      {
+        "portPointId": "ce2397_pp1_z0::0",
+        "x": -5.609864,
+        "y": 4.1734683911043575,
+        "z": 0,
+        "connectionName": "source_trace_6__source_net_6",
+        "rootConnectionName": "source_trace_6",
+        "prevPortPointId": "ce2392_pp1_z0::0"
+      }
+    ],
+    "portPointsInPairs": [
+      [
+        {
+          "portPointId": "ce2352_pp0_z1::1",
+          "x": -6.582136,
+          "y": 5.038978782208716,
+          "z": 1,
+          "connectionName": "source_trace_2__source_net_2_mst28",
+          "rootConnectionName": "source_trace_2",
+          "nextPortPointId": "ce2398_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce2398_pp0_z1::1",
+          "x": -5.609864,
+          "y": 5.327482318507263,
+          "z": 1,
+          "connectionName": "source_trace_2__source_net_2_mst28",
+          "rootConnectionName": "source_trace_2",
+          "prevPortPointId": "ce2352_pp0_z1::1"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2352_pp0_z0::0",
+          "x": -6.582136,
+          "y": 5.038978782208716,
+          "z": 0,
+          "connectionName": "source_trace_3__source_net_3_mst13",
+          "rootConnectionName": "source_trace_3",
+          "nextPortPointId": "ce2398_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce2398_pp0_z0::0",
+          "x": -5.609864,
+          "y": 5.471734086656537,
+          "z": 0,
+          "connectionName": "source_trace_3__source_net_3_mst13",
+          "rootConnectionName": "source_trace_3",
+          "prevPortPointId": "ce2352_pp0_z0::0"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2356_pp1_z1::1",
+          "x": -6.582136,
+          "y": 6.423795756441743,
+          "z": 1,
+          "connectionName": "source_trace_14__source_net_14_mst0",
+          "rootConnectionName": "source_trace_14",
+          "nextPortPointId": "ce2398_pp4_z1::1"
+        },
+        {
+          "portPointId": "ce2398_pp4_z1::1",
+          "x": -5.609864,
+          "y": 6.481496463701452,
+          "z": 1,
+          "connectionName": "source_trace_14__source_net_14_mst0",
+          "rootConnectionName": "source_trace_14",
+          "prevPortPointId": "ce2356_pp1_z1::1"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2398_pp2_z1::1",
+          "x": -5.609864,
+          "y": 5.904489391104358,
+          "z": 1,
+          "connectionName": "source_trace_46__source_net_46",
+          "rootConnectionName": "source_trace_46",
+          "nextPortPointId": "ce2354_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce2354_pp0_z1::1",
+          "x": -6.582136,
+          "y": 5.731387269325229,
+          "z": 1,
+          "connectionName": "source_trace_46__source_net_46",
+          "rootConnectionName": "source_trace_46",
+          "prevPortPointId": "ce2398_pp2_z1::1"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2275_pp1_z0::0",
+          "x": -6.093033999999999,
+          "y": 6.77,
+          "z": 0,
+          "connectionName": "source_trace_45__source_net_45",
+          "rootConnectionName": "source_trace_45",
+          "nextPortPointId": "ce2356_pp1_z0::0"
+        },
+        {
+          "portPointId": "ce2356_pp1_z0::0",
+          "x": -6.582136,
+          "y": 6.423795756441743,
+          "z": 0,
+          "connectionName": "source_trace_45__source_net_45",
+          "rootConnectionName": "source_trace_45",
+          "prevPortPointId": "ce2275_pp1_z0::0"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2390_pp0_z1::1",
+          "x": -6.291168000000001,
+          "y": 3.3079579999999993,
+          "z": 1,
+          "connectionName": "source_trace_11__source_net_11",
+          "rootConnectionName": "source_trace_11",
+          "nextPortPointId": "ce2275_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce2275_pp0_z0::0",
+          "x": -6.4191020000000005,
+          "y": 6.77,
+          "z": 0,
+          "connectionName": "source_trace_11__source_net_11",
+          "rootConnectionName": "source_trace_11",
+          "prevPortPointId": "ce2390_pp0_z1::1"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2354_pp1_z0::0",
+          "x": -6.582136,
+          "y": 5.731387269325229,
+          "z": 0,
+          "connectionName": "source_trace_8__source_net_8",
+          "rootConnectionName": "source_trace_8",
+          "nextPortPointId": "ce2399_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce2399_pp0_z0::0",
+          "x": -5.769932,
+          "y": 6.7700000000000005,
+          "z": 0,
+          "connectionName": "source_trace_8__source_net_8",
+          "rootConnectionName": "source_trace_8",
+          "prevPortPointId": "ce2354_pp1_z0::0"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2350_pp1_z0::0",
+          "x": -6.582136,
+          "y": 4.346570295092203,
+          "z": 0,
+          "connectionName": "source_trace_7__source_net_7",
+          "rootConnectionName": "source_trace_7",
+          "nextPortPointId": "ce2398_pp1_z0::0"
+        },
+        {
+          "portPointId": "ce2398_pp1_z0::0",
+          "x": -5.609864,
+          "y": 6.337244695552179,
+          "z": 0,
+          "connectionName": "source_trace_7__source_net_7",
+          "rootConnectionName": "source_trace_7",
+          "prevPortPointId": "ce2350_pp1_z0::0"
+        }
+      ],
+      [
+        {
+          "portPointId": "ce2392_pp1_z0::0",
+          "x": -6.096,
+          "y": 3.3079579999999993,
+          "z": 0,
+          "connectionName": "source_trace_6__source_net_6",
+          "rootConnectionName": "source_trace_6",
+          "nextPortPointId": "ce2397_pp1_z0::0"
+        },
+        {
+          "portPointId": "ce2397_pp1_z0::0",
+          "x": -5.609864,
+          "y": 4.1734683911043575,
+          "z": 0,
+          "connectionName": "source_trace_6__source_net_6",
+          "rootConnectionName": "source_trace_6",
+          "prevPortPointId": "ce2392_pp1_z0::0"
+        }
+      ]
+    ],
+    "availableZ": [0, 1]
+  },
+  "routes": [
+    {
+      "connectionName": "source_trace_2__source_net_2_mst28",
+      "rootConnectionName": "source_trace_2",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2352_pp0_z1::1",
+          "x": -6.582136,
+          "y": 5.038978782208716,
+          "z": 1,
+          "connectionName": "source_trace_2__source_net_2_mst28",
+          "rootConnectionName": "connectivity_net42",
+          "nextPortPointId": "ce2398_pp0_z1::1"
+        },
+        { "x": -6.528120888888889, "y": 5.08989138235294, "z": 1 },
+        { "x": -6.474105777777778, "y": 5.140803764705882, "z": 1 },
+        { "x": -6.420090666666667, "y": 5.191716147058823, "z": 1 },
+        { "x": -6.366075555555556, "y": 5.242628529411764, "z": 1 },
+        { "x": -6.312060444444445, "y": 5.293540911764705, "z": 1 },
+        { "x": -6.2580453333333335, "y": 5.344453294117646, "z": 1 },
+        { "x": -6.204030222222222, "y": 5.344453294117646, "z": 1 },
+        { "x": -6.150015111111111, "y": 5.344453294117646, "z": 1 },
+        { "x": -6.096, "y": 5.344453294117646, "z": 1 },
+        { "x": -6.041984888888889, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.987969777777778, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.933954666666667, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.879939555555556, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.8259244444444445, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.771909333333333, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.717894222222222, "y": 5.344453294117646, "z": 1 },
+        { "x": -5.663879111111111, "y": 5.344453294117646, "z": 1 },
+        {
+          "portPointId": "ce2398_pp0_z1::1",
+          "x": -5.609864,
+          "y": 5.327482318507263,
+          "z": 1,
+          "connectionName": "source_trace_2__source_net_2_mst28",
+          "rootConnectionName": "connectivity_net42",
+          "prevPortPointId": "ce2352_pp0_z1::1"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_46__source_net_46",
+      "rootConnectionName": "source_trace_46",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2398_pp2_z1::1",
+          "x": -5.609864,
+          "y": 5.904489391104358,
+          "z": 1,
+          "connectionName": "source_trace_46__source_net_46",
+          "rootConnectionName": "connectivity_net0",
+          "nextPortPointId": "ce2354_pp0_z1::1"
+        },
+        { "x": -5.663879111111111, "y": 5.853577117647058, "z": 1 },
+        { "x": -5.717894222222222, "y": 5.802664735294117, "z": 1 },
+        { "x": -5.771909333333333, "y": 5.7517523529411765, "z": 1 },
+        { "x": -5.8259244444444445, "y": 5.7517523529411765, "z": 1 },
+        { "x": -5.879939555555556, "y": 5.7517523529411765, "z": 1 },
+        { "x": -5.933954666666667, "y": 5.7517523529411765, "z": 1 },
+        { "x": -5.987969777777778, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.041984888888889, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.096, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.150015111111111, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.204030222222222, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.2580453333333335, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.312060444444445, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.366075555555556, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.420090666666667, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.474105777777778, "y": 5.7517523529411765, "z": 1 },
+        { "x": -6.528120888888889, "y": 5.7517523529411765, "z": 1 },
+        {
+          "portPointId": "ce2354_pp0_z1::1",
+          "x": -6.582136,
+          "y": 5.731387269325229,
+          "z": 1,
+          "connectionName": "source_trace_46__source_net_46",
+          "rootConnectionName": "connectivity_net0",
+          "prevPortPointId": "ce2398_pp2_z1::1"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_8__source_net_8",
+      "rootConnectionName": "source_trace_8",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2354_pp1_z0::0",
+          "x": -6.582136,
+          "y": 5.731387269325229,
+          "z": 0,
+          "connectionName": "source_trace_8__source_net_8",
+          "rootConnectionName": "connectivity_net36",
+          "nextPortPointId": "ce2399_pp0_z0::0"
+        },
+        { "x": -6.528120888888889, "y": 5.802664735294117, "z": 0 },
+        { "x": -6.474105777777778, "y": 5.853577117647058, "z": 0 },
+        { "x": -6.420090666666667, "y": 5.9044894999999995, "z": 0 },
+        { "x": -6.366075555555556, "y": 5.95540188235294, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.006314264705882, "z": 0 },
+        { "x": -6.2580453333333335, "y": 6.0572266470588225, "z": 0 },
+        { "x": -6.204030222222222, "y": 6.108139029411764, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.159051411764706, "z": 0 },
+        { "x": -6.096, "y": 6.209963794117646, "z": 0 },
+        { "x": -6.041984888888889, "y": 6.260876176470587, "z": 0 },
+        { "x": -5.987969777777778, "y": 6.311788558823529, "z": 0 },
+        { "x": -5.933954666666667, "y": 6.36270094117647, "z": 0 },
+        { "x": -5.879939555555556, "y": 6.413613323529411, "z": 0 },
+        { "x": -5.8259244444444445, "y": 6.464525705882352, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.515438088235293, "z": 0 },
+        { "x": -5.717894222222222, "y": 6.566350470588235, "z": 0 },
+        { "x": -5.717894222222222, "y": 6.617262852941176, "z": 0 },
+        { "x": -5.717894222222222, "y": 6.668175235294117, "z": 0 },
+        { "x": -5.717894222222222, "y": 6.719087617647058, "z": 0 },
+        {
+          "portPointId": "ce2399_pp0_z0::0",
+          "x": -5.769932,
+          "y": 6.7700000000000005,
+          "z": 0,
+          "connectionName": "source_trace_8__source_net_8",
+          "rootConnectionName": "connectivity_net36",
+          "prevPortPointId": "ce2354_pp1_z0::0"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_6__source_net_6",
+      "rootConnectionName": "source_trace_6",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2392_pp1_z0::0",
+          "x": -6.096,
+          "y": 3.3079579999999993,
+          "z": 0,
+          "connectionName": "source_trace_6__source_net_6",
+          "rootConnectionName": "connectivity_net38",
+          "nextPortPointId": "ce2397_pp1_z0::0"
+        },
+        { "x": -6.041984888888889, "y": 3.3588703823529404, "z": 0 },
+        { "x": -5.987969777777778, "y": 3.4097827647058816, "z": 0 },
+        { "x": -5.933954666666667, "y": 3.4606951470588228, "z": 0 },
+        { "x": -5.879939555555556, "y": 3.511607529411764, "z": 0 },
+        { "x": -5.8259244444444445, "y": 3.5625199117647055, "z": 0 },
+        { "x": -5.771909333333333, "y": 3.613432294117646, "z": 0 },
+        { "x": -5.717894222222222, "y": 3.664344676470588, "z": 0 },
+        { "x": -5.663879111111111, "y": 3.7152570588235285, "z": 0 },
+        { "x": -5.609864, "y": 3.76616944117647, "z": 0 },
+        { "x": -5.609864, "y": 3.817081823529411, "z": 0 },
+        { "x": -5.609864, "y": 3.8679942058823524, "z": 0 },
+        { "x": -5.609864, "y": 3.9189065882352936, "z": 0 },
+        { "x": -5.609864, "y": 3.9698189705882347, "z": 0 },
+        { "x": -5.609864, "y": 4.020731352941176, "z": 0 },
+        { "x": -5.609864, "y": 4.071643735294117, "z": 0 },
+        { "x": -5.609864, "y": 4.122556117647059, "z": 0 },
+        {
+          "portPointId": "ce2397_pp1_z0::0",
+          "x": -5.609864,
+          "y": 4.1734683911043575,
+          "z": 0,
+          "connectionName": "source_trace_6__source_net_6",
+          "rootConnectionName": "connectivity_net38",
+          "prevPortPointId": "ce2392_pp1_z0::0"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_14__source_net_14_mst0",
+      "rootConnectionName": "source_trace_14",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2356_pp1_z1::1",
+          "x": -6.582136,
+          "y": 6.423795756441743,
+          "z": 1,
+          "connectionName": "source_trace_14__source_net_14_mst0",
+          "rootConnectionName": "connectivity_net30",
+          "nextPortPointId": "ce2398_pp4_z1::1"
+        },
+        { "x": -6.528120888888889, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.474105777777778, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.420090666666667, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.366075555555556, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.312060444444445, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.2580453333333335, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.204030222222222, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.150015111111111, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.096, "y": 6.515438088235293, "z": 1 },
+        { "x": -6.041984888888889, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.987969777777778, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.933954666666667, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.879939555555556, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.8259244444444445, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.771909333333333, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.717894222222222, "y": 6.515438088235293, "z": 1 },
+        { "x": -5.663879111111111, "y": 6.515438088235293, "z": 1 },
+        {
+          "portPointId": "ce2398_pp4_z1::1",
+          "x": -5.609864,
+          "y": 6.481496463701452,
+          "z": 1,
+          "connectionName": "source_trace_14__source_net_14_mst0",
+          "rootConnectionName": "connectivity_net30",
+          "prevPortPointId": "ce2356_pp1_z1::1"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_45__source_net_45",
+      "rootConnectionName": "source_trace_45",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2275_pp1_z0::0",
+          "x": -6.093033999999999,
+          "y": 6.77,
+          "z": 0,
+          "connectionName": "source_trace_45__source_net_45",
+          "rootConnectionName": "connectivity_net1",
+          "nextPortPointId": "ce2356_pp1_z0::0"
+        },
+        { "x": -6.096, "y": 6.719087617647058, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.668175235294117, "z": 0 },
+        { "x": -6.204030222222222, "y": 6.617262852941176, "z": 0 },
+        { "x": -6.204030222222222, "y": 6.566350470588235, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.515438088235293, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.464525705882352, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.413613323529411, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.36270094117647, "z": 0 },
+        { "x": -6.150015111111111, "y": 6.311788558823529, "z": 0 },
+        { "x": -6.204030222222222, "y": 6.260876176470587, "z": 0 },
+        { "x": -6.2580453333333335, "y": 6.209963794117646, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.159051411764706, "z": 0 },
+        { "x": -6.366075555555556, "y": 6.159051411764706, "z": 0 },
+        { "x": -6.420090666666667, "y": 6.209963794117646, "z": 0 },
+        { "x": -6.474105777777778, "y": 6.260876176470587, "z": 0 },
+        { "x": -6.528120888888889, "y": 6.311788558823529, "z": 0 },
+        { "x": -6.582136, "y": 6.36270094117647, "z": 0 },
+        { "x": -6.582136, "y": 6.413613323529411, "z": 0 },
+        {
+          "portPointId": "ce2356_pp1_z0::0",
+          "x": -6.582136,
+          "y": 6.423795756441743,
+          "z": 0,
+          "connectionName": "source_trace_45__source_net_45",
+          "rootConnectionName": "connectivity_net1",
+          "prevPortPointId": "ce2275_pp1_z0::0"
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_11__source_net_11",
+      "rootConnectionName": "source_trace_11",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2390_pp0_z1::1",
+          "x": -6.291168000000001,
+          "y": 3.3079579999999993,
+          "z": 1,
+          "connectionName": "source_trace_11__source_net_11",
+          "rootConnectionName": "connectivity_net33",
+          "nextPortPointId": "ce2275_pp0_z0::0"
+        },
+        { "x": -6.312060444444445, "y": 3.3588703823529404, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.4097827647058816, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.4606951470588228, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.511607529411764, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.5625199117647055, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.613432294117646, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.664344676470588, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.7152570588235285, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.76616944117647, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.817081823529411, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.8679942058823524, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.9189065882352936, "z": 1 },
+        { "x": -6.366075555555556, "y": 3.9698189705882347, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.020731352941176, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.071643735294117, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.122556117647059, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.173468499999999, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.224380882352941, "z": 1 },
+        { "x": -6.366075555555556, "y": 4.224380882352941, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.275293264705882, "z": 0 },
+        { "x": -6.366075555555556, "y": 4.326205647058823, "z": 0 },
+        { "x": -6.366075555555556, "y": 4.377118029411764, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.428030411764706, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.478942794117646, "z": 0 },
+        { "x": -6.2580453333333335, "y": 4.529855176470587, "z": 0 },
+        { "x": -6.2580453333333335, "y": 4.5807675588235295, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.63167994117647, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.682592323529411, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.733504705882352, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.784417088235293, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.835329470588235, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.8862418529411755, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.937154235294116, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.988066617647058, "z": 0 },
+        { "x": -6.312060444444445, "y": 5.038978999999999, "z": 0 },
+        { "x": -6.2580453333333335, "y": 5.08989138235294, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.140803764705882, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.191716147058823, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.242628529411764, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.293540911764705, "z": 0 },
+        { "x": -6.150015111111111, "y": 5.344453294117646, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.395365676470588, "z": 0 },
+        { "x": -6.2580453333333335, "y": 5.446278058823529, "z": 0 },
+        { "x": -6.2580453333333335, "y": 5.497190441176469, "z": 0 },
+        { "x": -6.2580453333333335, "y": 5.548102823529411, "z": 0 },
+        { "x": -6.2580453333333335, "y": 5.599015205882353, "z": 0 },
+        { "x": -6.204030222222222, "y": 5.649927588235293, "z": 0 },
+        { "x": -6.150015111111111, "y": 5.700839970588234, "z": 0 },
+        { "x": -6.096, "y": 5.7517523529411765, "z": 0 },
+        { "x": -6.041984888888889, "y": 5.802664735294117, "z": 0 },
+        { "x": -5.987969777777778, "y": 5.853577117647058, "z": 0 },
+        { "x": -5.933954666666667, "y": 5.9044894999999995, "z": 0 },
+        { "x": -5.879939555555556, "y": 5.95540188235294, "z": 0 },
+        { "x": -5.879939555555556, "y": 5.95540188235294, "z": 1 },
+        { "x": -5.933954666666667, "y": 6.006314264705882, "z": 1 },
+        { "x": -5.987969777777778, "y": 6.0572266470588225, "z": 1 },
+        { "x": -6.041984888888889, "y": 6.108139029411764, "z": 1 },
+        { "x": -6.096, "y": 6.159051411764706, "z": 1 },
+        { "x": -6.150015111111111, "y": 6.209963794117646, "z": 1 },
+        { "x": -6.204030222222222, "y": 6.260876176470587, "z": 1 },
+        { "x": -6.2580453333333335, "y": 6.311788558823529, "z": 1 },
+        { "x": -6.312060444444445, "y": 6.311788558823529, "z": 1 },
+        { "x": -6.312060444444445, "y": 6.311788558823529, "z": 0 },
+        { "x": -6.366075555555556, "y": 6.36270094117647, "z": 0 },
+        { "x": -6.366075555555556, "y": 6.413613323529411, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.464525705882352, "z": 0 },
+        { "x": -6.2580453333333335, "y": 6.515438088235293, "z": 0 },
+        { "x": -6.2580453333333335, "y": 6.566350470588235, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.617262852941176, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.668175235294117, "z": 0 },
+        { "x": -6.312060444444445, "y": 6.719087617647058, "z": 0 },
+        { "x": -6.366075555555556, "y": 6.769999999999999, "z": 0 },
+        {
+          "portPointId": "ce2275_pp0_z0::0",
+          "x": -6.4191020000000005,
+          "y": 6.77,
+          "z": 0,
+          "connectionName": "source_trace_11__source_net_11",
+          "rootConnectionName": "connectivity_net33",
+          "prevPortPointId": "ce2390_pp0_z1::1"
+        }
+      ],
+      "vias": [
+        { "x": -6.366075555555556, "y": 4.224380882352941 },
+        { "x": -5.879939555555556, "y": 5.95540188235294 },
+        { "x": -6.312060444444445, "y": 6.311788558823529 }
+      ]
+    },
+    {
+      "connectionName": "source_trace_3__source_net_3_mst13",
+      "rootConnectionName": "source_trace_3",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2352_pp0_z0::0",
+          "x": -6.582136,
+          "y": 5.038978782208716,
+          "z": 0,
+          "connectionName": "source_trace_3__source_net_3_mst13",
+          "rootConnectionName": "connectivity_net41",
+          "nextPortPointId": "ce2398_pp0_z0::0"
+        },
+        { "x": -6.582136, "y": 5.08989138235294, "z": 0 },
+        { "x": -6.582136, "y": 5.140803764705882, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.191716147058823, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.242628529411764, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.293540911764705, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.344453294117646, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.395365676470588, "z": 0 },
+        { "x": -6.528120888888889, "y": 5.446278058823529, "z": 0 },
+        { "x": -6.474105777777778, "y": 5.497190441176469, "z": 0 },
+        { "x": -6.474105777777778, "y": 5.497190441176469, "z": 1 },
+        { "x": -6.420090666666667, "y": 5.548102823529411, "z": 1 },
+        { "x": -6.366075555555556, "y": 5.599015205882353, "z": 1 },
+        { "x": -6.312060444444445, "y": 5.649927588235293, "z": 1 },
+        { "x": -6.2580453333333335, "y": 5.599015205882353, "z": 1 },
+        { "x": -6.204030222222222, "y": 5.599015205882353, "z": 1 },
+        { "x": -6.150015111111111, "y": 5.599015205882353, "z": 1 },
+        { "x": -6.096, "y": 5.599015205882353, "z": 1 },
+        { "x": -6.041984888888889, "y": 5.599015205882353, "z": 1 },
+        { "x": -5.987969777777778, "y": 5.599015205882353, "z": 1 },
+        { "x": -5.933954666666667, "y": 5.599015205882353, "z": 1 },
+        { "x": -5.879939555555556, "y": 5.599015205882353, "z": 1 },
+        { "x": -5.8259244444444445, "y": 5.599015205882353, "z": 1 },
+        { "x": -5.771909333333333, "y": 5.548102823529411, "z": 1 },
+        { "x": -5.717894222222222, "y": 5.548102823529411, "z": 1 },
+        { "x": -5.717894222222222, "y": 5.548102823529411, "z": 0 },
+        { "x": -5.663879111111111, "y": 5.497190441176469, "z": 0 },
+        {
+          "portPointId": "ce2398_pp0_z0::0",
+          "x": -5.609864,
+          "y": 5.471734086656537,
+          "z": 0,
+          "connectionName": "source_trace_3__source_net_3_mst13",
+          "rootConnectionName": "connectivity_net41",
+          "prevPortPointId": "ce2352_pp0_z0::0"
+        }
+      ],
+      "vias": [
+        { "x": -6.474105777777778, "y": 5.497190441176469 },
+        { "x": -5.717894222222222, "y": 5.548102823529411 }
+      ]
+    },
+    {
+      "connectionName": "source_trace_7__source_net_7",
+      "rootConnectionName": "source_trace_7",
+      "regionId": "topology_merge_494",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "portPointId": "ce2350_pp1_z0::0",
+          "x": -6.582136,
+          "y": 4.346570295092203,
+          "z": 0,
+          "connectionName": "source_trace_7__source_net_7",
+          "rootConnectionName": "connectivity_net37",
+          "nextPortPointId": "ce2398_pp1_z0::0"
+        },
+        { "x": -6.528120888888889, "y": 4.275293264705882, "z": 0 },
+        { "x": -6.582136, "y": 4.224380882352941, "z": 0 },
+        { "x": -6.528120888888889, "y": 4.173468499999999, "z": 0 },
+        { "x": -6.474105777777778, "y": 4.122556117647059, "z": 0 },
+        { "x": -6.420090666666667, "y": 4.122556117647059, "z": 0 },
+        { "x": -6.366075555555556, "y": 4.071643735294117, "z": 0 },
+        { "x": -6.312060444444445, "y": 4.122556117647059, "z": 0 },
+        { "x": -6.2580453333333335, "y": 4.173468499999999, "z": 0 },
+        { "x": -6.204030222222222, "y": 4.224380882352941, "z": 0 },
+        { "x": -6.150015111111111, "y": 4.275293264705882, "z": 0 },
+        { "x": -6.096, "y": 4.326205647058823, "z": 0 },
+        { "x": -6.041984888888889, "y": 4.377118029411764, "z": 0 },
+        { "x": -5.987969777777778, "y": 4.428030411764706, "z": 0 },
+        { "x": -5.933954666666667, "y": 4.478942794117646, "z": 0 },
+        { "x": -5.879939555555556, "y": 4.529855176470587, "z": 0 },
+        { "x": -5.8259244444444445, "y": 4.5807675588235295, "z": 0 },
+        { "x": -5.771909333333333, "y": 4.63167994117647, "z": 0 },
+        { "x": -5.717894222222222, "y": 4.682592323529411, "z": 0 },
+        { "x": -5.663879111111111, "y": 4.733504705882352, "z": 0 },
+        { "x": -5.609864, "y": 4.784417088235293, "z": 0 },
+        { "x": -5.609864, "y": 4.835329470588235, "z": 0 },
+        { "x": -5.609864, "y": 4.8862418529411755, "z": 0 },
+        { "x": -5.609864, "y": 4.937154235294116, "z": 0 },
+        { "x": -5.663879111111111, "y": 4.988066617647058, "z": 0 },
+        { "x": -5.663879111111111, "y": 5.038978999999999, "z": 0 },
+        { "x": -5.663879111111111, "y": 5.08989138235294, "z": 0 },
+        { "x": -5.663879111111111, "y": 5.140803764705882, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.191716147058823, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.242628529411764, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.293540911764705, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.344453294117646, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.395365676470588, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.446278058823529, "z": 0 },
+        { "x": -5.8259244444444445, "y": 5.497190441176469, "z": 0 },
+        { "x": -5.879939555555556, "y": 5.548102823529411, "z": 0 },
+        { "x": -5.8259244444444445, "y": 5.599015205882353, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.649927588235293, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.700839970588234, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.7517523529411765, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.802664735294117, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.853577117647058, "z": 0 },
+        { "x": -5.771909333333333, "y": 5.9044894999999995, "z": 0 },
+        { "x": -5.717894222222222, "y": 5.95540188235294, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.006314264705882, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.0572266470588225, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.108139029411764, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.159051411764706, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.209963794117646, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.260876176470587, "z": 0 },
+        { "x": -5.8259244444444445, "y": 6.311788558823529, "z": 0 },
+        { "x": -5.771909333333333, "y": 6.36270094117647, "z": 0 },
+        { "x": -5.717894222222222, "y": 6.413613323529411, "z": 0 },
+        { "x": -5.663879111111111, "y": 6.464525705882352, "z": 0 },
+        { "x": -5.609864, "y": 6.413613323529411, "z": 0 },
+        {
+          "portPointId": "ce2398_pp1_z0::0",
+          "x": -5.609864,
+          "y": 6.337244695552179,
+          "z": 0,
+          "connectionName": "source_trace_7__source_net_7",
+          "rootConnectionName": "connectivity_net37",
+          "prevPortPointId": "ce2350_pp1_z0::0"
+        }
+      ],
+      "vias": []
+    }
+  ]
+}
