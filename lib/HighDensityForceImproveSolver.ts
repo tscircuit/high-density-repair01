@@ -96,13 +96,62 @@ type ForceImproveSampleEntry = {
 }
 
 type ProjectionViaNode = {
-  routeIndex: number
   rootConnectionName: string
-  pointIndexes: number[]
+  points: Vector[]
   x: number
   y: number
   radius: number
   movable: boolean
+}
+
+type ViaPositionKey = string
+
+const getViaPositionKey = (
+  rootConnectionName: string,
+  position: Vector,
+): ViaPositionKey =>
+  JSON.stringify([rootConnectionName, position.x, position.y])
+
+const collectSharedViaGroups = (
+  mutableRoutes: MutableRoute[],
+): MutableNode[][] => {
+  const nodesByPosition = new Map<ViaPositionKey, MutableNode[]>()
+  for (const route of mutableRoutes) {
+    for (const node of route.nodes) {
+      if (node.boundaryPadding === 0) continue
+      const key = getViaPositionKey(route.rootConnectionName, node)
+      const nodes = nodesByPosition.get(key) ?? []
+      nodes.push(node)
+      nodesByPosition.set(key, nodes)
+    }
+  }
+  const groups = [...nodesByPosition.values()].filter(
+    (nodes) => nodes.length > 1,
+  )
+  for (const nodes of groups) {
+    const fixed = nodes.some((node) => node.fixed)
+    const boundaryPadding = Math.max(
+      ...nodes.map((node) => node.boundaryPadding),
+    )
+    for (const node of nodes) {
+      node.fixed = fixed
+      node.boundaryPadding = boundaryPadding
+    }
+  }
+  return groups
+}
+
+const projectSharedViaPositions = (groups: MutableNode[][]): void => {
+  for (const nodes of groups) {
+    if (nodes[0]!.fixed) continue
+    // Project each branch's displacement onto one physical via position.
+    const x = nodes.reduce((sum, node) => sum + node.x, 0) / nodes.length
+    const y = nodes.reduce((sum, node) => sum + node.y, 0) / nodes.length
+    for (const node of nodes) {
+      node.x = x
+      node.y = y
+    }
+  }
 }
 
 export type ForceVector = {
@@ -858,7 +907,7 @@ const clampProjectionViaToNode = (
 const collectProjectionViaNodes = (
   routes: HighDensityRoute[],
 ): ProjectionViaNode[] => {
-  const viaNodes: ProjectionViaNode[] = []
+  const viaNodesByPosition = new Map<ViaPositionKey, ProjectionViaNode>()
 
   for (let routeIndex = 0; routeIndex < routes.length; routeIndex += 1) {
     const route = routes[routeIndex]
@@ -906,43 +955,52 @@ const collectProjectionViaNodes = (
         seenPointIndexes.add(pointIndex)
       }
 
-      viaNodes.push({
-        routeIndex,
-        rootConnectionName: getRouteRootConnectionName(route),
-        pointIndexes: uniquePointIndexes,
+      const rootConnectionName = getRouteRootConnectionName(route)
+      const key = getViaPositionKey(rootConnectionName, current)
+      const points = uniquePointIndexes.map(
+        (pointIndex) => route.route[pointIndex]!,
+      )
+      const radius = (route.viaDiameter ?? VIA_DIAMETER) / 2
+      const movable = !includesProtectedEndpointSegmentPoint(
+        route.route.length,
+        uniquePointIndexes,
+      )
+      const existing = viaNodesByPosition.get(key)
+      if (existing) {
+        // A shared drill is one obstacle and moves all attached branches.
+        existing.points.push(...points)
+        existing.radius = Math.max(existing.radius, radius)
+        existing.movable &&= movable
+        continue
+      }
+      viaNodesByPosition.set(key, {
+        rootConnectionName,
+        points,
         x: current.x,
         y: current.y,
-        radius: (route.viaDiameter ?? VIA_DIAMETER) / 2,
-        movable: !includesProtectedEndpointSegmentPoint(
-          route.route.length,
-          uniquePointIndexes,
-        ),
+        radius,
+        movable,
       })
     }
   }
 
-  return viaNodes
+  return [...viaNodesByPosition.values()]
 }
 
 const applyProjectionViaMove = (params: {
-  routes: HighDensityRoute[]
   via: ProjectionViaNode
   dx: number
   dy: number
   node: NodeWithPortPoints
-}) => {
-  const { routes, via, dx, dy, node } = params
+}): boolean => {
+  const { via, dx, dy, node } = params
   if (!via.movable) return false
 
   via.x += dx
   via.y += dy
   clampProjectionViaToNode(via, node)
 
-  const route = routes[via.routeIndex]
-  if (!route) return false
-  for (const pointIndex of via.pointIndexes) {
-    const point = route.route[pointIndex]
-    if (!point) continue
+  for (const point of via.points) {
     point.x = via.x
     point.y = via.y
   }
@@ -951,11 +1009,10 @@ const applyProjectionViaMove = (params: {
 }
 
 const projectViaViaClearance = (params: {
-  routes: HighDensityRoute[]
   node: NodeWithPortPoints
   vias: ProjectionViaNode[]
 }) => {
-  const { routes, node, vias } = params
+  const { node, vias } = params
   let changed = false
 
   for (let leftIndex = 0; leftIndex < vias.length; leftIndex += 1) {
@@ -994,7 +1051,6 @@ const projectViaViaClearance = (params: {
       const move = Math.min(MAX_VIA_MOVE_PER_PASS, penetration / movableCount)
       changed =
         applyProjectionViaMove({
-          routes,
           via: left,
           dx: directionX * move,
           dy: directionY * move,
@@ -1002,7 +1058,6 @@ const projectViaViaClearance = (params: {
         }) || changed
       changed =
         applyProjectionViaMove({
-          routes,
           via: right,
           dx: -directionX * move,
           dy: -directionY * move,
@@ -1015,12 +1070,11 @@ const projectViaViaClearance = (params: {
 }
 
 const projectViaSegmentClearance = (params: {
-  routes: HighDensityRoute[]
   node: NodeWithPortPoints
   vias: ProjectionViaNode[]
   segments: ProjectionSegment[]
 }) => {
-  const { routes, node, vias, segments } = params
+  const { node, vias, segments } = params
   let changed = false
 
   for (let viaIndex = 0; viaIndex < vias.length; viaIndex += 1) {
@@ -1062,7 +1116,6 @@ const projectViaSegmentClearance = (params: {
 
       changed =
         applyProjectionViaMove({
-          routes,
           via,
           dx: directionX * move,
           dy: directionY * move,
@@ -1092,6 +1145,11 @@ const applyProjectionRoutePointMove = (params: {
   if (includesProtectedEndpointSegmentPoint(route.route.length, pointIndexes)) {
     return false
   }
+
+  const via = collectProjectionViaNodes(routes).find((candidate) =>
+    candidate.points.includes(route.route[pointIndex]!),
+  )
+  if (via) return applyProjectionViaMove({ via, dx, dy, node })
 
   const bounds = getInsetNodeBounds(node, POSITION_EPSILON)
   let changed = false
@@ -1251,12 +1309,10 @@ const applyProjectionClearance = (
     const vias = collectProjectionViaNodes(routes)
     const segments = collectProjectionSegments(routes)
     const viaToViaChanged = projectViaViaClearance({
-      routes,
       node,
       vias,
     })
     const viaToSegmentChanged = projectViaSegmentClearance({
-      routes,
       node,
       vias,
       segments,
@@ -1299,15 +1355,25 @@ const applySelectedRouteSegmentClearance = (
   }
   return routes
 }
-const resolveClearanceConstraints = (
-  bounds: Bounds,
-  mutableRoutes: MutableRoute[],
-  forceElements: ForceElement[],
-  segments: SegmentObstacle[],
-  nodeCorrections: Float64Array,
+const resolveClearanceConstraints = ({
+  bounds,
+  mutableRoutes,
+  sharedViaGroups,
+  forceElements,
+  segments,
+  nodeCorrections,
   passCount = CLEARANCE_PROJECTION_PASSES,
   maxCorrection = MAX_CLEARANCE_CORRECTION,
-) => {
+}: {
+  bounds: Bounds
+  mutableRoutes: MutableRoute[]
+  sharedViaGroups: MutableNode[][]
+  forceElements: ForceElement[]
+  segments: SegmentObstacle[]
+  nodeCorrections: Float64Array
+  passCount?: number
+  maxCorrection?: number
+}): void => {
   for (let passIndex = 0; passIndex < passCount; passIndex += 1) {
     nodeCorrections.fill(0)
     const segmentSpatialIndex = buildSegmentSpatialIndex(segments)
@@ -1509,6 +1575,7 @@ const resolveClearanceConstraints = (
       }
     }
 
+    projectSharedViaPositions(sharedViaGroups)
     clampMutableRoutesToBounds(mutableRoutes, bounds)
   }
 }
@@ -1520,6 +1587,7 @@ export const runForceDirectedImprovement = (
   options?: ForceImproveOptions,
 ): ForceImproveResult => {
   const { mutableRoutes, totalNodeCount } = buildMutableRoutes(routes)
+  const sharedViaGroups = collectSharedViaGroups(mutableRoutes)
   const forceElements = buildForceElements(mutableRoutes)
   const segments = buildSegmentObstacles(mutableRoutes)
   const nodeForces = new Float64Array(totalNodeCount * 2)
@@ -1887,27 +1955,28 @@ export const runForceDirectedImprovement = (
       }
     }
 
+    projectSharedViaPositions(sharedViaGroups)
     clampMutableRoutesToBounds(mutableRoutes, bounds)
-    resolveClearanceConstraints(
+    resolveClearanceConstraints({
       bounds,
       mutableRoutes,
+      sharedViaGroups,
       forceElements,
       segments,
       nodeCorrections,
-      CLEARANCE_PROJECTION_PASSES,
-      MAX_CLEARANCE_CORRECTION,
-    )
+    })
   }
 
-  resolveClearanceConstraints(
+  resolveClearanceConstraints({
     bounds,
     mutableRoutes,
+    sharedViaGroups,
     forceElements,
     segments,
     nodeCorrections,
-    FINAL_CLEARANCE_PROJECTION_PASSES,
-    FINAL_MAX_CLEARANCE_CORRECTION,
-  )
+    passCount: FINAL_CLEARANCE_PROJECTION_PASSES,
+    maxCorrection: FINAL_MAX_CLEARANCE_CORRECTION,
+  })
 
   const improvedRoutes = materializeRoutes(mutableRoutes)
 
