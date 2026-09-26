@@ -1,0 +1,3802 @@
+{
+  "nodeWithPortPoints": [
+    {
+      "capacityMeshNodeId": "cmn_170",
+      "center": {
+        "x": 4.821217999999999,
+        "y": 14.860041500000001
+      },
+      "width": 1.2173320000000007,
+      "height": 4.219920999999999,
+      "portPoints": [
+        {
+          "portPointId": "ce9977_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 16.350023,
+          "z": 0,
+          "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst16",
+          "rootConnectionName": "source_trace_0",
+          "nextPortPointId": "ce10249_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce10249_pp0_z0::0",
+          "x": 5.4298839999999995,
+          "y": 16.699999999999996,
+          "z": 0,
+          "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst16",
+          "rootConnectionName": "source_trace_0",
+          "prevPortPointId": "ce9977_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce10240_pp0_z0::0",
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 0,
+          "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst37",
+          "rootConnectionName": "source_trace_0",
+          "nextPortPointId": "ce9977_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9977_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 16.350023,
+          "z": 0,
+          "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst37",
+          "rootConnectionName": "source_trace_0",
+          "prevPortPointId": "ce10240_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9957_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 14.350027,
+          "z": 0,
+          "connectionName": "source_trace_12__source_trace_14__source_trace_16__source_trace_18__source_net_6_mst2",
+          "rootConnectionName": "source_trace_12",
+          "nextPortPointId": "ce10244_pp4_z1::1"
+        },
+        {
+          "portPointId": "ce10244_pp4_z1::1",
+          "x": 5.4298839999999995,
+          "y": 13.875,
+          "z": 1,
+          "connectionName": "source_trace_12__source_trace_14__source_trace_16__source_trace_18__source_net_6_mst2",
+          "rootConnectionName": "source_trace_12",
+          "prevPortPointId": "ce9957_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9912_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 12.8000809,
+          "z": 0,
+          "connectionName": "source_trace_321__source_trace_322_mst1",
+          "rootConnectionName": "source_trace_321",
+          "nextPortPointId": "ce10241_pp0_z3::3"
+        },
+        {
+          "portPointId": "ce10241_pp0_z3::3",
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 3,
+          "connectionName": "source_trace_321__source_trace_322_mst1",
+          "rootConnectionName": "source_trace_321",
+          "prevPortPointId": "ce9912_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9916_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 13.150130999999998,
+          "z": 0,
+          "connectionName": "source_trace_318__source_trace_319_mst1",
+          "rootConnectionName": "source_trace_318",
+          "nextPortPointId": "ce10241_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce10241_pp0_z1::1",
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 1,
+          "connectionName": "source_trace_318__source_trace_319_mst1",
+          "rootConnectionName": "source_trace_318",
+          "prevPortPointId": "ce9916_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce10253_pp0_z1::1",
+          "x": 5.4298839999999995,
+          "y": 16.722537499999994,
+          "z": 1,
+          "connectionName": "source_trace_302",
+          "rootConnectionName": "source_trace_302",
+          "nextPortPointId": "ce10240_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce10240_pp0_z1::1",
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 1,
+          "connectionName": "source_trace_302",
+          "rootConnectionName": "source_trace_302",
+          "prevPortPointId": "ce10253_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce10240_pp3_z2::2",
+          "x": 5.125551,
+          "y": 16.970002,
+          "z": 2,
+          "connectionName": "source_trace_273",
+          "rootConnectionName": "source_trace_273",
+          "nextPortPointId": "ce10240_pp0_z2::2"
+        },
+        {
+          "portPointId": "ce10240_pp0_z2::2",
+          "x": 4.5168849999999985,
+          "y": 16.970002,
+          "z": 2,
+          "connectionName": "source_trace_273",
+          "rootConnectionName": "source_trace_273",
+          "prevPortPointId": "ce10240_pp3_z2::2"
+        },
+        {
+          "portPointId": "ce10248_pp0_z3::3",
+          "x": 5.4298839999999995,
+          "y": 15.774999999999999,
+          "z": 3,
+          "connectionName": "source_trace_269",
+          "rootConnectionName": "source_trace_269",
+          "nextPortPointId": "ce10020_pp6_z3::3"
+        },
+        {
+          "portPointId": "ce10020_pp6_z3::3",
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 3,
+          "connectionName": "source_trace_269",
+          "rootConnectionName": "source_trace_269",
+          "prevPortPointId": "ce10248_pp0_z3::3"
+        },
+        {
+          "portPointId": "ce10020_pp7_z3::3",
+          "x": 4.212551999999999,
+          "y": 16.283458333333336,
+          "z": 3,
+          "connectionName": "source_trace_269",
+          "rootConnectionName": "source_trace_269",
+          "nextPortPointId": "ce10240_pp0_z3::3"
+        },
+        {
+          "portPointId": "ce10240_pp0_z3::3",
+          "x": 4.415440666666665,
+          "y": 16.970002,
+          "z": 3,
+          "connectionName": "source_trace_269",
+          "rootConnectionName": "source_trace_269",
+          "prevPortPointId": "ce10020_pp7_z3::3"
+        },
+        {
+          "portPointId": "ce10248_pp0_z2::2",
+          "x": 5.4298839999999995,
+          "y": 15.774999999999999,
+          "z": 2,
+          "connectionName": "source_trace_267",
+          "rootConnectionName": "source_trace_267",
+          "nextPortPointId": "ce9946_pp6_z2::2"
+        },
+        {
+          "portPointId": "ce9946_pp6_z2::2",
+          "x": 4.212551999999999,
+          "y": 15.210066,
+          "z": 2,
+          "connectionName": "source_trace_267",
+          "rootConnectionName": "source_trace_267",
+          "prevPortPointId": "ce10248_pp0_z2::2"
+        },
+        {
+          "portPointId": "ce10246_pp0_z1::1",
+          "x": 5.4298839999999995,
+          "y": 14.85,
+          "z": 1,
+          "connectionName": "source_trace_265",
+          "rootConnectionName": "source_trace_265",
+          "nextPortPointId": "ce9973_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9973_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 15.949973,
+          "z": 0,
+          "connectionName": "source_trace_265",
+          "rootConnectionName": "source_trace_265",
+          "prevPortPointId": "ce10246_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce10244_pp4_z2::2",
+          "x": 5.4298839999999995,
+          "y": 13.875,
+          "z": 2,
+          "connectionName": "source_trace_263",
+          "rootConnectionName": "source_trace_263",
+          "nextPortPointId": "ce9969_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9969_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 15.549923,
+          "z": 0,
+          "connectionName": "source_trace_263",
+          "rootConnectionName": "source_trace_263",
+          "prevPortPointId": "ce10244_pp4_z2::2"
+        },
+        {
+          "portPointId": "ce10019_pp3_z1::1",
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 1,
+          "connectionName": "source_trace_261",
+          "rootConnectionName": "source_trace_261",
+          "nextPortPointId": "ce9965_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9965_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 15.150126999999998,
+          "z": 0,
+          "connectionName": "source_trace_261",
+          "rootConnectionName": "source_trace_261",
+          "prevPortPointId": "ce10019_pp3_z1::1"
+        },
+        {
+          "portPointId": "ce10240_pp2_z3::3",
+          "x": 5.226995333333333,
+          "y": 16.970002,
+          "z": 3,
+          "connectionName": "source_trace_259",
+          "rootConnectionName": "source_trace_259",
+          "nextPortPointId": "ce10240_pp1_z3::3"
+        },
+        {
+          "portPointId": "ce10240_pp1_z3::3",
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 3,
+          "connectionName": "source_trace_259",
+          "rootConnectionName": "source_trace_259",
+          "prevPortPointId": "ce10240_pp2_z3::3"
+        },
+        {
+          "portPointId": "ce10020_pp3_z3::3",
+          "x": 4.212551999999999,
+          "y": 14.016795666666665,
+          "z": 3,
+          "connectionName": "source_trace_259",
+          "rootConnectionName": "source_trace_259",
+          "nextPortPointId": "ce9961_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9961_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 14.750076999999997,
+          "z": 0,
+          "connectionName": "source_trace_259",
+          "rootConnectionName": "source_trace_259",
+          "prevPortPointId": "ce10020_pp3_z3::3"
+        },
+        {
+          "portPointId": "ce10242_pp0_z2::2",
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 2,
+          "connectionName": "source_trace_257",
+          "rootConnectionName": "source_trace_257",
+          "nextPortPointId": "ce9953_pp0_z0::0"
+        },
+        {
+          "portPointId": "ce9953_pp0_z0::0",
+          "x": 4.21255215,
+          "y": 13.949977,
+          "z": 0,
+          "connectionName": "source_trace_257",
+          "rootConnectionName": "source_trace_257",
+          "prevPortPointId": "ce10242_pp0_z2::2"
+        }
+      ],
+      "portPointsInPairs": [
+        [
+          {
+            "portPointId": "ce9977_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 16.350023,
+            "z": 0,
+            "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst16",
+            "rootConnectionName": "source_trace_0",
+            "nextPortPointId": "ce10249_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce10249_pp0_z0::0",
+            "x": 5.4298839999999995,
+            "y": 16.699999999999996,
+            "z": 0,
+            "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst16",
+            "rootConnectionName": "source_trace_0",
+            "prevPortPointId": "ce9977_pp0_z0::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10240_pp0_z0::0",
+            "x": 4.821217999999999,
+            "y": 16.970002,
+            "z": 0,
+            "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst37",
+            "rootConnectionName": "source_trace_0",
+            "nextPortPointId": "ce9977_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9977_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 16.350023,
+            "z": 0,
+            "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst37",
+            "rootConnectionName": "source_trace_0",
+            "prevPortPointId": "ce10240_pp0_z0::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce9957_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 14.350027,
+            "z": 0,
+            "connectionName": "source_trace_12__source_trace_14__source_trace_16__source_trace_18__source_net_6_mst2",
+            "rootConnectionName": "source_trace_12",
+            "nextPortPointId": "ce10244_pp4_z1::1"
+          },
+          {
+            "portPointId": "ce10244_pp4_z1::1",
+            "x": 5.4298839999999995,
+            "y": 13.875,
+            "z": 1,
+            "connectionName": "source_trace_12__source_trace_14__source_trace_16__source_trace_18__source_net_6_mst2",
+            "rootConnectionName": "source_trace_12",
+            "prevPortPointId": "ce9957_pp0_z0::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce9912_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 12.8000809,
+            "z": 0,
+            "connectionName": "source_trace_321__source_trace_322_mst1",
+            "rootConnectionName": "source_trace_321",
+            "nextPortPointId": "ce10241_pp0_z3::3"
+          },
+          {
+            "portPointId": "ce10241_pp0_z3::3",
+            "x": 5.4298839999999995,
+            "y": 12.960041499999999,
+            "z": 3,
+            "connectionName": "source_trace_321__source_trace_322_mst1",
+            "rootConnectionName": "source_trace_321",
+            "prevPortPointId": "ce9912_pp0_z0::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce9916_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 13.150130999999998,
+            "z": 0,
+            "connectionName": "source_trace_318__source_trace_319_mst1",
+            "rootConnectionName": "source_trace_318",
+            "nextPortPointId": "ce10241_pp0_z1::1"
+          },
+          {
+            "portPointId": "ce10241_pp0_z1::1",
+            "x": 5.4298839999999995,
+            "y": 12.960041499999999,
+            "z": 1,
+            "connectionName": "source_trace_318__source_trace_319_mst1",
+            "rootConnectionName": "source_trace_318",
+            "prevPortPointId": "ce9916_pp0_z0::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10253_pp0_z1::1",
+            "x": 5.4298839999999995,
+            "y": 16.722537499999994,
+            "z": 1,
+            "connectionName": "source_trace_302",
+            "rootConnectionName": "source_trace_302",
+            "nextPortPointId": "ce10240_pp0_z1::1"
+          },
+          {
+            "portPointId": "ce10240_pp0_z1::1",
+            "x": 4.821217999999999,
+            "y": 16.970002,
+            "z": 1,
+            "connectionName": "source_trace_302",
+            "rootConnectionName": "source_trace_302",
+            "prevPortPointId": "ce10253_pp0_z1::1"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10240_pp3_z2::2",
+            "x": 5.125551,
+            "y": 16.970002,
+            "z": 2,
+            "connectionName": "source_trace_273",
+            "rootConnectionName": "source_trace_273",
+            "nextPortPointId": "ce10240_pp0_z2::2"
+          },
+          {
+            "portPointId": "ce10240_pp0_z2::2",
+            "x": 4.5168849999999985,
+            "y": 16.970002,
+            "z": 2,
+            "connectionName": "source_trace_273",
+            "rootConnectionName": "source_trace_273",
+            "prevPortPointId": "ce10240_pp3_z2::2"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10248_pp0_z3::3",
+            "x": 5.4298839999999995,
+            "y": 15.774999999999999,
+            "z": 3,
+            "connectionName": "source_trace_269",
+            "rootConnectionName": "source_trace_269",
+            "nextPortPointId": "ce10020_pp6_z3::3"
+          },
+          {
+            "portPointId": "ce10020_pp6_z3::3",
+            "x": 4.212551999999999,
+            "y": 15.150127,
+            "z": 3,
+            "connectionName": "source_trace_269",
+            "rootConnectionName": "source_trace_269",
+            "prevPortPointId": "ce10248_pp0_z3::3"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10020_pp7_z3::3",
+            "x": 4.212551999999999,
+            "y": 16.283458333333336,
+            "z": 3,
+            "connectionName": "source_trace_269",
+            "rootConnectionName": "source_trace_269",
+            "nextPortPointId": "ce10240_pp0_z3::3"
+          },
+          {
+            "portPointId": "ce10240_pp0_z3::3",
+            "x": 4.415440666666665,
+            "y": 16.970002,
+            "z": 3,
+            "connectionName": "source_trace_269",
+            "rootConnectionName": "source_trace_269",
+            "prevPortPointId": "ce10020_pp7_z3::3"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10248_pp0_z2::2",
+            "x": 5.4298839999999995,
+            "y": 15.774999999999999,
+            "z": 2,
+            "connectionName": "source_trace_267",
+            "rootConnectionName": "source_trace_267",
+            "nextPortPointId": "ce9946_pp6_z2::2"
+          },
+          {
+            "portPointId": "ce9946_pp6_z2::2",
+            "x": 4.212551999999999,
+            "y": 15.210066,
+            "z": 2,
+            "connectionName": "source_trace_267",
+            "rootConnectionName": "source_trace_267",
+            "prevPortPointId": "ce10248_pp0_z2::2"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10246_pp0_z1::1",
+            "x": 5.4298839999999995,
+            "y": 14.85,
+            "z": 1,
+            "connectionName": "source_trace_265",
+            "rootConnectionName": "source_trace_265",
+            "nextPortPointId": "ce9973_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9973_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 15.949973,
+            "z": 0,
+            "connectionName": "source_trace_265",
+            "rootConnectionName": "source_trace_265",
+            "prevPortPointId": "ce10246_pp0_z1::1"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10244_pp4_z2::2",
+            "x": 5.4298839999999995,
+            "y": 13.875,
+            "z": 2,
+            "connectionName": "source_trace_263",
+            "rootConnectionName": "source_trace_263",
+            "nextPortPointId": "ce9969_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9969_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 15.549923,
+            "z": 0,
+            "connectionName": "source_trace_263",
+            "rootConnectionName": "source_trace_263",
+            "prevPortPointId": "ce10244_pp4_z2::2"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10019_pp3_z1::1",
+            "x": 4.212551999999999,
+            "y": 15.150127,
+            "z": 1,
+            "connectionName": "source_trace_261",
+            "rootConnectionName": "source_trace_261",
+            "nextPortPointId": "ce9965_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9965_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 15.150126999999998,
+            "z": 0,
+            "connectionName": "source_trace_261",
+            "rootConnectionName": "source_trace_261",
+            "prevPortPointId": "ce10019_pp3_z1::1"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10240_pp2_z3::3",
+            "x": 5.226995333333333,
+            "y": 16.970002,
+            "z": 3,
+            "connectionName": "source_trace_259",
+            "rootConnectionName": "source_trace_259",
+            "nextPortPointId": "ce10240_pp1_z3::3"
+          },
+          {
+            "portPointId": "ce10240_pp1_z3::3",
+            "x": 4.821217999999999,
+            "y": 16.970002,
+            "z": 3,
+            "connectionName": "source_trace_259",
+            "rootConnectionName": "source_trace_259",
+            "prevPortPointId": "ce10240_pp2_z3::3"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10020_pp3_z3::3",
+            "x": 4.212551999999999,
+            "y": 14.016795666666665,
+            "z": 3,
+            "connectionName": "source_trace_259",
+            "rootConnectionName": "source_trace_259",
+            "nextPortPointId": "ce9961_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9961_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 14.750076999999997,
+            "z": 0,
+            "connectionName": "source_trace_259",
+            "rootConnectionName": "source_trace_259",
+            "prevPortPointId": "ce10020_pp3_z3::3"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce10242_pp0_z2::2",
+            "x": 5.4298839999999995,
+            "y": 12.960041499999999,
+            "z": 2,
+            "connectionName": "source_trace_257",
+            "rootConnectionName": "source_trace_257",
+            "nextPortPointId": "ce9953_pp0_z0::0"
+          },
+          {
+            "portPointId": "ce9953_pp0_z0::0",
+            "x": 4.21255215,
+            "y": 13.949977,
+            "z": 0,
+            "connectionName": "source_trace_257",
+            "rootConnectionName": "source_trace_257",
+            "prevPortPointId": "ce10242_pp0_z2::2"
+          }
+        ]
+      ],
+      "availableZ": [
+        0,
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "hdRoutes": [
+    {
+      "connectionName": "source_trace_257",
+      "rootConnectionName": "source_trace_257",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 2
+        },
+        {
+          "x": 5.4356089999999995,
+          "y": 12.955020750000001,
+          "z": 2
+        },
+        {
+          "x": 5.3856090000000005,
+          "y": 13.00502075,
+          "z": 2
+        },
+        {
+          "x": 5.335609,
+          "y": 13.05502075,
+          "z": 2
+        },
+        {
+          "x": 5.285609000000001,
+          "y": 13.105020750000001,
+          "z": 2
+        },
+        {
+          "x": 5.235609,
+          "y": 13.15502075,
+          "z": 2
+        },
+        {
+          "x": 5.185609000000001,
+          "y": 13.20502075,
+          "z": 2
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 13.25502075,
+          "z": 2
+        },
+        {
+          "x": 5.085609000000002,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.985609000000002,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.885609000000002,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.835609000000002,
+          "y": 13.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.785609000000003,
+          "y": 13.35502075,
+          "z": 2
+        },
+        {
+          "x": 4.785609000000003,
+          "y": 13.405020749999998,
+          "z": 2
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.45502075,
+          "z": 2
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.45502075,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.50502075,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.555020749999999,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.605020749999998,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.655020749999998,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.70502075,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.755020749999998,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.805020749999997,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.855020749999998,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.905020749999998,
+          "z": 1
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.685609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.635609000000002,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.585609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.535609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.485609000000004,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.435609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.385609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.335609000000003,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.2856090000000036,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.235609000000004,
+          "y": 13.905020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.21255215,
+          "y": 13.949977,
+          "z": 0
+        }
+      ],
+      "vias": [
+        {
+          "x": 4.735609000000002,
+          "y": 13.45502075
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 13.905020749999998
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_269",
+      "rootConnectionName": "source_trace_269",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 3
+        },
+        {
+          "x": 4.210609,
+          "y": 15.155020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.260609,
+          "y": 15.205020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.25502075,
+          "z": 3
+        },
+        {
+          "x": 4.360609,
+          "y": 15.30502075,
+          "z": 3
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.355020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.460609,
+          "y": 15.40502075,
+          "z": 3
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.455020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.505020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.555020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.605020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.705020750000005,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.755020750000005,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.805020750000006,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.855020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.905020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.955020750000008,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 16.005020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 16.05502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 16.10502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 16.20502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.460609,
+          "y": 16.20502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 16.20502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.360608999999999,
+          "y": 16.255020750000014,
+          "z": 3
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 16.255020750000014,
+          "z": 3
+        },
+        {
+          "x": 4.260608999999999,
+          "y": 16.255020750000014,
+          "z": 3
+        },
+        {
+          "x": 4.212551999999999,
+          "y": 16.283458333333336,
+          "z": 3
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_269",
+      "rootConnectionName": "source_trace_269",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 3
+        },
+        {
+          "x": 4.210609,
+          "y": 15.155020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.260609,
+          "y": 15.205020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.25502075,
+          "z": 3
+        },
+        {
+          "x": 4.360609,
+          "y": 15.30502075,
+          "z": 3
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.355020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.460609,
+          "y": 15.40502075,
+          "z": 3
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.455020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.505020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.555020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.605020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 15.705020750000005,
+          "z": 3
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 15.755020750000005,
+          "z": 3
+        },
+        {
+          "x": 5.410608999999996,
+          "y": 15.755020750000005,
+          "z": 3
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 15.774999999999999,
+          "z": 3
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_269",
+      "rootConnectionName": "source_trace_269",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 3
+        },
+        {
+          "x": 4.210609,
+          "y": 15.155020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.260609,
+          "y": 15.205020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.25502075,
+          "z": 3
+        },
+        {
+          "x": 4.360609,
+          "y": 15.30502075,
+          "z": 3
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.355020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.460609,
+          "y": 15.40502075,
+          "z": 3
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.455020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.505020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.555020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.605020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.655020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.705020750000005,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.755020750000005,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.805020750000006,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.855020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.905020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.955020750000008,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 16.005020750000007,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 16.05502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 16.10502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 16.155020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 16.20502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 16.255020750000014,
+          "z": 3
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 16.30502075000001,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.355020750000016,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.405020750000013,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.455020750000017,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.505020750000014,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.55502075000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.605020750000016,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.65502075000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.705020750000017,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.75502075000002,
+          "z": 3
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.80502075000002,
+          "z": 3
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 16.855020750000023,
+          "z": 3
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 16.90502075000002,
+          "z": 3
+        },
+        {
+          "x": 4.460609,
+          "y": 16.955020750000024,
+          "z": 3
+        },
+        {
+          "x": 4.415440666666665,
+          "y": 16.970002,
+          "z": 3
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst37",
+      "rootConnectionName": "source_trace_0",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 0
+        },
+        {
+          "x": 4.8106089999999995,
+          "y": 16.98002075,
+          "z": 0
+        },
+        {
+          "x": 4.7606090000000005,
+          "y": 16.93002075,
+          "z": 0
+        },
+        {
+          "x": 4.710609,
+          "y": 16.88002075,
+          "z": 0
+        },
+        {
+          "x": 4.660609000000001,
+          "y": 16.83002075,
+          "z": 0
+        },
+        {
+          "x": 4.660609000000001,
+          "y": 16.78002075,
+          "z": 0
+        },
+        {
+          "x": 4.660609000000001,
+          "y": 16.730020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.660609000000001,
+          "y": 16.680020749999997,
+          "z": 0
+        },
+        {
+          "x": 4.610609,
+          "y": 16.630020749999996,
+          "z": 0
+        },
+        {
+          "x": 4.560609000000001,
+          "y": 16.630020749999996,
+          "z": 0
+        },
+        {
+          "x": 4.5106090000000005,
+          "y": 16.580020749999996,
+          "z": 0
+        },
+        {
+          "x": 4.460609000000002,
+          "y": 16.530020749999995,
+          "z": 0
+        },
+        {
+          "x": 4.410609000000001,
+          "y": 16.480020749999994,
+          "z": 0
+        },
+        {
+          "x": 4.360609000000001,
+          "y": 16.430020749999994,
+          "z": 0
+        },
+        {
+          "x": 4.310609000000001,
+          "y": 16.380020749999993,
+          "z": 0
+        },
+        {
+          "x": 4.260609000000001,
+          "y": 16.380020749999993,
+          "z": 0
+        },
+        {
+          "x": 4.21255215,
+          "y": 16.350023,
+          "z": 0
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_263",
+      "rootConnectionName": "source_trace_263",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 15.549923,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 15.55502075,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 15.55502075,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.55502075,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 15.55502075,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.55502075,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 15.50502075,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.45502075,
+          "z": 0
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.405020749999998,
+          "z": 0
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.35502075,
+          "z": 0
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.20502075,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.15502075,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.15502075,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 15.105020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 15.05502075,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 15.00502075,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.905020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.855020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.80502075,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.755020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.705020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 14.655020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.605020750000001,
+          "z": 3
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.555020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.505020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.455020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.405020750000002,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.355020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.305020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.255020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.205020750000003,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.155020750000004,
+          "z": 3
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.105020750000005,
+          "z": 3
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 14.055020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 14.005020750000003,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.955020750000005,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.905020750000006,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.855020750000005,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.805020750000004,
+          "z": 3
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 13.805020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 13.855020750000005,
+          "z": 2
+        },
+        {
+          "x": 5.410608999999996,
+          "y": 13.855020750000005,
+          "z": 2
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 13.875,
+          "z": 2
+        }
+      ],
+      "vias": [
+        {
+          "x": 4.810608999999998,
+          "y": 15.15502075
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.805020750000004
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_273",
+      "rootConnectionName": "source_trace_273",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.125551,
+          "y": 16.970002,
+          "z": 2
+        },
+        {
+          "x": 5.135609,
+          "y": 16.98002075,
+          "z": 2
+        },
+        {
+          "x": 5.085609,
+          "y": 16.93002075,
+          "z": 2
+        },
+        {
+          "x": 5.035609,
+          "y": 16.88002075,
+          "z": 2
+        },
+        {
+          "x": 4.985609,
+          "y": 16.83002075,
+          "z": 2
+        },
+        {
+          "x": 4.935609,
+          "y": 16.78002075,
+          "z": 2
+        },
+        {
+          "x": 4.8856090000000005,
+          "y": 16.730020749999998,
+          "z": 2
+        },
+        {
+          "x": 4.835609000000001,
+          "y": 16.680020749999997,
+          "z": 2
+        },
+        {
+          "x": 4.785609000000001,
+          "y": 16.680020749999997,
+          "z": 2
+        },
+        {
+          "x": 4.735609000000001,
+          "y": 16.680020749999997,
+          "z": 2
+        },
+        {
+          "x": 4.685609000000001,
+          "y": 16.680020749999997,
+          "z": 2
+        },
+        {
+          "x": 4.635609000000001,
+          "y": 16.730020749999998,
+          "z": 2
+        },
+        {
+          "x": 4.585609000000002,
+          "y": 16.78002075,
+          "z": 2
+        },
+        {
+          "x": 4.585609000000002,
+          "y": 16.83002075,
+          "z": 2
+        },
+        {
+          "x": 4.535609000000002,
+          "y": 16.88002075,
+          "z": 2
+        },
+        {
+          "x": 4.535609000000002,
+          "y": 16.93002075,
+          "z": 2
+        },
+        {
+          "x": 4.5168849999999985,
+          "y": 16.970002,
+          "z": 2
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_267",
+      "rootConnectionName": "source_trace_267",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.212551999999999,
+          "y": 15.210066,
+          "z": 2
+        },
+        {
+          "x": 4.210609,
+          "y": 15.205020750000001,
+          "z": 2
+        },
+        {
+          "x": 4.260609,
+          "y": 15.25502075,
+          "z": 2
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.30502075,
+          "z": 2
+        },
+        {
+          "x": 4.360609,
+          "y": 15.355020750000001,
+          "z": 2
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.40502075,
+          "z": 2
+        },
+        {
+          "x": 4.460609,
+          "y": 15.455020750000001,
+          "z": 2
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.505020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 15.555020750000002,
+          "z": 2
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 15.605020750000003,
+          "z": 2
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.655020750000004,
+          "z": 2
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 15.705020750000005,
+          "z": 2
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 15.755020750000005,
+          "z": 2
+        },
+        {
+          "x": 5.410608999999996,
+          "y": 15.755020750000005,
+          "z": 2
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 15.774999999999999,
+          "z": 2
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_12__source_trace_14__source_trace_16__source_trace_18__source_net_6_mst2",
+      "rootConnectionName": "source_trace_12",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 14.350027,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 14.355020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 14.30502075,
+          "z": 0
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.255020750000002,
+          "z": 0
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.255020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.205020750000003,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 14.055020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 14.005020750000003,
+          "z": 1
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 13.955020750000003,
+          "z": 1
+        },
+        {
+          "x": 5.410608999999996,
+          "y": 13.905020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 13.875,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 5.260608999999997,
+          "y": 14.255020750000002
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_302",
+      "rootConnectionName": "source_trace_302",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 1
+        },
+        {
+          "x": 4.8106089999999995,
+          "y": 16.98002075,
+          "z": 1
+        },
+        {
+          "x": 4.860609,
+          "y": 16.93002075,
+          "z": 1
+        },
+        {
+          "x": 4.910608999999999,
+          "y": 16.88002075,
+          "z": 1
+        },
+        {
+          "x": 4.960609,
+          "y": 16.83002075,
+          "z": 1
+        },
+        {
+          "x": 5.010608999999999,
+          "y": 16.78002075,
+          "z": 1
+        },
+        {
+          "x": 5.0606089999999995,
+          "y": 16.730020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.110608999999998,
+          "y": 16.680020749999997,
+          "z": 1
+        },
+        {
+          "x": 5.160608999999999,
+          "y": 16.680020749999997,
+          "z": 1
+        },
+        {
+          "x": 5.210608999999998,
+          "y": 16.730020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999999,
+          "y": 16.730020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.310608999999998,
+          "y": 16.730020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.360608999999998,
+          "y": 16.730020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 16.722537499999994,
+          "z": 1
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_259",
+      "rootConnectionName": "source_trace_259",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.226995333333333,
+          "y": 16.970002,
+          "z": 3
+        },
+        {
+          "x": 5.235609,
+          "y": 16.98002075,
+          "z": 3
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 16.93002075,
+          "z": 3
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 16.88002075,
+          "z": 3
+        },
+        {
+          "x": 5.085609,
+          "y": 16.83002075,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.78002075,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.730020749999998,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.680020749999997,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.630020749999996,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.580020749999996,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.530020749999995,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.480020749999994,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.430020749999994,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.380020749999993,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.330020749999992,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.28002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.23002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.18002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.13002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.08002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.030020749999988,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.980020749999987,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.930020749999986,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.830020749999985,
+          "z": 0
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 15.780020749999984,
+          "z": 0
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 15.730020749999984,
+          "z": 0
+        },
+        {
+          "x": 5.235609,
+          "y": 15.680020749999983,
+          "z": 0
+        },
+        {
+          "x": 5.235609,
+          "y": 15.630020749999982,
+          "z": 0
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 15.580020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 15.53002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.48002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.43002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.38002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.330020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.28002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.23002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.180020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.130020749999982,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.080020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.985609,
+          "y": 15.03002074999998,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.980020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.8856090000000005,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.835609000000002,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.785609000000001,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.685609000000001,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.635609000000002,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.585609000000002,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.535609000000003,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.485609000000002,
+          "y": 14.880020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.435609000000003,
+          "y": 14.830020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.830020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.3356090000000025,
+          "y": 14.830020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.285609000000003,
+          "y": 14.830020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.235609000000002,
+          "y": 14.780020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.21255215,
+          "y": 14.750076999999997,
+          "z": 0
+        }
+      ],
+      "vias": [
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_259",
+      "rootConnectionName": "source_trace_259",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.226995333333333,
+          "y": 16.970002,
+          "z": 3
+        },
+        {
+          "x": 5.235609,
+          "y": 16.98002075,
+          "z": 3
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 16.93002075,
+          "z": 3
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 16.88002075,
+          "z": 3
+        },
+        {
+          "x": 5.085609,
+          "y": 16.83002075,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.78002075,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.730020749999998,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.680020749999997,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.630020749999996,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.580020749999996,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.530020749999995,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.480020749999994,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.430020749999994,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.380020749999993,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.330020749999992,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.28002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.23002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.18002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.13002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.08002074999999,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.030020749999988,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.980020749999987,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.930020749999986,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.830020749999985,
+          "z": 0
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 15.780020749999984,
+          "z": 0
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 15.730020749999984,
+          "z": 0
+        },
+        {
+          "x": 5.235609,
+          "y": 15.680020749999983,
+          "z": 0
+        },
+        {
+          "x": 5.235609,
+          "y": 15.630020749999982,
+          "z": 0
+        },
+        {
+          "x": 5.235609,
+          "y": 15.580020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 15.53002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 15.48002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 15.43002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 15.38002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.330020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.28002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.085609,
+          "y": 15.23002074999998,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.180020749999981,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.130020749999982,
+          "z": 0
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 15.080020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.985609,
+          "y": 15.03002074999998,
+          "z": 0
+        },
+        {
+          "x": 4.985609,
+          "y": 14.980020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.985609,
+          "y": 14.930020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.880020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.830020749999981,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.780020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.730020749999984,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.680020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 14.630020749999982,
+          "z": 0
+        },
+        {
+          "x": 4.8856090000000005,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.835609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.785609000000001,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.735609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.685609000000001,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.635609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.585609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.535609000000003,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.485609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.435609000000003,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.580020749999983,
+          "z": 0
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.580020749999983,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.530020749999984,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.480020749999984,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.430020749999983,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.380020749999984,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.330020749999985,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.280020749999984,
+          "z": 3
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.230020749999984,
+          "z": 3
+        },
+        {
+          "x": 4.3356090000000025,
+          "y": 14.180020749999985,
+          "z": 3
+        },
+        {
+          "x": 4.285609000000003,
+          "y": 14.130020749999986,
+          "z": 3
+        },
+        {
+          "x": 4.235609000000002,
+          "y": 14.080020749999985,
+          "z": 3
+        },
+        {
+          "x": 4.212551999999999,
+          "y": 14.016795666666665,
+          "z": 3
+        }
+      ],
+      "vias": [
+        {
+          "x": 5.035609000000001,
+          "y": 15.880020749999986
+        },
+        {
+          "x": 4.385609000000002,
+          "y": 14.580020749999983
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_259",
+      "rootConnectionName": "source_trace_259",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.226995333333333,
+          "y": 16.970002,
+          "z": 3
+        },
+        {
+          "x": 5.235609,
+          "y": 16.98002075,
+          "z": 3
+        },
+        {
+          "x": 5.1856089999999995,
+          "y": 16.970002,
+          "z": 3
+        },
+        {
+          "x": 5.1356090000000005,
+          "y": 16.920002,
+          "z": 3
+        },
+        {
+          "x": 5.085609,
+          "y": 16.920002,
+          "z": 3
+        },
+        {
+          "x": 5.035609000000001,
+          "y": 16.920002,
+          "z": 3
+        },
+        {
+          "x": 4.985609,
+          "y": 16.920002,
+          "z": 3
+        },
+        {
+          "x": 4.935609000000001,
+          "y": 16.920002,
+          "z": 3
+        },
+        {
+          "x": 4.8856090000000005,
+          "y": 16.970002,
+          "z": 3
+        },
+        {
+          "x": 4.821217999999999,
+          "y": 16.970002,
+          "z": 3
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_261",
+      "rootConnectionName": "source_trace_261",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 15.150126999999998,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.460609,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.360608999999999,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.260608999999999,
+          "y": 15.155020750000002,
+          "z": 1
+        },
+        {
+          "x": 4.212551999999999,
+          "y": 15.150127,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 4.510608999999999,
+          "y": 15.155020750000002
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_318__source_trace_319_mst1",
+      "rootConnectionName": "source_trace_318",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 13.150130999999998,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 13.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 13.205020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 13.25502075,
+          "z": 0
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 13.205020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 13.205020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 13.155020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 13.105020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 13.105020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 13.05502075,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 13.005020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 13.005020750000002,
+          "z": 1
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 12.955020750000003,
+          "z": 1
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 4.810608999999998,
+          "y": 13.105020750000001
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_321__source_trace_322_mst1",
+      "rootConnectionName": "source_trace_321",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 5.4298839999999995,
+          "y": 12.960041499999999,
+          "z": 3
+        },
+        {
+          "x": 5.4356089999999995,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.379884,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.329884,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.279884,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.229884,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.179884,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.1298840000000006,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.079884000000001,
+          "y": 12.955020750000001,
+          "z": 3
+        },
+        {
+          "x": 5.029884000000001,
+          "y": 12.905020750000002,
+          "z": 3
+        },
+        {
+          "x": 5.029884000000001,
+          "y": 12.905020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.979884000000001,
+          "y": 12.905020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.929884000000001,
+          "y": 12.905020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.879884000000001,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.829884000000002,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.779884000000002,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.729884000000002,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.679884000000002,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.629884000000002,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.5798840000000025,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.529884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.479884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.429884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.379884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.329884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.279884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.229884000000003,
+          "y": 12.855020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.21255215,
+          "y": 12.8000809,
+          "z": 0
+        }
+      ],
+      "vias": [
+        {
+          "x": 5.029884000000001,
+          "y": 12.905020750000002
+        }
+      ]
+    },
+    {
+      "connectionName": "source_trace_0__source_trace_2__source_trace_4__source_trace_6__source_trace_8__source_trace_10__source_trace_165__source_trace_167__source_trace_171__source_trace_183__source_trace_206__source_trace_207__source_trace_208__source_trace_314__source_trace_316__source_net_1_mst16",
+      "rootConnectionName": "source_trace_0",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 16.350023,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 16.35502075,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 16.405020750000002,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 16.455020750000003,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 16.505020750000003,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 16.555020750000004,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 16.605020750000005,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 16.655020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 16.655020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 16.705020750000006,
+          "z": 0
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 16.699999999999996,
+          "z": 0
+        }
+      ],
+      "vias": []
+    },
+    {
+      "connectionName": "source_trace_265",
+      "rootConnectionName": "source_trace_265",
+      "regionId": "cmn_170",
+      "traceThickness": 0.1,
+      "viaDiameter": 0.45,
+      "route": [
+        {
+          "x": 4.21255215,
+          "y": 15.949973,
+          "z": 0
+        },
+        {
+          "x": 4.210609,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.260609,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.3106089999999995,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.360609,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.410608999999999,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.460609,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.510608999999999,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.5606089999999995,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.610608999999998,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.660608999999999,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.710608999999998,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.760608999999999,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.810608999999998,
+          "y": 15.955020750000001,
+          "z": 0
+        },
+        {
+          "x": 4.860608999999998,
+          "y": 16.00502075,
+          "z": 0
+        },
+        {
+          "x": 4.910608999999997,
+          "y": 16.055020750000004,
+          "z": 0
+        },
+        {
+          "x": 4.960608999999998,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.010608999999997,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.060608999999998,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.110608999999997,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.160608999999997,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.210608999999996,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 16.10502075,
+          "z": 0
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 16.10502075,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 16.055020750000004,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 16.00502075,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.955020750000001,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.90502075,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.85502075,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.805020749999999,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.755020749999998,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.705020749999997,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.655020749999997,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.605020749999996,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.555020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.505020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.455020749999994,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.405020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.355020749999994,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.305020749999994,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.255020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.205020749999996,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.155020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.105020749999994,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.055020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.260608999999997,
+          "y": 15.005020749999996,
+          "z": 1
+        },
+        {
+          "x": 5.310608999999996,
+          "y": 14.955020749999996,
+          "z": 1
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 14.905020749999995,
+          "z": 1
+        },
+        {
+          "x": 5.360608999999997,
+          "y": 14.855020749999996,
+          "z": 1
+        },
+        {
+          "x": 5.4298839999999995,
+          "y": 14.85,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": 5.260608999999997,
+          "y": 16.10502075
+        }
+      ]
+    }
+  ],
+  "totalStepsPerNode": 20,
+  "nodeAssignmentMargin": 0.2
+}
