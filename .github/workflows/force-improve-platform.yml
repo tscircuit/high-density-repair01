@@ -25,6 +25,11 @@ jobs:
         with:
           name: force-improve-${{ matrix.os }}
           path: tmp/gameboy-force-improve-routes.json
+      - name: Validate the complete test suite and types
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          bun test
+          bun run typecheck
 
   compare:
     needs: route

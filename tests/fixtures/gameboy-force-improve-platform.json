@@ -620,12 +620,7 @@
           }
         ]
       ],
-      "availableZ": [
-        0,
-        1,
-        2,
-        3
-      ]
+      "availableZ": [0, 1, 2, 3]
     }
   ],
   "hdRoutes": [
