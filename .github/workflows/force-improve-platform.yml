@@ -38,13 +38,5 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: results
-      - name: Reproduce the known platform mismatch (expected failure)
-        run: |
-          set +e
-          diff -u results/force-improve-ubuntu-latest/gameboy-force-improve-routes.json results/force-improve-macos-14/gameboy-force-improve-routes.json
-          result=$?
-          set -e
-          if [ "$result" -ne 1 ]; then
-            echo "Expected different solver outputs (diff exit 1), received $result"
-            exit 1
-          fi
+      - name: Require identical Linux and macOS route geometry
+        run: diff -u results/force-improve-ubuntu-latest/gameboy-force-improve-routes.json results/force-improve-macos-14/gameboy-force-improve-routes.json
