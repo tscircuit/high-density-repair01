@@ -1,3 +1,4 @@
+import { getVectorLength } from "./utils/getVectorLength"
 import Flatbush from "flatbush"
 import type { GraphicsObject } from "graphics-debug"
 import { BaseSolver } from "./BaseSolver"
@@ -235,7 +236,7 @@ const isOutsideExpandedBounds = (
   pointY < minY - expansion ||
   pointY > maxY + expansion
 
-const getVectorMagnitude = (vector: Vector) => Math.hypot(vector.x, vector.y)
+const getVectorMagnitude = (vector: Vector) => getVectorLength(vector.x, vector.y)
 
 const clampVectorMagnitude = (vector: Vector, maxMagnitude: number) => {
   const magnitude = getVectorMagnitude(vector)
@@ -974,7 +975,7 @@ const projectViaViaClearance = (params: {
         left.radius + right.radius + RELAXED_VIA_CLEARANCE + CLEARANCE_SLACK
       const separationX = left.x - right.x
       const separationY = left.y - right.y
-      const distance = Math.hypot(separationX, separationY)
+      const distance = getVectorLength(separationX, separationY)
       const penetration = requiredDistance - distance
       if (penetration <= 0) continue
 
@@ -1033,7 +1034,7 @@ const projectViaSegmentClearance = (params: {
       const projection = pointToProjectionSegment(via, segment)
       const separationX = via.x - projection.x
       const separationY = via.y - projection.y
-      const distance = Math.hypot(separationX, separationY)
+      const distance = getVectorLength(separationX, separationY)
       const requiredDistance =
         via.radius +
         segment.traceRadius +
@@ -1044,7 +1045,7 @@ const projectViaSegmentClearance = (params: {
 
       const segmentX = segment.end.x - segment.start.x
       const segmentY = segment.end.y - segment.start.y
-      const normalMagnitude = Math.hypot(segmentX, segmentY)
+      const normalMagnitude = getVectorLength(segmentX, segmentY)
       const fallbackSign = viaIndex % 2 === 0 ? 1 : -1
       const directionX =
         distance > POSITION_EPSILON
@@ -1187,7 +1188,7 @@ const projectSegmentSegmentClearance = (params: {
 
       const separationX = candidate.leftPoint.x - candidate.rightPoint.x
       const separationY = candidate.leftPoint.y - candidate.rightPoint.y
-      const distance = Math.hypot(separationX, separationY)
+      const distance = getVectorLength(separationX, separationY)
       const penetration = requiredDistance - distance
       if (penetration <= 0) continue
       const leftMovable =
@@ -1199,7 +1200,7 @@ const projectSegmentSegmentClearance = (params: {
 
       const leftVectorX = left.end.x - left.start.x
       const leftVectorY = left.end.y - left.start.y
-      const fallbackMagnitude = Math.hypot(leftVectorX, leftVectorY)
+      const fallbackMagnitude = getVectorLength(leftVectorX, leftVectorY)
       const fallbackSign = (leftIndex + rightIndex) % 2 === 0 ? 1 : -1
       const directionX =
         distance > POSITION_EPSILON
@@ -1339,7 +1340,7 @@ const resolveClearanceConstraints = (
         ) {
           continue
         }
-        const distance = Math.hypot(separationX, separationY)
+        const distance = getVectorLength(separationX, separationY)
         const penetration = TARGET_CLEARANCE - distance
         if (penetration <= 0) continue
 
@@ -1422,7 +1423,7 @@ const resolveClearanceConstraints = (
           const closestPointY = startNode.y + segmentY * segmentT
           const separationX = elementNode.x - closestPointX
           const separationY = elementNode.y - closestPointY
-          const distance = Math.hypot(separationX, separationY)
+          const distance = getVectorLength(separationX, separationY)
           const penetration = targetClearance - distance
           if (penetration <= 0) continue
 
@@ -1438,7 +1439,7 @@ const resolveClearanceConstraints = (
           } else {
             const normalX = -segmentY
             const normalY = segmentX
-            const normalMagnitude = Math.hypot(normalX, normalY)
+            const normalMagnitude = getVectorLength(normalX, normalY)
             if (normalMagnitude > POSITION_EPSILON) {
               const directionScale =
                 (fallbackSeed % 2 === 0 ? 1 : -1) / normalMagnitude
@@ -1493,7 +1494,7 @@ const resolveClearanceConstraints = (
         const correctionOffset = node.forceIndex * 2
         let correctionX = nodeCorrections[correctionOffset] ?? 0
         let correctionY = nodeCorrections[correctionOffset + 1] ?? 0
-        const correctionMagnitude = Math.hypot(correctionX, correctionY)
+        const correctionMagnitude = getVectorLength(correctionX, correctionY)
 
         if (
           correctionMagnitude > maxCorrection &&
@@ -1567,7 +1568,7 @@ export const runForceDirectedImprovement = (
         ) {
           continue
         }
-        const distance = Math.hypot(separationX, separationY)
+        const distance = getVectorLength(separationX, separationY)
         const fallbackSeed = leftIndex * 97 + rightIndex * 13
         let directionX = 0
         let directionY = 0
@@ -1656,7 +1657,7 @@ export const runForceDirectedImprovement = (
           const closestPointY = startNode.y + segmentY * segmentT
           const separationX = elementNode.x - closestPointX
           const separationY = elementNode.y - closestPointY
-          const distance = Math.hypot(separationX, separationY)
+          const distance = getVectorLength(separationX, separationY)
           const fallbackSeed = elementIndex * 97 + segment.obstacleIndex * 13
           let directionX = 0
           let directionY = 0
@@ -1668,7 +1669,7 @@ export const runForceDirectedImprovement = (
           } else {
             const normalX = -segmentY
             const normalY = segmentX
-            const normalMagnitude = Math.hypot(normalX, normalY)
+            const normalMagnitude = getVectorLength(normalX, normalY)
             if (normalMagnitude > POSITION_EPSILON) {
               const directionScale =
                 (fallbackSeed % 2 === 0 ? 1 : -1) / normalMagnitude
@@ -1870,7 +1871,7 @@ export const runForceDirectedImprovement = (
 
         let movementX = nextForceX * STEP_SIZE * stepDecay
         let movementY = nextForceY * STEP_SIZE * stepDecay
-        const movementMagnitude = Math.hypot(movementX, movementY)
+        const movementMagnitude = getVectorLength(movementX, movementY)
         const maxMovementMagnitude = MAX_NODE_MOVE_PER_STEP * stepDecay
 
         if (
