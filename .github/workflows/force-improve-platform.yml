@@ -1,7 +1,6 @@
 name: Force improvement platform parity
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:
