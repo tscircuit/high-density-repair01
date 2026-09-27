@@ -1,9 +1,9 @@
-import { getVectorLength } from "./getVectorLength"
 import type { HighDensityRoute } from "../types/high-density-types"
 import {
   areSameXY,
   getRouteRootConnectionName,
 } from "./force-improve-route-helpers"
+import { getVectorLength } from "./getVectorLength"
 
 type Vector = {
   x: number

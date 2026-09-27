@@ -1,4 +1,3 @@
-import { getVectorLength } from "./getVectorLength"
 import type {
   HighDensityRoute,
   NodeWithPortPoints,
@@ -9,6 +8,7 @@ import {
   getProjectionSegmentDistanceCandidates,
   type ProjectionSegment,
 } from "./force-improve-segment-helpers"
+import { getVectorLength } from "./getVectorLength"
 
 type SegmentPairSelector = {
   leftRouteIndex: number

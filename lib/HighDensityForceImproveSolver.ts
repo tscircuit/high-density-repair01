@@ -1,4 +1,3 @@
-import { getVectorLength } from "./utils/getVectorLength"
 import Flatbush from "flatbush"
 import type { GraphicsObject } from "graphics-debug"
 import { BaseSolver } from "./BaseSolver"
@@ -17,9 +16,10 @@ import {
 import {
   collectProjectionSegments,
   getProjectionSegmentDistanceCandidates,
-  pointToProjectionSegment,
   type ProjectionSegment,
+  pointToProjectionSegment,
 } from "./utils/force-improve-segment-helpers"
+import { getVectorLength } from "./utils/getVectorLength"
 import {
   findAlignedTopologyCandidate,
   findNewProperSegmentCrossings,
@@ -236,7 +236,8 @@ const isOutsideExpandedBounds = (
   pointY < minY - expansion ||
   pointY > maxY + expansion
 
-const getVectorMagnitude = (vector: Vector) => getVectorLength(vector.x, vector.y)
+const getVectorMagnitude = (vector: Vector) =>
+  getVectorLength(vector.x, vector.y)
 
 const clampVectorMagnitude = (vector: Vector, maxMagnitude: number) => {
   const magnitude = getVectorMagnitude(vector)
