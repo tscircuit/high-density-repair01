@@ -3,6 +3,7 @@ import {
   areSameXY,
   getRouteRootConnectionName,
 } from "./force-improve-route-helpers"
+import { getVectorLength } from "./getVectorLength"
 
 type Vector = {
   x: number
@@ -226,11 +227,11 @@ export const getProjectionSegmentDistanceCandidates = (
       rightPoint: right.end,
     },
   ].sort((a, b) => {
-    const aDistance = Math.hypot(
+    const aDistance = getVectorLength(
       a.leftPoint.x - a.rightPoint.x,
       a.leftPoint.y - a.rightPoint.y,
     )
-    const bDistance = Math.hypot(
+    const bDistance = getVectorLength(
       b.leftPoint.x - b.rightPoint.x,
       b.leftPoint.y - b.rightPoint.y,
     )

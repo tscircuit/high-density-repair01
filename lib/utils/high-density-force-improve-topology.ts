@@ -8,6 +8,7 @@ import {
   getProjectionSegmentDistanceCandidates,
   type ProjectionSegment,
 } from "./force-improve-segment-helpers"
+import { getVectorLength } from "./getVectorLength"
 
 type SegmentPairSelector = {
   leftRouteIndex: number
@@ -90,7 +91,7 @@ const findClosestAdjacentProjectionSegment = (
       otherSegment,
     )
     if (!distanceCandidate) continue
-    const distance = Math.hypot(
+    const distance = getVectorLength(
       distanceCandidate.leftPoint.x - distanceCandidate.rightPoint.x,
       distanceCandidate.leftPoint.y - distanceCandidate.rightPoint.y,
     )
@@ -144,7 +145,7 @@ export const findNewProperSegmentCrossings = (
       const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
       if (
         !candidate ||
-        Math.hypot(
+        getVectorLength(
           candidate.leftPoint.x - candidate.rightPoint.x,
           candidate.leftPoint.y - candidate.rightPoint.y,
         ) > POSITION_EPSILON ||
@@ -167,7 +168,7 @@ export const findNewProperSegmentCrossings = (
       )
       if (
         !originalCandidate ||
-        Math.hypot(
+        getVectorLength(
           originalCandidate.leftPoint.x - originalCandidate.rightPoint.x,
           originalCandidate.leftPoint.y - originalCandidate.rightPoint.y,
         ) <= POSITION_EPSILON
@@ -241,7 +242,7 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
       }
       const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
       if (!candidate) continue
-      const distance = Math.hypot(
+      const distance = getVectorLength(
         candidate.leftPoint.x - candidate.rightPoint.x,
         candidate.leftPoint.y - candidate.rightPoint.y,
       )
@@ -302,7 +303,7 @@ export const findAlignedTopologyCandidate = (
     )
     if (
       !guardedCrossing ||
-      Math.hypot(
+      getVectorLength(
         guardedCrossing.leftPoint.x - guardedCrossing.rightPoint.x,
         guardedCrossing.leftPoint.y - guardedCrossing.rightPoint.y,
       ) > POSITION_EPSILON ||
@@ -494,7 +495,7 @@ export const preconditionRoutesForNewCrossings = (
     if (!candidate) return []
     const separationX = candidate.leftPoint.x - candidate.rightPoint.x
     const separationY = candidate.leftPoint.y - candidate.rightPoint.y
-    const distance = Math.hypot(separationX, separationY)
+    const distance = getVectorLength(separationX, separationY)
     if (distance <= POSITION_EPSILON) return []
     return [
       {
