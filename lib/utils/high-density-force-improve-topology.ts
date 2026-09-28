@@ -23,6 +23,15 @@ type ProjectionSegmentIndex = Array<
 
 type RoutePair = readonly [number, number]
 
+type ProjectionSegmentBounds = {
+  minX: number
+  maxX: number
+  minY: number
+  maxY: number
+  finite: boolean
+  roundingSlack: number
+}
+
 type DistributeProjectionSegmentMove = (params: {
   routes: HighDensityRoute[]
   segment: ProjectionSegment
@@ -221,8 +230,35 @@ export const findNewProperSegmentCrossings = (
   return selectors
 }
 
-const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
+const getRoutePairClearanceViolations = (
+  routes: HighDensityRoute[],
+): RoutePair[] => {
   const segments = collectProjectionSegments(routes)
+  const segmentBounds: ProjectionSegmentBounds[] = segments.map(
+    (segment): ProjectionSegmentBounds => ({
+      minX: Math.min(segment.start.x, segment.end.x),
+      maxX: Math.max(segment.start.x, segment.end.x),
+      minY: Math.min(segment.start.y, segment.end.y),
+      maxY: Math.max(segment.start.y, segment.end.y),
+      // Closest-point interpolation can round outside the endpoint bounds.
+      // Keep those near-boundary pairs on the existing exact calculation path.
+      roundingSlack:
+        8 *
+        Number.EPSILON *
+        Math.max(
+          Math.abs(segment.start.x),
+          Math.abs(segment.end.x),
+          Math.abs(segment.start.y),
+          Math.abs(segment.end.y),
+        ),
+      finite:
+        Number.isFinite(segment.start.x) &&
+        Number.isFinite(segment.end.x) &&
+        Number.isFinite(segment.start.y) &&
+        Number.isFinite(segment.end.y) &&
+        Number.isFinite(segment.traceRadius),
+    }),
+  )
   const violatingRoutePairs: RoutePair[] = []
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
@@ -237,6 +273,26 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
         !right ||
         left.z !== right.z ||
         left.rootConnectionName === right.rootConnectionName
+      ) {
+        continue
+      }
+      const leftBounds = segmentBounds[leftIndex]
+      const rightBounds = segmentBounds[rightIndex]
+      const clearanceBound =
+        left.traceRadius +
+        right.traceRadius +
+        POSITION_EPSILON +
+        leftBounds.roundingSlack +
+        rightBounds.roundingSlack
+      // Axis separation is a lower bound on segment distance. Leave touching
+      // bounds and nonfinite inputs to the existing exact distance calculation.
+      if (
+        leftBounds.finite &&
+        rightBounds.finite &&
+        (rightBounds.minX - leftBounds.maxX > clearanceBound ||
+          leftBounds.minX - rightBounds.maxX > clearanceBound ||
+          rightBounds.minY - leftBounds.maxY > clearanceBound ||
+          leftBounds.minY - rightBounds.maxY > clearanceBound)
       ) {
         continue
       }
