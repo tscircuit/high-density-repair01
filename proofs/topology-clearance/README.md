@@ -68,9 +68,10 @@ closest-point routine. Its general closest-point parameters are not explicitly
 clamped. Finite inputs alone do not exclude intermediate overflow, subnormal
 underflow, or ill-conditioned parameter arithmetic.
 
-Latest main uses `getVectorLength`, implemented with `Math.sqrt(x*x + y*y)`,
-instead of the historical `Math.hypot`. The real norm theorem applies to the
-mathematical expression, but the required bounds for JavaScript multiplication,
+Latest main uses `getVectorLength`, which scales by `max(abs(x), abs(y))`
+before computing `scale * Math.sqrt((x/scale)^2 + (y/scale)^2)`, instead of
+the historical `Math.hypot`. The real norm theorem applies to the mathematical
+norm, but the required bounds for JavaScript division, multiplication,
 addition, subtraction, square root, guard accumulation, and predicate rounding
 are **not established here**. The final rounded-guard theorem states that
 remaining obligation explicitly; it does not assume pruning correctness.
