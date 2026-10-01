@@ -1927,16 +1927,19 @@ export class HighDensityForceImproveSolver extends BaseSolver {
   readonly colorMap: Record<string, string>
   readonly totalStepsPerNode: number
   readonly nodeAssignmentMargin: number
+  readonly includeForceVectorsInVisualization: boolean
 
   improvedRoutesByIndex = new Map<number, HighDensityRoute>()
   activeSampleIndex = 0
-  latestVisualization: GraphicsObject = {}
+  latestResult?: ForceImproveResult
+  latestNode?: NodeWithPortPoints
 
   constructor(params: {
     nodeWithPortPoints: NodeWithPortPoints[]
     hdRoutes: HighDensityRoute[]
     totalStepsPerNode?: number
     nodeAssignmentMargin?: number
+    includeForceVectorsInVisualization?: boolean
     colorMap?: Record<string, string>
   }) {
     super()
@@ -1947,6 +1950,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       params.totalStepsPerNode ?? DEFAULT_TOTAL_STEPS_PER_NODE
     this.nodeAssignmentMargin =
       params.nodeAssignmentMargin ?? DEFAULT_ASSIGNMENT_MARGIN
+    this.includeForceVectorsInVisualization =
+      params.includeForceVectorsInVisualization ?? false
 
     const routeIndexesByNode = new Map<number, number[]>()
     for (let i = 0; i < params.hdRoutes.length; i++) {
@@ -1989,6 +1994,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
         hdRoutes: this.originalHdRoutes,
         totalStepsPerNode: this.totalStepsPerNode,
         nodeAssignmentMargin: this.nodeAssignmentMargin,
+        includeForceVectorsInVisualization:
+          this.includeForceVectorsInVisualization,
         colorMap: this.colorMap,
       },
     ] as const
@@ -2010,7 +2017,9 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       bounds,
       inputRoutes,
       this.totalStepsPerNode,
-      { includeForceVectors: true },
+      {
+        includeForceVectors: this.includeForceVectorsInVisualization,
+      },
     )
     applyProjectionClearance(sampleEntry.node, baselineResult.routes)
     const segmentPairBarrierSelectors = findNewProperSegmentCrossings(
@@ -2031,7 +2040,9 @@ export class HighDensityForceImproveSolver extends BaseSolver {
               distributeProjectionSegmentMove,
             ),
             this.totalStepsPerNode,
-            { includeForceVectors: true },
+            {
+              includeForceVectors: this.includeForceVectorsInVisualization,
+            },
           )
     if (result !== baselineResult) {
       applyProjectionClearance(sampleEntry.node, result.routes)
@@ -2064,12 +2075,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       )
     }
 
-    this.latestVisualization = createForceImproveVisualization({
-      node: sampleEntry.node,
-      routes: result.routes,
-      forceVectors: result.forceVectors,
-      colorMap: this.colorMap,
-    })
+    this.latestResult = result
+    this.latestNode = sampleEntry.node
 
     this.activeSampleIndex += 1
     this.stats = {
@@ -2093,7 +2100,12 @@ export class HighDensityForceImproveSolver extends BaseSolver {
 
   override visualize(): GraphicsObject {
     if (!this.solved) {
-      return this.latestVisualization
+      return createForceImproveVisualization({
+        node: this.latestNode,
+        routes: this.latestResult?.routes ?? [],
+        forceVectors: this.latestResult?.forceVectors,
+        colorMap: this.colorMap,
+      })
     }
 
     return createForceImproveVisualization({
