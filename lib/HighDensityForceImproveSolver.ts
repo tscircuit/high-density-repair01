@@ -184,6 +184,7 @@ const MIN_STEP_DECAY = 0.25
 const FORCE_VECTOR_DISPLAY_MULTIPLIER = 5
 const DEFAULT_ASSIGNMENT_MARGIN = 0.2
 const DEFAULT_TOTAL_STEPS_PER_NODE = 60
+const MAX_SAMPLE_ENTRIES_PER_STEP = 10
 
 const ROUNDING_PRECISION = 1_000
 const POSITION_EPSILON = 1e-6
@@ -2001,7 +2002,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     ] as const
   }
 
-  override _step() {
+  private improveNextSampleEntry(): void {
     const sampleEntry = this.sampleEntries[this.activeSampleIndex]
 
     if (!sampleEntry) {
@@ -2089,6 +2090,16 @@ export class HighDensityForceImproveSolver extends BaseSolver {
 
     if (this.activeSampleIndex >= this.sampleEntries.length) {
       this.solved = true
+    }
+  }
+
+  override _step(): void {
+    for (
+      let sampleEntryCount = 0;
+      sampleEntryCount < MAX_SAMPLE_ENTRIES_PER_STEP && !this.solved;
+      sampleEntryCount += 1
+    ) {
+      this.improveNextSampleEntry()
     }
   }
 
