@@ -1,3 +1,4 @@
+import Flatbush from "flatbush"
 import type {
   HighDensityRoute,
   NodeWithPortPoints,
@@ -111,6 +112,18 @@ export const findNewProperSegmentCrossings = (
   const originalSegments = collectProjectionSegments(originalRoutes)
   const originalSegmentIndex = indexProjectionSegments(originalSegments)
   const selectors: SegmentPairSelector[] = []
+  if (candidateSegments.length < 2) return selectors
+
+  const candidateSegmentSpatialIndex = new Flatbush(candidateSegments.length)
+  for (const segment of candidateSegments) {
+    candidateSegmentSpatialIndex.add(
+      Math.min(segment.start.x, segment.end.x),
+      Math.min(segment.start.y, segment.end.y),
+      Math.max(segment.start.x, segment.end.x),
+      Math.max(segment.start.y, segment.end.y),
+    )
+  }
+  candidateSegmentSpatialIndex.finish()
 
   for (
     let leftIndex = 0;
@@ -119,12 +132,20 @@ export const findNewProperSegmentCrossings = (
   ) {
     const left = candidateSegments[leftIndex]
     if (!left) continue
+    const candidateIndexes = candidateSegmentSpatialIndex
+      .search(
+        Math.min(left.start.x, left.end.x),
+        Math.min(left.start.y, left.end.y),
+        Math.max(left.start.x, left.end.x),
+        Math.max(left.start.y, left.end.y),
+      )
+      .sort(
+        (firstCandidateIndex, secondCandidateIndex) =>
+          firstCandidateIndex - secondCandidateIndex,
+      )
 
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < candidateSegments.length;
-      rightIndex += 1
-    ) {
+    for (const rightIndex of candidateIndexes) {
+      if (rightIndex <= leftIndex) continue
       const right = candidateSegments[rightIndex]
       if (
         !right ||
@@ -224,14 +245,40 @@ export const findNewProperSegmentCrossings = (
 const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
   const segments = collectProjectionSegments(routes)
   const violatingRoutePairs: RoutePair[] = []
+  if (segments.length < 2) return violatingRoutePairs
+
+  const maxTraceRadius = Math.max(
+    ...segments.map((segment) => segment.traceRadius),
+  )
+  const segmentSpatialIndex = new Flatbush(segments.length)
+  for (const segment of segments) {
+    segmentSpatialIndex.add(
+      Math.min(segment.start.x, segment.end.x),
+      Math.min(segment.start.y, segment.end.y),
+      Math.max(segment.start.x, segment.end.x),
+      Math.max(segment.start.y, segment.end.y),
+    )
+  }
+  segmentSpatialIndex.finish()
+
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    const searchExpansion = left.traceRadius + maxTraceRadius
+    const candidateIndexes = segmentSpatialIndex
+      .search(
+        Math.min(left.start.x, left.end.x) - searchExpansion,
+        Math.min(left.start.y, left.end.y) - searchExpansion,
+        Math.max(left.start.x, left.end.x) + searchExpansion,
+        Math.max(left.start.y, left.end.y) + searchExpansion,
+      )
+      .sort(
+        (firstCandidateIndex, secondCandidateIndex) =>
+          firstCandidateIndex - secondCandidateIndex,
+      )
+
+    for (const rightIndex of candidateIndexes) {
+      if (rightIndex <= leftIndex) continue
       const right = segments[rightIndex]
       if (
         !right ||

@@ -1145,17 +1145,45 @@ const projectSegmentSegmentClearance = (params: {
   movableRouteIndexes?: ReadonlySet<number>
 }) => {
   const { routes, node, segments, movableRouteIndexes } = params
+  if (segments.length < 2) return false
+
   let changed = false
+  const maxTraceRadius = Math.max(
+    ...segments.map((segment) => segment.traceRadius),
+  )
+  const segmentIndex = new Flatbush(segments.length)
+  for (const segment of segments) {
+    segmentIndex.add(
+      Math.min(segment.start.x, segment.end.x),
+      Math.min(segment.start.y, segment.end.y),
+      Math.max(segment.start.x, segment.end.x),
+      Math.max(segment.start.y, segment.end.y),
+    )
+  }
+  segmentIndex.finish()
 
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
+    const searchExpansion =
+      left.traceRadius +
+      maxTraceRadius +
+      RELAXED_TRACE_CLEARANCE +
+      CLEARANCE_SLACK
+    const candidateIndexes = segmentIndex
+      .search(
+        Math.min(left.start.x, left.end.x) - searchExpansion,
+        Math.min(left.start.y, left.end.y) - searchExpansion,
+        Math.max(left.start.x, left.end.x) + searchExpansion,
+        Math.max(left.start.y, left.end.y) + searchExpansion,
+      )
+      .sort(
+        (firstCandidateIndex, secondCandidateIndex) =>
+          firstCandidateIndex - secondCandidateIndex,
+      )
 
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    for (const rightIndex of candidateIndexes) {
+      if (rightIndex <= leftIndex) continue
       const right = segments[rightIndex]
       if (
         !right ||
