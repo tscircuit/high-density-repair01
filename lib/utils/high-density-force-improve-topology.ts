@@ -24,6 +24,12 @@ type ProjectionSegmentIndex = Array<
 
 type RoutePair = readonly [number, number]
 
+type ProjectionSegmentSpatialIndex = {
+  index: Flatbush
+  segments: ProjectionSegment[]
+  maximumTraceRadius: number
+}
+
 type DistributeProjectionSegmentMove = (params: {
   routes: HighDensityRoute[]
   segment: ProjectionSegment
@@ -304,6 +310,67 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
   return violatingRoutePairs
 }
 
+const getRouteClearanceViolations = ({
+  route,
+  routeIndex,
+  segmentSpatialIndex,
+}: {
+  route: HighDensityRoute
+  routeIndex: number
+  segmentSpatialIndex: ProjectionSegmentSpatialIndex
+}): RoutePair[] => {
+  const violatingRouteIndexes = new Set<number>()
+  const routeSegments = collectProjectionSegments([route]).map((segment) => ({
+    ...segment,
+    routeIndex,
+  }))
+
+  for (const segment of routeSegments) {
+    const searchExpansion =
+      segment.traceRadius + segmentSpatialIndex.maximumTraceRadius
+    const candidateIndexes = segmentSpatialIndex.index.search(
+      Math.min(segment.start.x, segment.end.x) - searchExpansion,
+      Math.min(segment.start.y, segment.end.y) - searchExpansion,
+      Math.max(segment.start.x, segment.end.x) + searchExpansion,
+      Math.max(segment.start.y, segment.end.y) + searchExpansion,
+    )
+
+    for (const candidateIndex of candidateIndexes) {
+      const candidate = segmentSpatialIndex.segments[candidateIndex]
+      if (
+        !candidate ||
+        candidate.routeIndex === routeIndex ||
+        candidate.z !== segment.z ||
+        candidate.rootConnectionName === segment.rootConnectionName ||
+        violatingRouteIndexes.has(candidate.routeIndex)
+      ) {
+        continue
+      }
+      const [distanceCandidate] = getProjectionSegmentDistanceCandidates(
+        segment,
+        candidate,
+      )
+      if (!distanceCandidate) continue
+      const distance = getVectorLength(
+        distanceCandidate.leftPoint.x - distanceCandidate.rightPoint.x,
+        distanceCandidate.leftPoint.y - distanceCandidate.rightPoint.y,
+      )
+      if (
+        distance + POSITION_EPSILON <
+        segment.traceRadius + candidate.traceRadius
+      ) {
+        violatingRouteIndexes.add(candidate.routeIndex)
+      }
+    }
+  }
+
+  return [...violatingRouteIndexes]
+    .sort(
+      (firstRouteIndex, secondRouteIndex) => firstRouteIndex - secondRouteIndex,
+    )
+    .map((otherRouteIndex) => getRoutePair(routeIndex, otherRouteIndex))
+}
+
 export const findAlignedTopologyCandidate = (
   params: {
     originalRoutes: HighDensityRoute[]
@@ -328,6 +395,27 @@ export const findAlignedTopologyCandidate = (
     collectProjectionSegments(guardedRoutes),
   )
   const baselineViolationPairs = getRoutePairClearanceViolations(guardedRoutes)
+  const guardedSegments = collectProjectionSegments(guardedRoutes)
+  const guardedSegmentSpatialIndex = new Flatbush(guardedSegments.length)
+  let maximumGuardedTraceRadius = 0
+  for (const segment of guardedSegments) {
+    guardedSegmentSpatialIndex.add(
+      Math.min(segment.start.x, segment.end.x),
+      Math.min(segment.start.y, segment.end.y),
+      Math.max(segment.start.x, segment.end.x),
+      Math.max(segment.start.y, segment.end.y),
+    )
+    maximumGuardedTraceRadius = Math.max(
+      maximumGuardedTraceRadius,
+      segment.traceRadius,
+    )
+  }
+  guardedSegmentSpatialIndex.finish()
+  const guardedRouteSegmentSpatialIndex: ProjectionSegmentSpatialIndex = {
+    index: guardedSegmentSpatialIndex,
+    segments: guardedSegments,
+    maximumTraceRadius: maximumGuardedTraceRadius,
+  }
   const protectedRoutePairs = protectedSelectors.map(
     ({ leftRouteIndex, rightRouteIndex }) =>
       getRoutePair(leftRouteIndex, rightRouteIndex),
@@ -452,8 +540,18 @@ export const findAlignedTopologyCandidate = (
           if (!insideBounds) continue
           candidateRoute.vias = deriveVias(candidateRoute)
           let evaluatedRoutes = candidateRoutes
-          let candidateViolationPairs =
-            getRoutePairClearanceViolations(evaluatedRoutes)
+          let candidateViolationPairs = [
+            ...baselineViolationPairs.filter(
+              ([leftRouteIndex, rightRouteIndex]) =>
+                leftRouteIndex !== movableRouteIndex &&
+                rightRouteIndex !== movableRouteIndex,
+            ),
+            ...getRouteClearanceViolations({
+              route: candidateRoute,
+              routeIndex: movableRouteIndex,
+              segmentSpatialIndex: guardedRouteSegmentSpatialIndex,
+            }),
+          ]
           const closureRouteIndexes = new Set<number>()
           for (const [
             leftRouteIndex,
