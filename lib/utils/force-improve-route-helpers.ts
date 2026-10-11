@@ -18,7 +18,9 @@ type Bounds = {
 export const getRouteRootConnectionName = (route: HighDensityRoute) =>
   route.rootConnectionName ?? route.connectionName
 
-export const deriveVias = (route: HighDensityRoute) => {
+export const deriveVias = (
+  route: HighDensityRoute,
+): HighDensityRoute["vias"] => {
   const vias: HighDensityRoute["vias"] = []
 
   for (let index = 0; index < route.route.length - 1; index += 1) {
@@ -33,8 +35,8 @@ export const deriveVias = (route: HighDensityRoute) => {
     }
 
     const nextVia = {
-      x: Math.round(current.x * 1_000) / 1_000,
-      y: Math.round(current.y * 1_000) / 1_000,
+      x: current.x,
+      y: current.y,
     }
     const lastVia = vias.at(-1)
     if (lastVia && lastVia.x === nextVia.x && lastVia.y === nextVia.y) continue
