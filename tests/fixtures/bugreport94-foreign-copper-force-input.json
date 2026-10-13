@@ -1,0 +1,345 @@
+{
+  "nodeWithPortPoints": [
+    {
+      "capacityMeshNodeId": "topology_merge_889",
+      "center": {
+        "x": -4.949480650000025,
+        "y": -19.76534425
+      },
+      "width": 0.2407213000000512,
+      "height": 1.296115499999999,
+      "portPoints": [
+        {
+          "portPointId": "ce4565_pp0_z0_cramped::0",
+          "x": -4.949480650000025,
+          "y": -20.413401999999998,
+          "z": 0,
+          "connectionName": "source_trace_111",
+          "rootConnectionName": "source_trace_111",
+          "nextPortPointId": "ce4586_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce4586_pp0_z1::1",
+          "x": -4.969841500000051,
+          "y": -19.1172865,
+          "z": 1,
+          "connectionName": "source_trace_111",
+          "rootConnectionName": "source_trace_111",
+          "prevPortPointId": "ce4565_pp0_z0_cramped::0"
+        },
+        {
+          "portPointId": "ce4584_pp0_z0::0",
+          "x": -4.82912,
+          "y": -20.089373,
+          "z": 0,
+          "connectionName": "source_trace_96",
+          "rootConnectionName": "source_trace_96",
+          "nextPortPointId": "ce4585_pp0_z1::1"
+        },
+        {
+          "portPointId": "ce4585_pp0_z1::1",
+          "x": -4.82912,
+          "y": -19.44131525,
+          "z": 1,
+          "connectionName": "source_trace_96",
+          "rootConnectionName": "source_trace_96",
+          "prevPortPointId": "ce4584_pp0_z0::0"
+        }
+      ],
+      "portPointsInPairs": [
+        [
+          {
+            "portPointId": "ce4565_pp0_z0_cramped::0",
+            "x": -4.949480650000025,
+            "y": -20.413401999999998,
+            "z": 0,
+            "connectionName": "source_trace_111",
+            "rootConnectionName": "source_trace_111",
+            "nextPortPointId": "ce4586_pp0_z1::1"
+          },
+          {
+            "portPointId": "ce4586_pp0_z1::1",
+            "x": -4.969841500000051,
+            "y": -19.1172865,
+            "z": 1,
+            "connectionName": "source_trace_111",
+            "rootConnectionName": "source_trace_111",
+            "prevPortPointId": "ce4565_pp0_z0_cramped::0"
+          }
+        ],
+        [
+          {
+            "portPointId": "ce4584_pp0_z0::0",
+            "x": -4.82912,
+            "y": -20.089373,
+            "z": 0,
+            "connectionName": "source_trace_96",
+            "rootConnectionName": "source_trace_96",
+            "nextPortPointId": "ce4585_pp0_z1::1"
+          },
+          {
+            "portPointId": "ce4585_pp0_z1::1",
+            "x": -4.82912,
+            "y": -19.44131525,
+            "z": 1,
+            "connectionName": "source_trace_96",
+            "rootConnectionName": "source_trace_96",
+            "prevPortPointId": "ce4584_pp0_z0::0"
+          }
+        ]
+      ],
+      "availableZ": [
+        0,
+        1
+      ],
+      "useExplicitPortPointPairs": true
+    }
+  ],
+  "hdRoutes": [
+    {
+      "connectionName": "source_trace_160",
+      "rootConnectionName": "source_trace_160",
+      "regionId": "cmn_950",
+      "route": [
+        {
+          "x": 66.31000249999994,
+          "y": 36.930837,
+          "z": 1
+        },
+        {
+          "x": 66.31000249999995,
+          "y": 37.213665999999996,
+          "z": 1
+        }
+      ],
+      "traceThickness": 0.15,
+      "viaDiameter": 0.3,
+      "vias": [],
+      "endPcbPortId": "pcb_port_297"
+    },
+    {
+      "connectionName": "source_trace_96",
+      "regionId": "topology_merge_889",
+      "traceThickness": 0.15,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "x": -4.82912,
+          "y": -20.089373,
+          "z": 0
+        },
+        {
+          "x": -4.85412,
+          "y": -19.698541848726297,
+          "z": 0
+        },
+        {
+          "x": -4.85412,
+          "y": -19.828633227798885,
+          "z": 0
+        },
+        {
+          "x": -4.85412,
+          "y": -19.794313505405515,
+          "z": 0
+        },
+        {
+          "x": -4.85412,
+          "y": -19.773209846917993,
+          "z": 0
+        },
+        {
+          "x": -4.762213806268718,
+          "y": -19.949146365845955,
+          "z": 0
+        },
+        {
+          "x": -4.762213806268718,
+          "y": -19.949146365845955,
+          "z": 1
+        },
+        {
+          "x": -4.82912,
+          "y": -19.44131525,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": -4.762213806268718,
+          "y": -19.949146365845955
+        }
+      ],
+      "rootConnectionName": "source_trace_96"
+    },
+    {
+      "connectionName": "source_trace_111",
+      "regionId": "topology_merge_889",
+      "traceThickness": 0.15,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "x": -4.949480650000025,
+          "y": -20.413401999999998,
+          "z": 0
+        },
+        {
+          "x": -5.04484130000005,
+          "y": -20.388402,
+          "z": 0
+        },
+        {
+          "x": -5.04484130000005,
+          "y": -20.388402,
+          "z": 0
+        },
+        {
+          "x": -5.04484130000005,
+          "y": -19.142286499999997,
+          "z": 0
+        },
+        {
+          "x": -5.04484130000005,
+          "y": -19.142286499999997,
+          "z": 0
+        },
+        {
+          "x": -4.926016859813747,
+          "y": -19.074294462057882,
+          "z": 0
+        },
+        {
+          "x": -4.926016859813747,
+          "y": -19.074294462057882,
+          "z": 1
+        },
+        {
+          "x": -4.969841500000051,
+          "y": -19.1172865,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": -4.926016859813747,
+          "y": -19.074294462057882
+        }
+      ],
+      "rootConnectionName": "source_trace_111"
+    }
+  ],
+  "totalStepsPerNode": 20,
+  "nodeAssignmentMargin": 0.2,
+  "recordedCandidateRoutes": [
+    {
+      "connectionName": "source_trace_96",
+      "regionId": "topology_merge_889",
+      "traceThickness": 0.15,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "x": -4.829,
+          "y": -20.089,
+          "z": 0
+        },
+        {
+          "x": -4.854,
+          "y": -19.699,
+          "z": 0
+        },
+        {
+          "x": -4.829121,
+          "y": -19.765,
+          "z": 0
+        },
+        {
+          "x": -4.829121,
+          "y": -19.768321682347416,
+          "z": 0
+        },
+        {
+          "x": -4.829121,
+          "y": -19.77530735076225,
+          "z": 0
+        },
+        {
+          "x": -4.919,
+          "y": -19.949,
+          "z": 0
+        },
+        {
+          "x": -4.919,
+          "y": -19.949,
+          "z": 1
+        },
+        {
+          "x": -4.829,
+          "y": -19.441,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": -4.919,
+          "y": -19.949
+        }
+      ],
+      "rootConnectionName": "source_trace_96"
+    },
+    {
+      "connectionName": "source_trace_111",
+      "regionId": "topology_merge_889",
+      "traceThickness": 0.15,
+      "viaDiameter": 0.3,
+      "route": [
+        {
+          "x": -4.949,
+          "y": -20.413,
+          "z": 0
+        },
+        {
+          "x": -5.045,
+          "y": -20.388,
+          "z": 0
+        },
+        {
+          "x": -5.045,
+          "y": -20.388,
+          "z": 0
+        },
+        {
+          "x": -5.06984030000005,
+          "y": -19.150878683725082,
+          "z": 0
+        },
+        {
+          "x": -5.06984030000005,
+          "y": -19.150878683725082,
+          "z": 0
+        },
+        {
+          "x": -4.919,
+          "y": -19.268,
+          "z": 0
+        },
+        {
+          "x": -4.919,
+          "y": -19.268,
+          "z": 1
+        },
+        {
+          "x": -4.97,
+          "y": -19.117,
+          "z": 1
+        }
+      ],
+      "vias": [
+        {
+          "x": -4.919,
+          "y": -19.268
+        }
+      ],
+      "rootConnectionName": "source_trace_111"
+    }
+  ]
+}
