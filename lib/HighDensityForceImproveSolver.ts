@@ -126,6 +126,27 @@ export type ForceImproveOptions = {
   includeForceVectors?: boolean
 }
 
+export type ForceImproveCandidate = {
+  node: Readonly<NodeWithPortPoints>
+  routeIndexes: readonly number[]
+  originalRoutes: readonly HighDensityRoute[]
+  candidateRoutes: readonly HighDensityRoute[]
+  currentHdRoutes: readonly HighDensityRoute[]
+}
+
+export type ForceImproveCandidateSolutionValidator = (
+  candidate: ForceImproveCandidate,
+) => boolean
+
+export type HighDensityForceImproveSolverParams = {
+  nodeWithPortPoints: NodeWithPortPoints[]
+  hdRoutes: HighDensityRoute[]
+  totalStepsPerNode?: number
+  nodeAssignmentMargin?: number
+  colorMap?: Record<string, string>
+  candidateSolutionValidator?: ForceImproveCandidateSolutionValidator | false
+}
+
 // The first and last trace segments encode pad escape/arrival geometry.
 const isPointOnProtectedEndpointSegment = (
   routeLength: number,
@@ -1927,19 +1948,24 @@ export class HighDensityForceImproveSolver extends BaseSolver {
   readonly colorMap: Record<string, string>
   readonly totalStepsPerNode: number
   readonly nodeAssignmentMargin: number
+  readonly candidateSolutionValidator?:
+    | ForceImproveCandidateSolutionValidator
+    | false
 
   improvedRoutesByIndex = new Map<number, HighDensityRoute>()
   activeSampleIndex = 0
+  rejectedCandidateCount = 0
   latestVisualization: GraphicsObject = {}
 
-  constructor(params: {
-    nodeWithPortPoints: NodeWithPortPoints[]
-    hdRoutes: HighDensityRoute[]
-    totalStepsPerNode?: number
-    nodeAssignmentMargin?: number
-    colorMap?: Record<string, string>
-  }) {
+  constructor(params: HighDensityForceImproveSolverParams) {
     super()
+    if (
+      params.candidateSolutionValidator !== undefined &&
+      params.candidateSolutionValidator !== false &&
+      typeof params.candidateSolutionValidator !== "function"
+    ) {
+      throw new Error("Force candidate solution validator must be a function")
+    }
     this.originalHdRoutes = params.hdRoutes
     this.originalNodeWithPortPoints = params.nodeWithPortPoints
     this.colorMap = params.colorMap ?? {}
@@ -1947,6 +1973,7 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       params.totalStepsPerNode ?? DEFAULT_TOTAL_STEPS_PER_NODE
     this.nodeAssignmentMargin =
       params.nodeAssignmentMargin ?? DEFAULT_ASSIGNMENT_MARGIN
+    this.candidateSolutionValidator = params.candidateSolutionValidator
 
     const routeIndexesByNode = new Map<number, number[]>()
     for (let i = 0; i < params.hdRoutes.length; i++) {
@@ -1990,11 +2017,14 @@ export class HighDensityForceImproveSolver extends BaseSolver {
         totalStepsPerNode: this.totalStepsPerNode,
         nodeAssignmentMargin: this.nodeAssignmentMargin,
         colorMap: this.colorMap,
+        ...(this.candidateSolutionValidator
+          ? { candidateSolutionValidator: this.candidateSolutionValidator }
+          : {}),
       },
     ] as const
   }
 
-  override _step() {
+  override _step(): void {
     const sampleEntry = this.sampleEntries[this.activeSampleIndex]
 
     if (!sampleEntry) {
@@ -2057,17 +2087,41 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       }
     }
 
-    for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
-      this.improvedRoutesByIndex.set(
-        sampleEntry.routeIndexes[i],
-        result.routes[i],
+    let candidateAccepted = true
+    if (this.candidateSolutionValidator) {
+      const currentHdRoutes = this.originalHdRoutes.map(
+        (route, index): HighDensityRoute =>
+          this.improvedRoutesByIndex.get(index) ?? route,
       )
+      candidateAccepted = this.candidateSolutionValidator({
+        node: sampleEntry.node,
+        routeIndexes: sampleEntry.routeIndexes,
+        originalRoutes: inputRoutes,
+        candidateRoutes: result.routes,
+        currentHdRoutes,
+      })
+      if (typeof candidateAccepted !== "boolean") {
+        throw new Error(
+          "Force candidate solution validator must return a boolean",
+        )
+      }
+    }
+
+    if (candidateAccepted) {
+      for (let i = 0; i < sampleEntry.routeIndexes.length; i++) {
+        this.improvedRoutesByIndex.set(
+          sampleEntry.routeIndexes[i],
+          result.routes[i],
+        )
+      }
+    } else {
+      this.rejectedCandidateCount += 1
     }
 
     this.latestVisualization = createForceImproveVisualization({
       node: sampleEntry.node,
-      routes: result.routes,
-      forceVectors: result.forceVectors,
+      routes: candidateAccepted ? result.routes : inputRoutes,
+      forceVectors: candidateAccepted ? result.forceVectors : [],
       colorMap: this.colorMap,
     })
 
@@ -2075,9 +2129,12 @@ export class HighDensityForceImproveSolver extends BaseSolver {
     this.stats = {
       nodeAssignmentMargin: this.nodeAssignmentMargin,
       sampleCount: this.sampleEntries.length,
-      improvedNodeCount: this.activeSampleIndex,
+      improvedNodeCount: this.activeSampleIndex - this.rejectedCandidateCount,
       improvedRouteCount: this.improvedRoutesByIndex.size,
       totalStepsPerNode: this.totalStepsPerNode,
+      ...(this.candidateSolutionValidator
+        ? { rejectedCandidateCount: this.rejectedCandidateCount }
+        : {}),
     }
 
     if (this.activeSampleIndex >= this.sampleEntries.length) {
