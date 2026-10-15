@@ -50,7 +50,7 @@ test("PMP22650 derived vias retain exact layer-transition coordinates", async ()
         (via) => via.x === transition.x && via.y === transition.y,
       ),
   )
-  expect(missingVias).toHaveLength(3)
+  expect(missingVias).toHaveLength(0)
 
   const layerColors = [
     "#ef4444",
