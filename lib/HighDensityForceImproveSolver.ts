@@ -1095,7 +1095,13 @@ const applyProjectionRoutePointMove = (params: {
     return false
   }
 
-  const bounds = getInsetNodeBounds(node, POSITION_EPSILON)
+  const z = route.route[pointIndex]!.z
+  const viaRadius = pointIndexes.some(
+    (candidateIndex) => route.route[candidateIndex]!.z !== z,
+  )
+    ? route.viaDiameter / 2
+    : 0
+  const bounds = getInsetNodeBounds(node, viaRadius + POSITION_EPSILON)
   let changed = false
   for (const candidateIndex of pointIndexes) {
     const point = route.route[candidateIndex]

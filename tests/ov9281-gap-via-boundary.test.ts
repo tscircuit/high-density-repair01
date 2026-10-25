@@ -87,7 +87,7 @@ const createReproGraphics = ({
   }
 }
 
-test("reproduce segment projection moving the OV9281 via into a pad", async (): Promise<void> => {
+test("segment projection keeps the OV9281 via inside its free region", async (): Promise<void> => {
   const solver = new HighDensityForceImproveSolver(structuredClone(fixture))
   const node = fixture.nodeWithPortPoints[0]!
   const radius = fixture.hdRoutes[0]!.viaDiameter / 2
@@ -100,7 +100,15 @@ test("reproduce segment projection moving the OV9281 via into a pad", async (): 
   solver.solve()
   expect(solver.solved).toBe(true)
   const after = getTargetVia(solver.getOutput())
-  expect(getPadClearance(after, radius)).toBeLessThan(0)
+  expect(after.x - radius).toBeGreaterThanOrEqual(
+    node.center.x - node.width / 2,
+  )
+  expect(after.x + radius).toBeLessThanOrEqual(node.center.x + node.width / 2)
+  expect(after.y - radius).toBeGreaterThanOrEqual(
+    node.center.y - node.height / 2,
+  )
+  expect(after.y + radius).toBeLessThanOrEqual(node.center.y + node.height / 2)
+  expect(getPadClearance(after, radius)).toBeGreaterThanOrEqual(0)
 
   await expect(
     stackGraphicsHorizontally(
