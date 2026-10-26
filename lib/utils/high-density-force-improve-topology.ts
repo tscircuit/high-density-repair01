@@ -221,7 +221,9 @@ export const findNewProperSegmentCrossings = (
   return selectors
 }
 
-const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
+export const getRoutePairClearanceViolations = (
+  routes: HighDensityRoute[],
+): RoutePair[] => {
   const segments = collectProjectionSegments(routes)
   const violatingRoutePairs: RoutePair[] = []
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
@@ -237,6 +239,36 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
         !right ||
         left.z !== right.z ||
         left.rootConnectionName === right.rootConnectionName
+      ) {
+        continue
+      }
+      // Keep borderline pairs in the exact test, including rounding at large
+      // coordinates. These boxes include the full segments and actual widths.
+      const coordinateScale = Math.max(
+        1,
+        Math.abs(left.start.x),
+        Math.abs(left.start.y),
+        Math.abs(left.end.x),
+        Math.abs(left.end.y),
+        Math.abs(right.start.x),
+        Math.abs(right.start.y),
+        Math.abs(right.end.x),
+        Math.abs(right.end.y),
+      )
+      const separation =
+        left.traceRadius +
+        right.traceRadius +
+        POSITION_EPSILON +
+        32 * Number.EPSILON * coordinateScale
+      if (
+        Math.max(left.start.x, left.end.x) + separation <
+          Math.min(right.start.x, right.end.x) ||
+        Math.max(right.start.x, right.end.x) + separation <
+          Math.min(left.start.x, left.end.x) ||
+        Math.max(left.start.y, left.end.y) + separation <
+          Math.min(right.start.y, right.end.y) ||
+        Math.max(right.start.y, right.end.y) + separation <
+          Math.min(left.start.y, left.end.y)
       ) {
         continue
       }
