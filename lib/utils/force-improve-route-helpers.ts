@@ -32,9 +32,10 @@ export const deriveVias = (route: HighDensityRoute) => {
       continue
     }
 
+    // Via records share the exact coordinates of their layer-change points.
     const nextVia = {
-      x: Math.round(current.x * 1_000) / 1_000,
-      y: Math.round(current.y * 1_000) / 1_000,
+      x: current.x,
+      y: current.y,
     }
     const lastVia = vias.at(-1)
     if (lastVia && lastVia.x === nextVia.x && lastVia.y === nextVia.y) continue
