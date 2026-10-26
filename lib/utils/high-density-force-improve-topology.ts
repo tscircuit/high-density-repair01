@@ -142,7 +142,10 @@ export const findNewProperSegmentCrossings = (
         continue
       }
 
-      const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (
         !candidate ||
         getVectorLength(
@@ -240,7 +243,10 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
       ) {
         continue
       }
-      const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (!candidate) continue
       const distance = getVectorLength(
         candidate.leftPoint.x - candidate.rightPoint.x,
@@ -521,7 +527,10 @@ export const preconditionRoutesForNewCrossings = (
           barrier.selector.rightStartPointIndex
         ]
       if (!left || !right) continue
-      const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (!candidate) continue
       const signedDistance =
         (candidate.leftPoint.x - candidate.rightPoint.x) * barrier.directionX +

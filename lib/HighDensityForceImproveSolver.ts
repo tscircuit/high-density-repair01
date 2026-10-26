@@ -1184,7 +1184,10 @@ const projectSegmentSegmentClearance = (params: {
         continue
       }
 
-      const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (!candidate) continue
 
       const separationX = candidate.leftPoint.x - candidate.rightPoint.x
