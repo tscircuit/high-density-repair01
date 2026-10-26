@@ -1,0 +1,704 @@
+{
+  "sourceRevision": "27b3392c38ed4474b0557c73640b261155e28c27",
+  "cases": [
+    {
+      "name": "parallel equal minima",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 10, "y": 0 } },
+      "right": { "start": { "x": 0, "y": 1 }, "end": { "x": 10, "y": 1 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0, "y": 1, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 10, "y": 0 },
+          "rightPoint": { "x": 10, "y": 1, "t": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0, "t": 0 },
+          "rightPoint": { "x": 0, "y": 1 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 10, "y": 0, "t": 1 },
+          "rightPoint": { "x": 10, "y": 1 }
+        }
+      ]
+    },
+    {
+      "name": "reversed parallel",
+      "left": { "start": { "x": 10, "y": 0 }, "end": { "x": 0, "y": 0 } },
+      "right": { "start": { "x": 0, "y": 1 }, "end": { "x": 10, "y": 1 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 10, "y": 0 },
+          "rightPoint": { "x": 10, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 10, "y": 0 },
+          "rightPoint": { "x": 10, "y": 1, "t": 1 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0, "y": 1, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0, "t": 1 },
+          "rightPoint": { "x": 0, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 10, "y": 0, "t": 0 },
+          "rightPoint": { "x": 10, "y": 1 }
+        }
+      ]
+    },
+    {
+      "name": "crossing interiors",
+      "left": { "start": { "x": -3, "y": -2 }, "end": { "x": 7, "y": 4 } },
+      "right": { "start": { "x": -2, "y": 3 }, "end": { "x": 5, "y": -5 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.3524590163934426,
+          "rightT": 0.36065573770491804,
+          "leftPoint": { "x": 0.5245901639344264, "y": 0.11475409836065564 },
+          "rightPoint": { "x": 0.5245901639344264, "y": 0.11475409836065564 }
+        },
+        {
+          "leftT": 0.29411764705882354,
+          "rightT": 0,
+          "leftPoint": {
+            "x": -0.0588235294117645,
+            "y": -0.23529411764705888,
+            "t": 0.29411764705882354
+          },
+          "rightPoint": { "x": -2, "y": 3 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0.2920353982300885,
+          "leftPoint": { "x": -3, "y": -2 },
+          "rightPoint": {
+            "x": 0.04424778761061976,
+            "y": 0.663716814159292,
+            "t": 0.2920353982300885
+          }
+        },
+        {
+          "leftT": 0.45588235294117646,
+          "rightT": 1,
+          "leftPoint": {
+            "x": 1.5588235294117645,
+            "y": 0.7352941176470589,
+            "t": 0.45588235294117646
+          },
+          "rightPoint": { "x": 5, "y": -5 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0.48672566371681414,
+          "leftPoint": { "x": 7, "y": 4 },
+          "rightPoint": {
+            "x": 1.4070796460176989,
+            "y": -0.8938053097345131,
+            "t": 0.48672566371681414
+          }
+        }
+      ]
+    },
+    {
+      "name": "collinear overlap",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 4, "y": 0 } },
+      "right": { "start": { "x": 1, "y": 0 }, "end": { "x": 6, "y": 0 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.25,
+          "rightT": 0,
+          "leftPoint": { "x": 1, "y": 0 },
+          "rightPoint": { "x": 1, "y": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0.6,
+          "leftPoint": { "x": 4, "y": 0 },
+          "rightPoint": { "x": 4, "y": 0, "t": 0.6 }
+        },
+        {
+          "leftT": 0.25,
+          "rightT": 0,
+          "leftPoint": { "x": 1, "y": 0, "t": 0.25 },
+          "rightPoint": { "x": 1, "y": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 1, "y": 0, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 4, "y": 0, "t": 1 },
+          "rightPoint": { "x": 6, "y": 0 }
+        }
+      ]
+    },
+    {
+      "name": "touching endpoints",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 3, "y": 4 } },
+      "right": { "start": { "x": 3, "y": 4 }, "end": { "x": 8, "y": 2 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 3, "y": 4 },
+          "rightPoint": { "x": 3, "y": 4 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 3, "y": 4 },
+          "rightPoint": { "x": 3, "y": 4, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 3, "y": 4, "t": 1 },
+          "rightPoint": { "x": 3, "y": 4 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 3, "y": 4, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 3, "y": 4, "t": 1 },
+          "rightPoint": { "x": 8, "y": 2 }
+        }
+      ]
+    },
+    {
+      "name": "left point",
+      "left": { "start": { "x": 2, "y": 1 }, "end": { "x": 2, "y": 1 } },
+      "right": { "start": { "x": 0, "y": 0 }, "end": { "x": 4, "y": 0 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0.5,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0.5,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 0, "t": 0.5 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0.5,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 0, "t": 0.5 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 1, "t": 0 },
+          "rightPoint": { "x": 0, "y": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 2, "y": 1, "t": 0 },
+          "rightPoint": { "x": 4, "y": 0 }
+        }
+      ]
+    },
+    {
+      "name": "right point",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 4, "y": 0 } },
+      "right": { "start": { "x": 2, "y": 1 }, "end": { "x": 2, "y": 1 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.5,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 0, "t": 0.5 },
+          "rightPoint": { "x": 2, "y": 1 }
+        },
+        {
+          "leftT": 0.5,
+          "rightT": 1,
+          "leftPoint": { "x": 2, "y": 0, "t": 0.5 },
+          "rightPoint": { "x": 2, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 2, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 2, "y": 1, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 4, "y": 0 },
+          "rightPoint": { "x": 2, "y": 1, "t": 0 }
+        }
+      ]
+    },
+    {
+      "name": "two coincident points",
+      "left": { "start": { "x": 2, "y": 1 }, "end": { "x": 2, "y": 1 } },
+      "right": { "start": { "x": 2, "y": 1 }, "end": { "x": 2, "y": 1 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 1, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 1 },
+          "rightPoint": { "x": 2, "y": 1, "t": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 2, "y": 1, "t": 0 },
+          "rightPoint": { "x": 2, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 2, "y": 1, "t": 0 },
+          "rightPoint": { "x": 2, "y": 1 }
+        }
+      ]
+    },
+    {
+      "name": "two distinct points",
+      "left": { "start": { "x": -3, "y": 1 }, "end": { "x": -3, "y": 1 } },
+      "right": { "start": { "x": 2, "y": -4 }, "end": { "x": 2, "y": -4 } },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": -3, "y": 1 },
+          "rightPoint": { "x": 2, "y": -4 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": -3, "y": 1 },
+          "rightPoint": { "x": 2, "y": -4, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": -3, "y": 1 },
+          "rightPoint": { "x": 2, "y": -4, "t": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": -3, "y": 1, "t": 0 },
+          "rightPoint": { "x": 2, "y": -4 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": -3, "y": 1, "t": 0 },
+          "rightPoint": { "x": 2, "y": -4 }
+        }
+      ]
+    },
+    {
+      "name": "nearly parallel",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 1, "y": 1 } },
+      "right": {
+        "start": { "x": 0, "y": 0.2 },
+        "end": { "x": 1, "y": 1.2000000000000002 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.1,
+          "rightT": 0,
+          "leftPoint": { "x": 0.1, "y": 0.1 },
+          "rightPoint": { "x": 0, "y": 0.2 }
+        },
+        {
+          "leftT": 0.1,
+          "rightT": 0,
+          "leftPoint": { "x": 0.1, "y": 0.1, "t": 0.1 },
+          "rightPoint": { "x": 0, "y": 0.2 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0.8999999999999999,
+          "leftPoint": { "x": 1, "y": 1 },
+          "rightPoint": {
+            "x": 0.8999999999999999,
+            "y": 1.1,
+            "t": 0.8999999999999999
+          }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0, "y": 0.2, "t": 0 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 1, "y": 1, "t": 1 },
+          "rightPoint": { "x": 1, "y": 1.2000000000000002 }
+        }
+      ]
+    },
+    {
+      "name": "pcb coordinate scale",
+      "left": {
+        "start": { "x": -33.9979038, "y": 22.8927722 },
+        "end": { "x": -31.34221, "y": 25.7791 }
+      },
+      "right": {
+        "start": { "x": -32.22341, "y": 23.00331 },
+        "end": { "x": -32.11551, "y": 24.87021 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.6959747276123682,
+          "rightT": 1,
+          "leftPoint": { "x": -32.14960803092315, "y": 24.901583404405006 },
+          "rightPoint": { "x": -32.11551, "y": 24.87021 }
+        },
+        {
+          "leftT": 0.6959747276123682,
+          "rightT": 1,
+          "leftPoint": {
+            "x": -32.14960803092315,
+            "y": 24.901583404405006,
+            "t": 0.6959747276123682
+          },
+          "rightPoint": { "x": -32.11551, "y": 24.87021 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": -31.34221, "y": 25.7791 },
+          "rightPoint": { "x": -32.11551, "y": 24.87021, "t": 1 }
+        },
+        {
+          "leftT": 0.3270730681287069,
+          "rightT": 0,
+          "leftPoint": {
+            "x": -33.12929788082362,
+            "y": 23.83681228917118,
+            "t": 0.3270730681287069
+          },
+          "rightPoint": { "x": -32.22341, "y": 23.00331 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": -33.9979038, "y": 22.8927722 },
+          "rightPoint": { "x": -32.22341, "y": 23.00331, "t": 0 }
+        }
+      ]
+    },
+    {
+      "name": "small denominator",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 0.001, "y": 0 } },
+      "right": {
+        "start": { "x": 0.0002, "y": 0.0003 },
+        "end": { "x": 0.0007, "y": 0.0003 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003, "t": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0, "t": 0 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 0, "y": 0, "t": 0 },
+          "rightPoint": { "x": 0.0007, "y": 0.0003 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 0.001, "y": 0 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003, "t": 0 }
+        }
+      ]
+    },
+    {
+      "name": "small scale",
+      "left": {
+        "start": { "x": 1e-120, "y": 2e-120 },
+        "end": { "x": 4e-120, "y": 6e-120 }
+      },
+      "right": {
+        "start": { "x": 3e-120, "y": 2e-120 },
+        "end": { "x": 1e-120, "y": 7e-120 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 1e-120, "y": 2e-120 },
+          "rightPoint": { "x": 3e-120, "y": 2e-120 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 1e-120, "y": 2e-120 },
+          "rightPoint": { "x": 3e-120, "y": 2e-120, "t": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 1e-120, "y": 2e-120, "t": 0 },
+          "rightPoint": { "x": 3e-120, "y": 2e-120 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0,
+          "leftPoint": { "x": 4e-120, "y": 6e-120 },
+          "rightPoint": { "x": 3e-120, "y": 2e-120, "t": 0 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 1,
+          "leftPoint": { "x": 1e-120, "y": 2e-120, "t": 0 },
+          "rightPoint": { "x": 1e-120, "y": 7e-120 }
+        }
+      ]
+    },
+    {
+      "name": "large finite arithmetic",
+      "left": {
+        "start": { "x": 1e60, "y": 2e60 },
+        "end": { "x": 4e60, "y": 6e60 }
+      },
+      "right": {
+        "start": { "x": 3e60, "y": 2e60 },
+        "end": { "x": 1e60, "y": 7e60 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 0.4347826086956523,
+          "rightT": 0.34782608695652173,
+          "leftPoint": {
+            "x": 2.3043478260869567e60,
+            "y": 3.739130434782609e60
+          },
+          "rightPoint": {
+            "x": 2.3043478260869563e60,
+            "y": 3.7391304347826086e60
+          }
+        },
+        {
+          "leftT": 0.24000000000000002,
+          "rightT": 0,
+          "leftPoint": {
+            "x": 1.72e60,
+            "y": 2.96e60,
+            "t": 0.24000000000000002
+          },
+          "rightPoint": { "x": 3e60, "y": 2e60 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0.1379310344827586,
+          "leftPoint": { "x": 1e60, "y": 2e60 },
+          "rightPoint": {
+            "x": 2.7241379310344827e60,
+            "y": 2.689655172413793e60,
+            "t": 0.1379310344827586
+          }
+        },
+        {
+          "leftT": 1,
+          "rightT": 0.6206896551724138,
+          "leftPoint": { "x": 4e60, "y": 6e60 },
+          "rightPoint": {
+            "x": 1.7586206896551725e60,
+            "y": 5.103448275862069e60,
+            "t": 0.6206896551724138
+          }
+        },
+        {
+          "leftT": 0.8000000000000002,
+          "rightT": 1,
+          "leftPoint": {
+            "x": 3.4e60,
+            "y": 5.200000000000001e60,
+            "t": 0.8000000000000002
+          },
+          "rightPoint": { "x": 1e60, "y": 7e60 }
+        }
+      ]
+    },
+    {
+      "name": "explicit zero epsilon",
+      "left": {
+        "start": { "x": 0, "y": 0 },
+        "end": { "x": 0.001, "y": 0.002 }
+      },
+      "right": {
+        "start": { "x": 0.0002, "y": 0.0003 },
+        "end": { "x": 0.0007, "y": 0.0003 }
+      },
+      "epsilon": 0,
+      "expected": [
+        {
+          "leftT": 0.16,
+          "rightT": 0,
+          "leftPoint": { "x": 0.00016, "y": 0.00032 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003 }
+        },
+        {
+          "leftT": 0.16,
+          "rightT": 0,
+          "leftPoint": { "x": 0.00016, "y": 0.00032, "t": 0.16 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0.0002, "y": 0.0003, "t": 0 }
+        },
+        {
+          "leftT": 0.26,
+          "rightT": 1,
+          "leftPoint": {
+            "x": 0.00026000000000000003,
+            "y": 0.0005200000000000001,
+            "t": 0.26
+          },
+          "rightPoint": { "x": 0.0007, "y": 0.0003 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 0.001, "y": 0.002 },
+          "rightPoint": { "x": 0.0007, "y": 0.0003, "t": 1 }
+        }
+      ]
+    },
+    {
+      "name": "one ulp y offset",
+      "left": { "start": { "x": 0, "y": 0 }, "end": { "x": 1, "y": 0 } },
+      "right": {
+        "start": { "x": 0, "y": 1.0000000000000002 },
+        "end": { "x": 1, "y": 1 }
+      },
+      "epsilon": 0.000001,
+      "expected": [
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 1, "y": 0 },
+          "rightPoint": { "x": 1, "y": 1, "t": 1 }
+        },
+        {
+          "leftT": 1,
+          "rightT": 1,
+          "leftPoint": { "x": 1, "y": 0, "t": 1 },
+          "rightPoint": { "x": 1, "y": 1 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": { "x": 0, "y": 1.0000000000000002 }
+        },
+        {
+          "leftT": 0,
+          "rightT": 2.2204460492503136e-16,
+          "leftPoint": { "x": 0, "y": 0 },
+          "rightPoint": {
+            "x": 2.2204460492503136e-16,
+            "y": 1.0000000000000002,
+            "t": 2.2204460492503136e-16
+          }
+        },
+        {
+          "leftT": 0,
+          "rightT": 0,
+          "leftPoint": { "x": 0, "y": 0, "t": 0 },
+          "rightPoint": { "x": 0, "y": 1.0000000000000002 }
+        }
+      ]
+    }
+  ]
+}

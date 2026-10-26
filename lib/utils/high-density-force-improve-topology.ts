@@ -5,7 +5,7 @@ import type {
 import { deriveVias, getInsetNodeBounds } from "./force-improve-route-helpers"
 import {
   collectProjectionSegments,
-  getProjectionSegmentDistanceCandidates,
+  getClosestProjectionSegmentDistanceCandidate,
   type ProjectionSegment,
 } from "./force-improve-segment-helpers"
 import { getVectorLength } from "./getVectorLength"
@@ -86,7 +86,7 @@ const findClosestAdjacentProjectionSegment = (
       continue
     }
 
-    const [distanceCandidate] = getProjectionSegmentDistanceCandidates(
+    const distanceCandidate = getClosestProjectionSegmentDistanceCandidate(
       candidate,
       otherSegment,
     )
@@ -142,7 +142,10 @@ export const findNewProperSegmentCrossings = (
         continue
       }
 
-      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (
         !candidate ||
         getVectorLength(
@@ -162,7 +165,7 @@ export const findNewProperSegmentCrossings = (
       const originalRight =
         originalSegmentIndex[right.routeIndex]?.[right.startIndex]
       if (!originalLeft || !originalRight) continue
-      const [originalCandidate] = getProjectionSegmentDistanceCandidates(
+      const originalCandidate = getClosestProjectionSegmentDistanceCandidate(
         originalLeft,
         originalRight,
       )
@@ -240,7 +243,10 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
       ) {
         continue
       }
-      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (!candidate) continue
       const distance = getVectorLength(
         candidate.leftPoint.x - candidate.rightPoint.x,
@@ -297,7 +303,7 @@ export const findAlignedTopologyCandidate = (
         selector.rightStartPointIndex
       ]
     if (!guardedLeft || !guardedRight) continue
-    const [guardedCrossing] = getProjectionSegmentDistanceCandidates(
+    const guardedCrossing = getClosestProjectionSegmentDistanceCandidate(
       guardedLeft,
       guardedRight,
     )
@@ -491,7 +497,7 @@ export const preconditionRoutesForNewCrossings = (
         selector.rightStartPointIndex
       ]
     if (!left || !right) return []
-    const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+    const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
     if (!candidate) return []
     const separationX = candidate.leftPoint.x - candidate.rightPoint.x
     const separationY = candidate.leftPoint.y - candidate.rightPoint.y
@@ -521,7 +527,10 @@ export const preconditionRoutesForNewCrossings = (
           barrier.selector.rightStartPointIndex
         ]
       if (!left || !right) continue
-      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(
+        left,
+        right,
+      )
       if (!candidate) continue
       const signedDistance =
         (candidate.leftPoint.x - candidate.rightPoint.x) * barrier.directionX +
