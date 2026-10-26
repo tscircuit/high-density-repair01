@@ -15,7 +15,7 @@ import {
 } from "./utils/force-improve-route-helpers"
 import {
   collectProjectionSegments,
-  getProjectionSegmentDistanceCandidates,
+  getClosestProjectionSegmentDistanceCandidate,
   type ProjectionSegment,
   pointToProjectionSegment,
 } from "./utils/force-improve-segment-helpers"
@@ -1184,7 +1184,7 @@ const projectSegmentSegmentClearance = (params: {
         continue
       }
 
-      const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
+      const candidate = getClosestProjectionSegmentDistanceCandidate(left, right)
       if (!candidate) continue
 
       const separationX = candidate.leftPoint.x - candidate.rightPoint.x

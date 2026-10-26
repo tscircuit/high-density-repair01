@@ -103,7 +103,7 @@ export const pointToProjectionSegment = (
   }
 }
 
-export const getProjectionSegmentDistanceCandidates = (
+const buildProjectionSegmentDistanceCandidates = (
   left: SegmentGeometry,
   right: SegmentGeometry,
   positionEpsilon = 1e-6,
@@ -226,7 +226,19 @@ export const getProjectionSegmentDistanceCandidates = (
       leftPoint: rightEndProjection,
       rightPoint: right.end,
     },
-  ].sort((a, b) => {
+  ]
+}
+
+export const getProjectionSegmentDistanceCandidates = (
+  left: SegmentGeometry,
+  right: SegmentGeometry,
+  positionEpsilon = 1e-6,
+): SegmentDistanceCandidate[] => {
+  return buildProjectionSegmentDistanceCandidates(
+    left,
+    right,
+    positionEpsilon,
+  ).sort((a, b) => {
     const aDistance = getVectorLength(
       a.leftPoint.x - a.rightPoint.x,
       a.leftPoint.y - a.rightPoint.y,
@@ -237,4 +249,33 @@ export const getProjectionSegmentDistanceCandidates = (
     )
     return aDistance - bDistance
   })
+}
+
+export const getClosestProjectionSegmentDistanceCandidate = (
+  left: SegmentGeometry,
+  right: SegmentGeometry,
+  positionEpsilon = 1e-6,
+): SegmentDistanceCandidate => {
+  const candidates = buildProjectionSegmentDistanceCandidates(
+    left,
+    right,
+    positionEpsilon,
+  )
+  let closest = candidates[0]!
+  let closestDistance = Number.POSITIVE_INFINITY
+  for (const candidate of candidates) {
+    const distance = getVectorLength(
+      candidate.leftPoint.x - candidate.rightPoint.x,
+      candidate.leftPoint.y - candidate.rightPoint.y,
+    )
+    if (!Number.isFinite(distance)) {
+      throw new Error("Projection segment distance must be finite")
+    }
+    // The sorted-array API is stable: the first witness wins rounded ties.
+    if (distance < closestDistance) {
+      closest = candidate
+      closestDistance = distance
+    }
+  }
+  return closest
 }
