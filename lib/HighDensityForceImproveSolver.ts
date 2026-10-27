@@ -504,8 +504,10 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
         lastNode.fixed ||=
           isPointOnProtectedEndpointSegment(route.route.length, index) ||
           isPointOnThroughObstacleSegment(route, index)
-        lastNode.barrelEndpoint ||=
-          isPointOnThroughObstacleSegment(route, index)
+        lastNode.barrelEndpoint ||= isPointOnThroughObstacleSegment(
+          route,
+          index,
+        )
         pointNodeIndexes[index] = lastNodeIndex
         continue
       }

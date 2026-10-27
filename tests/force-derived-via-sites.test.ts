@@ -21,8 +21,6 @@ test("derived drills keep their exact transition site and exclude pad barrels", 
     vias: [],
   }
   const original = structuredClone(route)
-  expect(deriveVias(route)).toEqual([
-    { x: 0.123456789, y: 0.654321987 },
-  ])
+  expect(deriveVias(route)).toEqual([{ x: 0.123456789, y: 0.654321987 }])
   expect(route).toEqual(original)
 })
