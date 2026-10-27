@@ -12,6 +12,7 @@ import {
   getCoincidentPointIndexes,
   getInsetNodeBounds,
   getRouteRootConnectionName,
+  isPointOnThroughObstacleSegment,
 } from "./utils/force-improve-route-helpers"
 import {
   collectProjectionSegments,
@@ -46,6 +47,7 @@ type MutableNode = {
   boundaryPadding: number
   pointIndexes: number[]
   fixed: boolean
+  barrelEndpoint: boolean
   forceIndex: number
 }
 
@@ -414,6 +416,7 @@ const clampMutableRoutesToBounds = (
 ) => {
   for (const mutableRoute of mutableRoutes) {
     for (const node of mutableRoute.nodes) {
+      if (node.barrelEndpoint) continue
       clampNodeToBounds(node, bounds)
     }
   }
@@ -498,8 +501,11 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
           )
         }
         lastNode.pointIndexes.push(index)
-        lastNode.fixed ||= isPointOnProtectedEndpointSegment(
-          route.route.length,
+        lastNode.fixed ||=
+          isPointOnProtectedEndpointSegment(route.route.length, index) ||
+          isPointOnThroughObstacleSegment(route, index)
+        lastNode.barrelEndpoint ||= isPointOnThroughObstacleSegment(
+          route,
           index,
         )
         pointNodeIndexes[index] = lastNodeIndex
@@ -513,7 +519,10 @@ const buildMutableRoutes = (routes: HighDensityRoute[]) => {
         originalY: point.y,
         boundaryPadding: 0,
         pointIndexes: [index],
-        fixed: isPointOnProtectedEndpointSegment(route.route.length, index),
+        fixed:
+          isPointOnProtectedEndpointSegment(route.route.length, index) ||
+          isPointOnThroughObstacleSegment(route, index),
+        barrelEndpoint: isPointOnThroughObstacleSegment(route, index),
         forceIndex: nextForceIndex,
       })
       pointNodeIndexes[index] = nodes.length - 1
@@ -832,8 +841,10 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            x: roundCoordinate(ownerNode.x),
-            y: roundCoordinate(ownerNode.y),
+            // Fixed pad escapes and barrel edges keep their physical frame.
+            // Rounding a boundary point outward invalidates its layer span.
+            x: ownerNode.fixed ? ownerNode.x : roundCoordinate(ownerNode.x),
+            y: ownerNode.fixed ? ownerNode.y : roundCoordinate(ownerNode.y),
           }
         : point
     })
@@ -871,7 +882,11 @@ const collectProjectionViaNodes = (
       const current = route.route[index]
       const next = route.route[index + 1]
       if (!current || !next) continue
-      if (current.z === next.z || !areSameXY(current, next)) {
+      if (
+        current.z === next.z ||
+        current.toNextSegmentType === "through_obstacle" ||
+        !areSameXY(current, next)
+      ) {
         continue
       }
 
@@ -915,10 +930,14 @@ const collectProjectionViaNodes = (
         x: current.x,
         y: current.y,
         radius: (route.viaDiameter ?? VIA_DIAMETER) / 2,
-        movable: !includesProtectedEndpointSegmentPoint(
-          route.route.length,
-          uniquePointIndexes,
-        ),
+        movable:
+          !includesProtectedEndpointSegmentPoint(
+            route.route.length,
+            uniquePointIndexes,
+          ) &&
+          !uniquePointIndexes.some((pointIndex): boolean =>
+            isPointOnThroughObstacleSegment(route, pointIndex),
+          ),
       })
     }
   }
@@ -1091,7 +1110,12 @@ const applyProjectionRoutePointMove = (params: {
   }
 
   const pointIndexes = getCoincidentPointIndexes(route.route, pointIndex)
-  if (includesProtectedEndpointSegmentPoint(route.route.length, pointIndexes)) {
+  if (
+    includesProtectedEndpointSegmentPoint(route.route.length, pointIndexes) ||
+    pointIndexes.some((candidateIndex): boolean =>
+      isPointOnThroughObstacleSegment(route, candidateIndex),
+    )
+  ) {
     return false
   }
 

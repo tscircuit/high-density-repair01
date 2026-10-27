@@ -18,13 +18,33 @@ type Bounds = {
 export const getRouteRootConnectionName = (route: HighDensityRoute) =>
   route.rootConnectionName ?? route.connectionName
 
-export const deriveVias = (route: HighDensityRoute) => {
+export const isPointOnThroughObstacleSegment = (
+  route: HighDensityRoute,
+  pointIndex: number,
+): boolean => {
+  const point = route.route[pointIndex]
+  const previous = route.route[pointIndex - 1]
+  return (
+    point?.toNextSegmentType === "through_obstacle" ||
+    previous?.toNextSegmentType === "through_obstacle"
+  )
+}
+
+export const deriveVias = (
+  route: HighDensityRoute,
+): HighDensityRoute["vias"] => {
   const vias: HighDensityRoute["vias"] = []
 
   for (let index = 0; index < route.route.length - 1; index += 1) {
     const current = route.route[index]
     const next = route.route[index + 1]
-    if (!current || !next || current.z === next.z) continue
+    if (
+      !current ||
+      !next ||
+      current.z === next.z ||
+      current.toNextSegmentType === "through_obstacle"
+    )
+      continue
     if (
       Math.abs(current.x - next.x) > 1e-6 ||
       Math.abs(current.y - next.y) > 1e-6
@@ -33,8 +53,8 @@ export const deriveVias = (route: HighDensityRoute) => {
     }
 
     const nextVia = {
-      x: Math.round(current.x * 1_000) / 1_000,
-      y: Math.round(current.y * 1_000) / 1_000,
+      x: current.x,
+      y: current.y,
     }
     const lastVia = vias.at(-1)
     if (lastVia && lastVia.x === nextVia.x && lastVia.y === nextVia.y) continue
