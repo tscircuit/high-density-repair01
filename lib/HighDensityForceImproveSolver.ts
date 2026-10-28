@@ -20,6 +20,7 @@ import {
   pointToProjectionSegment,
 } from "./utils/force-improve-segment-helpers"
 import { getVectorLength } from "./utils/getVectorLength"
+import { ProjectionSegmentSpatialIndex } from "./utils/ProjectionSegmentSpatialIndex"
 import {
   findAlignedTopologyCandidate,
   findNewProperSegmentCrossings,
@@ -1083,6 +1084,7 @@ const applyProjectionRoutePointMove = (params: {
   dx: number
   dy: number
   node: NodeWithPortPoints
+  onPointMoved?: (routeIndex: number, pointIndex: number) => void
 }) => {
   const { routes, routeIndex, pointIndex, dx, dy, node } = params
   const route = routes[routeIndex]
@@ -1100,8 +1102,12 @@ const applyProjectionRoutePointMove = (params: {
   for (const candidateIndex of pointIndexes) {
     const point = route.route[candidateIndex]
     if (!point) continue
-    point.x = clampValue(point.x + dx, bounds.minX, bounds.maxX)
-    point.y = clampValue(point.y + dy, bounds.minY, bounds.maxY)
+    const x = clampValue(point.x + dx, bounds.minX, bounds.maxX)
+    const y = clampValue(point.y + dy, bounds.minY, bounds.maxY)
+    const moved = x !== point.x || y !== point.y
+    point.x = x
+    point.y = y
+    if (moved) params.onPointMoved?.(routeIndex, candidateIndex)
     changed = true
   }
 
@@ -1115,6 +1121,7 @@ const distributeProjectionSegmentMove = (params: {
   dy: number
   node: NodeWithPortPoints
   t: number
+  onPointMoved?: (routeIndex: number, pointIndex: number) => void
 }) => {
   const { routes, segment, dx, dy, node, t } = params
   const startWeight = 1 - clampUnitInterval(t)
@@ -1126,6 +1133,7 @@ const distributeProjectionSegmentMove = (params: {
     dx: dx * startWeight,
     dy: dy * startWeight,
     node,
+    onPointMoved: params.onPointMoved,
   })
   const movedEnd = applyProjectionRoutePointMove({
     routes,
@@ -1134,6 +1142,7 @@ const distributeProjectionSegmentMove = (params: {
     dx: dx * endWeight,
     dy: dy * endWeight,
     node,
+    onPointMoved: params.onPointMoved,
   })
 
   return movedStart || movedEnd
@@ -1147,16 +1156,23 @@ const projectSegmentSegmentClearance = (params: {
 }) => {
   const { routes, node, segments, movableRouteIndexes } = params
   let changed = false
+  const spatialIndex = new ProjectionSegmentSpatialIndex(segments)
+  const onPointMoved = (routeIndex: number, pointIndex: number): void => {
+    spatialIndex.markPointMoved(routeIndex, pointIndex)
+  }
 
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
 
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    let candidates = spatialIndex.getCandidates({
+      segmentIndex: leftIndex,
+      afterIndex: leftIndex,
+      clearance: RELAXED_TRACE_CLEARANCE + CLEARANCE_SLACK,
+    })
+    let candidateCursor = 0
+    while (candidateCursor < candidates.length) {
+      const rightIndex = candidates[candidateCursor++]
       const right = segments[rightIndex]
       if (
         !right ||
@@ -1226,6 +1242,7 @@ const projectSegmentSegmentClearance = (params: {
             dy: directionY * move,
             node,
             t: candidate.leftT,
+            onPointMoved,
           }) || changed
       }
       if (rightMovable) {
@@ -1237,7 +1254,19 @@ const projectSegmentSegmentClearance = (params: {
             dy: -directionY * move,
             node,
             t: candidate.rightT,
+            onPointMoved,
           }) || changed
+      }
+      // A projection can move this segment or a future neighbor. Refresh both
+      // incident edges and requery only pairs the original ordered loop has
+      // not visited; never reuse boxes from before the move.
+      if (spatialIndex.refreshMovedPoints()) {
+        candidates = spatialIndex.getCandidates({
+          segmentIndex: leftIndex,
+          afterIndex: rightIndex,
+          clearance: RELAXED_TRACE_CLEARANCE + CLEARANCE_SLACK,
+        })
+        candidateCursor = 0
       }
     }
   }

@@ -9,6 +9,7 @@ import {
   type ProjectionSegment,
 } from "./force-improve-segment-helpers"
 import { getVectorLength } from "./getVectorLength"
+import { ProjectionSegmentSpatialIndex } from "./ProjectionSegmentSpatialIndex"
 
 type SegmentPairSelector = {
   leftRouteIndex: number
@@ -226,14 +227,15 @@ export const getRoutePairClearanceViolations = (
 ): RoutePair[] => {
   const segments = collectProjectionSegments(routes)
   const violatingRoutePairs: RoutePair[] = []
+  const spatialIndex = new ProjectionSegmentSpatialIndex(segments)
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    for (const rightIndex of spatialIndex.getCandidates({
+      segmentIndex: leftIndex,
+      afterIndex: leftIndex,
+      clearance: 0,
+    })) {
       const right = segments[rightIndex]
       if (
         !right ||
