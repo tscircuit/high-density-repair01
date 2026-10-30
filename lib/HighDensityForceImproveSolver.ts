@@ -397,8 +397,15 @@ const getClearanceForceMagnitude = (
   return tailMagnitude < 1e-5 ? 0 : tailMagnitude
 }
 
-const clampNodeToBounds = (node: MutableNode, bounds: Bounds) => {
-  if (node.fixed) {
+const clampNodeToBounds = (
+  node: MutableNode,
+  bounds: Bounds,
+  routePointCount: number,
+): void => {
+  if (
+    node.pointIndexes.includes(0) ||
+    node.pointIndexes.includes(routePointCount - 1)
+  ) {
     node.x = clampValue(node.x, bounds.minX, bounds.maxX)
     node.y = clampValue(node.y, bounds.minY, bounds.maxY)
     return
@@ -419,7 +426,7 @@ const clampMutableRoutesToBounds = (
 ) => {
   for (const mutableRoute of mutableRoutes) {
     for (const node of mutableRoute.nodes) {
-      clampNodeToBounds(node, bounds)
+      clampNodeToBounds(node, bounds, mutableRoute.route.route.length)
     }
   }
 }
