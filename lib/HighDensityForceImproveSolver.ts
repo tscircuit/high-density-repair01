@@ -398,6 +398,11 @@ const getClearanceForceMagnitude = (
 }
 
 const clampNodeToBounds = (node: MutableNode, bounds: Bounds) => {
+  if (node.fixed) {
+    node.x = clampValue(node.x, bounds.minX, bounds.maxX)
+    node.y = clampValue(node.y, bounds.minY, bounds.maxY)
+    return
+  }
   const inset = node.boundaryPadding > 0 ? BOUNDARY_INSET : 0
   const minX = bounds.minX + node.boundaryPadding + inset
   const maxX = bounds.maxX - node.boundaryPadding - inset
@@ -832,8 +837,8 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            x: roundCoordinate(ownerNode.x),
-            y: roundCoordinate(ownerNode.y),
+            x: ownerNode.fixed ? ownerNode.x : roundCoordinate(ownerNode.x),
+            y: ownerNode.fixed ? ownerNode.y : roundCoordinate(ownerNode.y),
           }
         : point
     })
