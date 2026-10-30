@@ -33,8 +33,8 @@ export const deriveVias = (route: HighDensityRoute) => {
     }
 
     const nextVia = {
-      x: current.x,
-      y: current.y,
+      x: Math.round(current.x * 1_000) / 1_000,
+      y: Math.round(current.y * 1_000) / 1_000,
     }
     const lastVia = vias.at(-1)
     if (lastVia && lastVia.x === nextVia.x && lastVia.y === nextVia.y) continue
