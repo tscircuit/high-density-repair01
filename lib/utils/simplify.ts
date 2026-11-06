@@ -246,6 +246,30 @@ const appendVia = (vias: ViaPoint[], point: RoutePoint) => {
   vias.push(nextVia)
 }
 
+const prependExactVia = (vias: ViaPoint[], point: RoutePoint) => {
+  const nextVia: ViaPoint = {
+    x: point.x,
+    y: point.y,
+  }
+
+  const firstVia = vias[0]
+  if (firstVia && firstVia.x === nextVia.x && firstVia.y === nextVia.y) return
+
+  vias.unshift(nextVia)
+}
+
+const appendExactVia = (vias: ViaPoint[], point: RoutePoint) => {
+  const nextVia: ViaPoint = {
+    x: point.x,
+    y: point.y,
+  }
+
+  const lastVia = vias.at(-1)
+  if (lastVia && lastVia.x === nextVia.x && lastVia.y === nextVia.y) return
+
+  vias.push(nextVia)
+}
+
 export const simplifyRoute = (
   route: HighDensityIntraNodeRoute,
   targetSegmentCount = DEFAULT_TARGET_SEGMENTS,
@@ -321,11 +345,33 @@ export const simplifyRoute = (
   const firstOriginalPoint = route.route[0]
   const lastOriginalPoint = route.route.at(-1)
   if (firstOriginalPoint && simplifiedPoints.length > 0) {
-    simplifiedPoints[0] = copyPointExact(firstOriginalPoint)
+    const firstSimplifiedPoint = simplifiedPoints[0]!
+    if (firstSimplifiedPoint.z === firstOriginalPoint.z) {
+      simplifiedPoints[0] = copyPointExact(firstOriginalPoint)
+    } else {
+      simplifiedPoints[0] = {
+        ...firstSimplifiedPoint,
+        x: firstOriginalPoint.x,
+        y: firstOriginalPoint.y,
+      }
+      simplifiedPoints.unshift(copyPointExact(firstOriginalPoint))
+      prependExactVia(simplifiedVias, firstOriginalPoint)
+    }
   }
   if (lastOriginalPoint && simplifiedPoints.length > 1) {
-    simplifiedPoints[simplifiedPoints.length - 1] =
-      copyPointExact(lastOriginalPoint)
+    const lastSimplifiedPoint = simplifiedPoints[simplifiedPoints.length - 1]!
+    if (lastSimplifiedPoint.z === lastOriginalPoint.z) {
+      simplifiedPoints[simplifiedPoints.length - 1] =
+        copyPointExact(lastOriginalPoint)
+    } else {
+      simplifiedPoints[simplifiedPoints.length - 1] = {
+        ...lastSimplifiedPoint,
+        x: lastOriginalPoint.x,
+        y: lastOriginalPoint.y,
+      }
+      simplifiedPoints.push(copyPointExact(lastOriginalPoint))
+      appendExactVia(simplifiedVias, lastOriginalPoint)
+    }
   }
 
   return {
