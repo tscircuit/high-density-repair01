@@ -18,18 +18,20 @@ test("preserves exact OrangeCrab topology anchors without grid rounding", (): vo
     vias: [],
   }
   const solver = new HighDensityForceImproveSolver({
-    nodeWithPortPoints: [{
-      capacityMeshNodeId: "topology_merge_11762",
-      center: { x: 5.289999999999991, y: 1.0499989999999926 },
-      width: 0.2699999999999996,
-      height: 0.2699999999999838,
-      availableZ: [0],
-      portPoints: route.route.map((point) => ({
-        ...point,
-        connectionName: route.connectionName,
-        rootConnectionName: route.rootConnectionName,
-      })),
-    }],
+    nodeWithPortPoints: [
+      {
+        capacityMeshNodeId: "topology_merge_11762",
+        center: { x: 5.289999999999991, y: 1.0499989999999926 },
+        width: 0.2699999999999996,
+        height: 0.2699999999999838,
+        availableZ: [0],
+        portPoints: route.route.map((point) => ({
+          ...point,
+          connectionName: route.connectionName,
+          rootConnectionName: route.rootConnectionName,
+        })),
+      },
+    ],
     hdRoutes: [route],
     totalStepsPerNode: 20,
     nodeAssignmentMargin: 0.2,
