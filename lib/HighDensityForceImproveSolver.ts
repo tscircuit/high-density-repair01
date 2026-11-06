@@ -492,8 +492,11 @@ const buildMutableRoutes = (
             Math.abs(port.y - point.y) <= POSITION_EPSILON,
         )
         if (
-          isEndpoint && isPort && adjacent &&
-          adjacent.x === point.x && adjacent.y === point.y &&
+          isEndpoint &&
+          isPort &&
+          adjacent &&
+          adjacent.x === point.x &&
+          adjacent.y === point.y &&
           adjacent.z !== point.z
         ) {
           return [{ ...point }, { ...point }]
@@ -878,8 +881,8 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            x: roundCoordinate(ownerNode.x),
-            y: roundCoordinate(ownerNode.y),
+            x: ownerNode.fixed ? ownerNode.x : roundCoordinate(ownerNode.x),
+            y: ownerNode.fixed ? ownerNode.y : roundCoordinate(ownerNode.y),
           }
         : point
     })
@@ -1999,7 +2002,8 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       params.totalStepsPerNode ?? DEFAULT_TOTAL_STEPS_PER_NODE
     this.nodeAssignmentMargin =
       params.nodeAssignmentMargin ?? DEFAULT_ASSIGNMENT_MARGIN
-    this.preserveTopologyPortAnchors = params.preserveTopologyPortAnchors ?? false
+    this.preserveTopologyPortAnchors =
+      params.preserveTopologyPortAnchors ?? false
 
     const routeIndexesByNode = new Map<number, number[]>()
     for (let i = 0; i < params.hdRoutes.length; i++) {
