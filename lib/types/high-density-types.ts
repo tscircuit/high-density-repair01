@@ -21,7 +21,8 @@ export type NodeWithPortPoints = {
  *
  * Wires travel along a route, and are placed to avoid other
  * wires at the same z-level. Any time a z level is changed,
- * you must place a via.
+ * you must place a via unless an existing multilayer obstacle supplies the
+ * connection, marked by toNextSegmentType on the starting point.
  *
  * z is an integer corresponding to the layer index
  *
@@ -35,7 +36,13 @@ export type HighDensityIntraNodeRoute = {
   rootConnectionName?: string
   traceThickness: number
   viaDiameter: number
-  route: Array<{ x: number; y: number; z: number; insideJumperPad?: boolean }>
+  route: Array<{
+    x: number
+    y: number
+    z: number
+    insideJumperPad?: boolean
+    toNextSegmentType?: "through_obstacle"
+  }>
   vias: Array<{ x: number; y: number }>
   jumpers?: Jumper[]
   regionId?: string
