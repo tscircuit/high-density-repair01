@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="440" viewBox="0 0 940 440">
+    <rect width="940" height="440" fill="white"/>
+    <g font-family="sans-serif" fill="#0f172a"><g transform="translate(20,0)">
+      <text x="0" y="32" font-size="20">Input fixed anchor</text>
+      <svg x="0" y="55" width="420" height="260"
+        viewBox="0 0 600 60" preserveAspectRatio="none">
+        <rect x="0" y="0" width="600" height="29.20000000017353" fill="#dcfce7"/>
+        <path d="M0 29.20000000017353 H600" stroke="#334155" stroke-width="0.3"/>
+        <path d="M547.6000000008696 29.20000000017353 L613046.0000000007 -799969.1999999996" stroke="#15803d" stroke-width="0.3"/>
+        <ellipse cx="547.6000000008696" cy="29.20000000017353" rx="6" ry="1.4" fill="#15803d"/>
+      </svg>
+      <text x="0" y="340" font-size="16">x = 23.4874976 mm; y = 27.7000108 mm</text>
+      <text x="0" y="366" font-size="16" fill="#15803d">On routing boundary: layer connection retained</text>
+    </g><g transform="translate(480,0)">
+      <text x="0" y="32" font-size="20">Optimizer output</text>
+      <svg x="0" y="55" width="420" height="260"
+        viewBox="0 0 600 60" preserveAspectRatio="none">
+        <rect x="0" y="0" width="600" height="29.20000000017353" fill="#dcfce7"/>
+        <path d="M0 29.20000000017353 H600" stroke="#334155" stroke-width="0.3"/>
+        <path d="M49.999999998107114 40.000000002038405 L613046.0000000007 -799969.1999999996" stroke="#b91c1c" stroke-width="0.3"/>
+        <ellipse cx="49.999999998107114" cy="40.000000002038405" rx="6" ry="1.4" fill="#b91c1c"/>
+      </svg>
+      <text x="0" y="340" font-size="16">x = 23.487 mm; y = 27.7 mm</text>
+      <text x="0" y="366" font-size="16" fill="#b91c1c">Outside routing boundary: layer connection lost</text>
+    </g>
+      <text x="20" y="407" font-size="15">RVboy cmn_1981 / pcb_plated_hole_10 · routing boundary y = 27.7000108 mm</text>
+      <text x="20" y="428" font-size="14">Exact sample coordinates; y scale enlarged. Green area is the plated-hole routing envelope.</text>
+    </g>
+  </svg>
