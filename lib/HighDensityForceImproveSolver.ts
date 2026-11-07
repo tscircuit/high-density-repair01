@@ -47,6 +47,7 @@ type MutableNode = {
   pointIndexes: number[]
   fixed: boolean
   isTopologyPort: boolean
+  isThroughObstacleAnchor: boolean
   forceIndex: number
 }
 
@@ -526,6 +527,9 @@ const buildMutableRoutes = (
         )
 
       const previousPoint = route.route[index - 1]
+      const isThroughObstacleAnchor =
+        point.toNextSegmentType === "through_obstacle" ||
+        previousPoint?.toNextSegmentType === "through_obstacle"
       const lastNode = nodes.at(-1)
       const lastNodeIndex = nodes.length - 1
 
@@ -544,10 +548,10 @@ const buildMutableRoutes = (
           )
         }
         lastNode.pointIndexes.push(index)
-        lastNode.fixed ||= isPointOnProtectedEndpointSegment(
-          route.route.length,
-          index,
-        )
+        lastNode.isThroughObstacleAnchor ||= isThroughObstacleAnchor
+        lastNode.fixed ||=
+          isThroughObstacleAnchor ||
+          isPointOnProtectedEndpointSegment(route.route.length, index)
         pointNodeIndexes[index] = lastNodeIndex
         continue
       }
@@ -561,8 +565,10 @@ const buildMutableRoutes = (
         pointIndexes: [index],
         fixed:
           isTopologyPort ||
+          isThroughObstacleAnchor ||
           isPointOnProtectedEndpointSegment(route.route.length, index),
         isTopologyPort,
+        isThroughObstacleAnchor,
         forceIndex: nextForceIndex,
       })
       pointNodeIndexes[index] = nodes.length - 1
@@ -881,10 +887,14 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            // Fixed points can lie exactly on a pad or topology boundary.
-            // Rounding them can move an otherwise unchanged connection outside it.
-            x: ownerNode.fixed ? ownerNode.x : roundCoordinate(ownerNode.x),
-            y: ownerNode.fixed ? ownerNode.y : roundCoordinate(ownerNode.y),
+            // Through-obstacle anchors must remain inside the same pad's
+            // routing envelope. Other nodes retain their established grid.
+            x: ownerNode.isThroughObstacleAnchor
+              ? ownerNode.x
+              : roundCoordinate(ownerNode.x),
+            y: ownerNode.isThroughObstacleAnchor
+              ? ownerNode.y
+              : roundCoordinate(ownerNode.y),
           }
         : point
     })
