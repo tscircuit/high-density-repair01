@@ -2037,12 +2037,27 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       routeIndexesByNode.set(nodeIndex, routeIndexes)
     }
 
-    this.sampleEntries = Array.from(routeIndexesByNode.entries()).map(
-      ([nodeIndex, routeIndexes]) => ({
+    this.sampleEntries = Array.from(routeIndexesByNode.entries())
+      .filter(([nodeIndex, routeIndexes]) => {
+        const node = params.nodeWithPortPoints[nodeIndex]!
+        // Regional routing can retain its original region ID while detouring
+        // beyond that region. Node-local forces clamp to these bounds and
+        // would undo the legal detour. Leave the entire coupled group for
+        // board-wide cleanup, which can see copper outside the node.
+        return routeIndexes.every((routeIndex) => {
+          const route = params.hdRoutes[routeIndex]!
+          return (
+            route.regionId !== node.capacityMeshNodeId ||
+            [...route.route, ...route.vias].every((point) =>
+              isPointInsideNode(point, node, this.nodeAssignmentMargin + 1e-6),
+            )
+          )
+        })
+      })
+      .map(([nodeIndex, routeIndexes]) => ({
         node: params.nodeWithPortPoints[nodeIndex],
         routeIndexes,
-      }),
-    )
+      }))
 
     this.MAX_ITERATIONS = Math.max(this.sampleEntries.length * 10, 1_000)
     this.stats = {
