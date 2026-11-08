@@ -1,3 +1,4 @@
+import Flatbush from "flatbush"
 import type {
   HighDensityRoute,
   NodeWithPortPoints,
@@ -224,19 +225,58 @@ export const findNewProperSegmentCrossings = (
 const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
   const segments = collectProjectionSegments(routes)
   const violatingRoutePairs: RoutePair[] = []
+  const seenPairs = new Set<number>()
+  if (segments.length === 0) return violatingRoutePairs
+  const index = new Flatbush(segments.length)
+  let maxTraceRadius = 0
+  for (const segment of segments) {
+    index.add(
+      Math.min(segment.start.x, segment.end.x),
+      Math.min(segment.start.y, segment.end.y),
+      Math.max(segment.start.x, segment.end.x),
+      Math.max(segment.start.y, segment.end.y),
+    )
+    maxTraceRadius = Math.max(maxTraceRadius, segment.traceRadius)
+  }
+  index.finish()
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    const radius = left.traceRadius + maxTraceRadius
+    // The call is read-only: spatial candidates remain valid throughout it.
+    // Keep segment order so the returned route pairs match the exhaustive pass.
+    const candidates = index
+      .search(
+        Math.min(left.start.x, left.end.x) - radius,
+        Math.min(left.start.y, left.end.y) - radius,
+        Math.max(left.start.x, left.end.x) + radius,
+        Math.max(left.start.y, left.end.y) + radius,
+      )
+      .filter((rightIndex) => rightIndex > leftIndex)
+      .sort((a, b) => a - b)
+    for (const rightIndex of candidates) {
       const right = segments[rightIndex]
       if (
         !right ||
         left.z !== right.z ||
         left.rootConnectionName === right.rootConnectionName
+      ) {
+        continue
+      }
+      // Only the first conflict for a route pair contributes to this result.
+      // Dense regional paths can contain thousands of segments per pair.
+      const pairKey = left.routeIndex * routes.length + right.routeIndex
+      if (seenPairs.has(pairKey)) continue
+      const requiredDistance = left.traceRadius + right.traceRadius
+      if (
+        Math.max(left.start.x, left.end.x) + requiredDistance <
+          Math.min(right.start.x, right.end.x) ||
+        Math.max(right.start.x, right.end.x) + requiredDistance <
+          Math.min(left.start.x, left.end.x) ||
+        Math.max(left.start.y, left.end.y) + requiredDistance <
+          Math.min(right.start.y, right.end.y) ||
+        Math.max(right.start.y, right.end.y) + requiredDistance <
+          Math.min(left.start.y, left.end.y)
       ) {
         continue
       }
@@ -248,9 +288,8 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
       )
       if (distance + POSITION_EPSILON < left.traceRadius + right.traceRadius) {
         const pair = getRoutePair(left.routeIndex, right.routeIndex)
-        if (!includesRoutePair(violatingRoutePairs, pair)) {
-          violatingRoutePairs.push(pair)
-        }
+        violatingRoutePairs.push(pair)
+        seenPairs.add(pairKey)
       }
     }
   }
@@ -432,6 +471,24 @@ export const findAlignedTopologyCandidate = (
               closureRouteIndexes.add(leftRouteIndex)
             }
           }
+          // Projection can move only the selected route and its new-conflict
+          // closure. A protected collision between two other routes therefore
+          // cannot be repaired by this candidate. Reject it before projecting
+          // every segment of a dense region for each local alignment trial.
+          const changedRouteIndexes = new Set([
+            movableRouteIndex,
+            ...closureRouteIndexes,
+          ])
+          if (
+            protectedRoutePairs.some(
+              (pair) =>
+                includesRoutePair(candidateViolationPairs, pair) &&
+                pair.every(
+                  (routeIndex) => !changedRouteIndexes.has(routeIndex),
+                ),
+            )
+          )
+            continue
           if (closureRouteIndexes.size > 0) {
             const projectedRoutes = applySelectedRouteSegmentClearance(
               node,

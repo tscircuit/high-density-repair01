@@ -47,6 +47,7 @@ type MutableNode = {
   pointIndexes: number[]
   fixed: boolean
   isTopologyPort: boolean
+  isFixedPortAnchor: boolean
   isThroughObstacleAnchor: boolean
   forceIndex: number
 }
@@ -512,18 +513,20 @@ const buildMutableRoutes = (
     for (let index = 0; index < route.route.length; index += 1) {
       const point = route.route[index]
       if (!point) continue
-      const isTopologyPort =
+      const isFixedPortAnchor =
         (index === 0 || index === route.route.length - 1) &&
-        route.vias.some(
-          (via) =>
-            Math.abs(via.x - point.x) <= POSITION_EPSILON &&
-            Math.abs(via.y - point.y) <= POSITION_EPSILON,
-        ) &&
         fixedPortPoints.some(
           (port) =>
             port.z === point.z &&
             Math.abs(port.x - point.x) <= POSITION_EPSILON &&
             Math.abs(port.y - point.y) <= POSITION_EPSILON,
+        )
+      const isTopologyPort =
+        isFixedPortAnchor &&
+        route.vias.some(
+          (via) =>
+            Math.abs(via.x - point.x) <= POSITION_EPSILON &&
+            Math.abs(via.y - point.y) <= POSITION_EPSILON,
         )
 
       const previousPoint = route.route[index - 1]
@@ -549,6 +552,7 @@ const buildMutableRoutes = (
         }
         lastNode.pointIndexes.push(index)
         lastNode.isThroughObstacleAnchor ||= isThroughObstacleAnchor
+        lastNode.isFixedPortAnchor ||= isFixedPortAnchor
         lastNode.fixed ||=
           isThroughObstacleAnchor ||
           isPointOnProtectedEndpointSegment(route.route.length, index)
@@ -568,6 +572,7 @@ const buildMutableRoutes = (
           isThroughObstacleAnchor ||
           isPointOnProtectedEndpointSegment(route.route.length, index),
         isTopologyPort,
+        isFixedPortAnchor,
         isThroughObstacleAnchor,
         forceIndex: nextForceIndex,
       })
@@ -887,14 +892,16 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            // Through-obstacle anchors must remain inside the same pad's
-            // routing envelope. Other nodes retain their established grid.
-            x: ownerNode.isThroughObstacleAnchor
-              ? ownerNode.x
-              : roundCoordinate(ownerNode.x),
-            y: ownerNode.isThroughObstacleAnchor
-              ? ownerNode.y
-              : roundCoordinate(ownerNode.y),
+            // Fixed topology ports and through-obstacle anchors retain
+            // their exact clearance and connections across regional boundaries.
+            x:
+              ownerNode.isThroughObstacleAnchor || ownerNode.isFixedPortAnchor
+                ? ownerNode.x
+                : roundCoordinate(ownerNode.x),
+            y:
+              ownerNode.isThroughObstacleAnchor || ownerNode.isFixedPortAnchor
+                ? ownerNode.y
+                : roundCoordinate(ownerNode.y),
           }
         : point
     })
@@ -2030,12 +2037,27 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       routeIndexesByNode.set(nodeIndex, routeIndexes)
     }
 
-    this.sampleEntries = Array.from(routeIndexesByNode.entries()).map(
-      ([nodeIndex, routeIndexes]) => ({
+    this.sampleEntries = Array.from(routeIndexesByNode.entries())
+      .filter(([nodeIndex, routeIndexes]) => {
+        const node = params.nodeWithPortPoints[nodeIndex]!
+        // Regional routing can retain its original region ID while detouring
+        // beyond that region. Node-local forces clamp to these bounds and
+        // would undo the legal detour. Leave the entire coupled group for
+        // board-wide cleanup, which can see copper outside the node.
+        return routeIndexes.every((routeIndex) => {
+          const route = params.hdRoutes[routeIndex]!
+          return (
+            route.regionId !== node.capacityMeshNodeId ||
+            [...route.route, ...route.vias].every((point) =>
+              isPointInsideNode(point, node, this.nodeAssignmentMargin + 1e-6),
+            )
+          )
+        })
+      })
+      .map(([nodeIndex, routeIndexes]) => ({
         node: params.nodeWithPortPoints[nodeIndex],
         routeIndexes,
-      }),
-    )
+      }))
 
     this.MAX_ITERATIONS = Math.max(this.sampleEntries.length * 10, 1_000)
     this.stats = {
