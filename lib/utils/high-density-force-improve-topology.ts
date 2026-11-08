@@ -471,6 +471,24 @@ export const findAlignedTopologyCandidate = (
               closureRouteIndexes.add(leftRouteIndex)
             }
           }
+          // Projection can move only the selected route and its new-conflict
+          // closure. A protected collision between two other routes therefore
+          // cannot be repaired by this candidate. Reject it before projecting
+          // every segment of a dense region for each local alignment trial.
+          const changedRouteIndexes = new Set([
+            movableRouteIndex,
+            ...closureRouteIndexes,
+          ])
+          if (
+            protectedRoutePairs.some(
+              (pair) =>
+                includesRoutePair(candidateViolationPairs, pair) &&
+                pair.every(
+                  (routeIndex) => !changedRouteIndexes.has(routeIndex),
+                ),
+            )
+          )
+            continue
           if (closureRouteIndexes.size > 0) {
             const projectedRoutes = applySelectedRouteSegmentClearance(
               node,
