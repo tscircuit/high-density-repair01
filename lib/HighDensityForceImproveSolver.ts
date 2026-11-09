@@ -1208,16 +1208,24 @@ const projectSegmentSegmentClearance = (params: {
 }) => {
   const { routes, node, segments, movableRouteIndexes } = params
   let changed = false
+  const segmentIndices = [...segments.keys()]
+  let movableSegmentIndices = segmentIndices
+  if (movableRouteIndexes) {
+    movableSegmentIndices = segmentIndices.filter((index) =>
+      movableRouteIndexes.has(segments[index]!.routeIndex),
+    )
+  }
 
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
 
-    for (
-      let rightIndex = leftIndex + 1;
-      rightIndex < segments.length;
-      rightIndex += 1
-    ) {
+    const leftMovable =
+      !movableRouteIndexes || movableRouteIndexes.has(left.routeIndex)
+    let rightSegmentIndices = segmentIndices
+    if (!leftMovable) rightSegmentIndices = movableSegmentIndices
+    for (const rightIndex of rightSegmentIndices) {
+      if (rightIndex <= leftIndex) continue
       const right = segments[rightIndex]
       if (
         !right ||
@@ -1226,6 +1234,11 @@ const projectSegmentSegmentClearance = (params: {
       ) {
         continue
       }
+
+      const rightMovable =
+        !movableRouteIndexes || movableRouteIndexes.has(right.routeIndex)
+      const movableCount = Number(leftMovable) + Number(rightMovable)
+      if (movableCount === 0) continue
 
       const requiredDistance =
         left.traceRadius +
@@ -1253,12 +1266,6 @@ const projectSegmentSegmentClearance = (params: {
       const distance = getVectorLength(separationX, separationY)
       const penetration = requiredDistance - distance
       if (penetration <= 0) continue
-      const leftMovable =
-        !movableRouteIndexes || movableRouteIndexes.has(left.routeIndex)
-      const rightMovable =
-        !movableRouteIndexes || movableRouteIndexes.has(right.routeIndex)
-      const movableCount = Number(leftMovable) + Number(rightMovable)
-      if (movableCount === 0) continue
 
       const leftVectorX = left.end.x - left.start.x
       const leftVectorY = left.end.y - left.start.y
