@@ -31,7 +31,9 @@ type NativeDdrPartData = {
  */
 export function NativePart({
   part,
-}: { part: NativeDdrPartData }): ReactElement {
+}: {
+  part: NativeDdrPartData
+}): ReactElement {
   const pinLabels: Record<string, string[]> = Object.fromEntries(
     Object.entries(part.pinLabels).map(([pin, labels]) => {
       if (!labels) throw new Error(`Missing aliases for ${part.name}.${pin}`)
