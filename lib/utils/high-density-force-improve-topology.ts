@@ -240,6 +240,19 @@ const getRoutePairClearanceViolations = (routes: HighDensityRoute[]) => {
       ) {
         continue
       }
+      const clearance = left.traceRadius + right.traceRadius
+      if (
+        Math.max(left.start.x, left.end.x) + clearance <
+          Math.min(right.start.x, right.end.x) ||
+        Math.max(right.start.x, right.end.x) + clearance <
+          Math.min(left.start.x, left.end.x) ||
+        Math.max(left.start.y, left.end.y) + clearance <
+          Math.min(right.start.y, right.end.y) ||
+        Math.max(right.start.y, right.end.y) + clearance <
+          Math.min(left.start.y, left.end.y)
+      ) {
+        continue
+      }
       const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
       if (!candidate) continue
       const distance = getVectorLength(

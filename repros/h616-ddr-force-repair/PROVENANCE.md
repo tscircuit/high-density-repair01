@@ -30,3 +30,16 @@ bun run render
 Baseline isolated-region runtime: 251.4 seconds. The complete native board hits
 the 120-second render limit in force repair. This SVG is a region diagnostic,
 not a DRC-clean board output.
+
+The fix skips geometrically separated segment pairs and avoids checking pairs
+where neither route can move. The existing exact distance checks, iteration
+order and displacement formulas are retained.
+
+| Isolated H616 region | Before | After |
+| --- | ---: | ---: |
+| Repair time | 251.4 s | 26.2 s |
+| Returned routes / vertices | 33 / 3,844 | 33 / 3,844 |
+
+All returned route coordinates and metadata are identical. Accordingly, the SVG
+snapshot remains unchanged. The complete board still reaches the 120-second
+limit; this measurement does not establish additional connected DDR signals.
