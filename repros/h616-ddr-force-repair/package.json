@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "bun render.mjs"
+  },
+  "dependencies": {
+    "circuit-to-svg": "0.0.457",
+    "react": "19.3.1",
+    "transformation-matrix": "2.16.1",
+    "tscircuit": "0.0.3124"
+  }
+}
