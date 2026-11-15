@@ -275,13 +275,12 @@ const isPointInsideNode = (
 const findNodeIndexForRoute = (
   route: HighDensityRoute,
   nodes: NodeWithPortPoints[],
+  nodeIndexById: ReadonlyMap<string, number>,
   margin: number,
 ): number => {
   if (route.regionId) {
-    const regionNodeIndex = nodes.findIndex(
-      (node) => node.capacityMeshNodeId === route.regionId,
-    )
-    if (regionNodeIndex !== -1) return regionNodeIndex
+    const regionNodeIndex = nodeIndexById.get(route.regionId)
+    if (regionNodeIndex !== undefined) return regionNodeIndex
   }
   const routePoints = route.route.map(({ x, y }) => ({ x, y }))
   const viaPoints = route.vias.map(({ x, y }) => ({ x, y }))
@@ -2025,10 +2024,17 @@ export class HighDensityForceImproveSolver extends BaseSolver {
       params.preserveTopologyPortAnchors ?? false
 
     const routeIndexesByNode = new Map<number, number[]>()
+    const nodeIndexById = new Map(
+      params.nodeWithPortPoints.map((node, nodeIndex) => [
+        node.capacityMeshNodeId,
+        nodeIndex,
+      ]),
+    )
     for (let i = 0; i < params.hdRoutes.length; i++) {
       const nodeIndex = findNodeIndexForRoute(
         params.hdRoutes[i],
         params.nodeWithPortPoints,
+        nodeIndexById,
         this.nodeAssignmentMargin,
       )
       if (nodeIndex === -1) continue
