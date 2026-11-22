@@ -1210,6 +1210,60 @@ const distributeProjectionSegmentMove = (params: {
   return movedStart || movedEnd
 }
 
+type ProjectionSegmentBounds = {
+  minX: Float64Array
+  maxX: Float64Array
+  minY: Float64Array
+  maxY: Float64Array
+  segmentIndexesByRoute: Map<number, number[]>
+}
+
+const refreshProjectionSegmentBound = (
+  bounds: ProjectionSegmentBounds,
+  segments: ProjectionSegment[],
+  index: number,
+): void => {
+  const segment = segments[index]!
+  bounds.minX[index] = Math.min(segment.start.x, segment.end.x)
+  bounds.maxX[index] = Math.max(segment.start.x, segment.end.x)
+  bounds.minY[index] = Math.min(segment.start.y, segment.end.y)
+  bounds.maxY[index] = Math.max(segment.start.y, segment.end.y)
+}
+
+const createProjectionSegmentBounds = (
+  segments: ProjectionSegment[],
+): ProjectionSegmentBounds => {
+  const bounds: ProjectionSegmentBounds = {
+    minX: new Float64Array(segments.length),
+    maxX: new Float64Array(segments.length),
+    minY: new Float64Array(segments.length),
+    maxY: new Float64Array(segments.length),
+    segmentIndexesByRoute: new Map(),
+  }
+  for (let index = 0; index < segments.length; index += 1) {
+    const routeIndex = segments[index]!.routeIndex
+    const indexes = bounds.segmentIndexesByRoute.get(routeIndex) ?? []
+    indexes.push(index)
+    bounds.segmentIndexesByRoute.set(routeIndex, indexes)
+    refreshProjectionSegmentBound(bounds, segments, index)
+  }
+  return bounds
+}
+
+const refreshProjectionRouteBounds = (
+  bounds: ProjectionSegmentBounds,
+  segments: ProjectionSegment[],
+  routeIndex: number,
+): void => {
+  const indexes = bounds.segmentIndexesByRoute.get(routeIndex)
+  if (!indexes) {
+    throw new Error(`Missing projection segments for route ${routeIndex}`)
+  }
+  for (const index of indexes) {
+    refreshProjectionSegmentBound(bounds, segments, index)
+  }
+}
+
 const projectSegmentSegmentClearance = (params: {
   routes: HighDensityRoute[]
   node: NodeWithPortPoints
@@ -1226,6 +1280,7 @@ const projectSegmentSegmentClearance = (params: {
     )
   }
 
+  const bounds = createProjectionSegmentBounds(segments)
   for (let leftIndex = 0; leftIndex < segments.length; leftIndex += 1) {
     const left = segments[leftIndex]
     if (!left) continue
@@ -1237,18 +1292,7 @@ const projectSegmentSegmentClearance = (params: {
     for (const rightIndex of rightSegmentIndices) {
       if (rightIndex <= leftIndex) continue
       const right = segments[rightIndex]
-      if (
-        !right ||
-        left.z !== right.z ||
-        left.rootConnectionName === right.rootConnectionName
-      ) {
-        continue
-      }
-
-      const rightMovable =
-        !movableRouteIndexes || movableRouteIndexes.has(right.routeIndex)
-      const movableCount = Number(leftMovable) + Number(rightMovable)
-      if (movableCount === 0) continue
+      if (!right || left.z !== right.z) continue
 
       const requiredDistance =
         left.traceRadius +
@@ -1256,17 +1300,23 @@ const projectSegmentSegmentClearance = (params: {
         RELAXED_TRACE_CLEARANCE +
         CLEARANCE_SLACK
       if (
-        Math.max(left.start.x, left.end.x) + requiredDistance <=
-          Math.min(right.start.x, right.end.x) ||
-        Math.max(right.start.x, right.end.x) + requiredDistance <=
-          Math.min(left.start.x, left.end.x) ||
-        Math.max(left.start.y, left.end.y) + requiredDistance <=
-          Math.min(right.start.y, right.end.y) ||
-        Math.max(right.start.y, right.end.y) + requiredDistance <=
-          Math.min(left.start.y, left.end.y)
+        bounds.maxX[leftIndex]! + requiredDistance <=
+          bounds.minX[rightIndex]! ||
+        bounds.maxX[rightIndex]! + requiredDistance <=
+          bounds.minX[leftIndex]! ||
+        bounds.maxY[leftIndex]! + requiredDistance <=
+          bounds.minY[rightIndex]! ||
+        bounds.maxY[rightIndex]! + requiredDistance <= bounds.minY[leftIndex]!
       ) {
         continue
       }
+
+      if (left.rootConnectionName === right.rootConnectionName) continue
+
+      const rightMovable =
+        !movableRouteIndexes || movableRouteIndexes.has(right.routeIndex)
+      const movableCount = Number(leftMovable) + Number(rightMovable)
+      if (movableCount === 0) continue
 
       const [candidate] = getProjectionSegmentDistanceCandidates(left, right)
       if (!candidate) continue
@@ -1317,6 +1367,8 @@ const projectSegmentSegmentClearance = (params: {
             t: candidate.rightT,
           }) || changed
       }
+      refreshProjectionRouteBounds(bounds, segments, left.routeIndex)
+      refreshProjectionRouteBounds(bounds, segments, right.routeIndex)
     }
   }
 
