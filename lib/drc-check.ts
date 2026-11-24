@@ -273,6 +273,19 @@ const extractRouteSegments = (
 
       if (start.x === end.x && start.y === end.y) {
         if (start.z !== end.z) {
+          const hasColocatedVia = route.vias.some((via) =>
+            arePointsCoincident(via, start),
+          )
+
+          if (!hasColocatedVia) {
+            issues.push({
+              kind: "invalid-route",
+              routeIndex,
+              connectionName: route.connectionName,
+              message: `Segment ${segmentIndex} changes z without a colocated via.`,
+            })
+          }
+
           continue
         }
 

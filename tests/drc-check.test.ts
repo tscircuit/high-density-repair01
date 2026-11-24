@@ -267,3 +267,54 @@ test("runDrcCheck rejects vias whose diameter crosses the node boundary", () => 
     },
   )
 })
+
+test("runDrcCheck rejects a layer change without a matching via", () => {
+  const nodeWithPortPoints = createNodeWithPortPoints([
+    {
+      connectionName: "conn00",
+      portPointId: "pp0",
+      rootConnectionName: "conn00",
+      x: 0,
+      y: 0,
+      z: 0,
+    },
+    {
+      connectionName: "conn00",
+      portPointId: "pp1",
+      rootConnectionName: "conn00",
+      x: 0,
+      y: 0,
+      z: 1,
+    },
+  ])
+  const routePoints: NodeHdRoute["route"] = [
+    { x: 0, y: 0, z: 0 },
+    { x: 0.3, y: 0, z: 0 },
+    { x: 0.3, y: 0, z: 1 },
+    { x: 0, y: 0, z: 1 },
+  ]
+
+  expectBothCheckers(
+    nodeWithPortPoints,
+    [createRoute("conn00", routePoints)],
+    (result) => {
+      expect(result.ok).toBe(false)
+      expect(
+        result.issues.some(
+          (issue) =>
+            issue.kind === "invalid-route" &&
+            issue.message.includes("without a colocated via"),
+        ),
+      ).toBe(true)
+    },
+  )
+
+  expectBothCheckers(
+    nodeWithPortPoints,
+    [createRoute("conn00", routePoints, [{ x: 0.3, y: 0 }])],
+    (result) => {
+      expect(result.ok).toBe(true)
+      expect(result.issues).toEqual([])
+    },
+  )
+})
