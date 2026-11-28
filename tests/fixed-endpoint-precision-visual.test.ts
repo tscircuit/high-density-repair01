@@ -46,6 +46,8 @@ test("force improvement preserves exact fixed endpoint coordinates", (): void =>
       output.route.at(-1)!.y - route.route.at(-1)!.y,
     ),
   )
+  expect(movement).toBe(0)
+  expect(output.route[0]).toEqual(route.route[0])
   const graphics = solver.visualize()
   graphics.texts = [
     {

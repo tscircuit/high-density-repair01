@@ -897,12 +897,11 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
       return ownerNode
         ? {
             ...point,
-            // Through-obstacle anchors must remain inside the same pad's
-            // routing envelope. Other nodes retain their established grid.
-            x: ownerNode.isThroughObstacleAnchor
+            // Fixed nodes retain exact pad, via and topology-port anchors.
+            x: ownerNode.fixed
               ? ownerNode.x
               : roundCoordinate(ownerNode.x),
-            y: ownerNode.isThroughObstacleAnchor
+            y: ownerNode.fixed
               ? ownerNode.y
               : roundCoordinate(ownerNode.y),
           }
