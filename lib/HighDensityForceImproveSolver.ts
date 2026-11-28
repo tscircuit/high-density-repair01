@@ -898,12 +898,8 @@ const materializeRoutes = (mutableRoutes: MutableRoute[]) =>
         ? {
             ...point,
             // Fixed nodes retain exact pad, via and topology-port anchors.
-            x: ownerNode.fixed
-              ? ownerNode.x
-              : roundCoordinate(ownerNode.x),
-            y: ownerNode.fixed
-              ? ownerNode.y
-              : roundCoordinate(ownerNode.y),
+            x: ownerNode.fixed ? ownerNode.x : roundCoordinate(ownerNode.x),
+            y: ownerNode.fixed ? ownerNode.y : roundCoordinate(ownerNode.y),
           }
         : point
     })
